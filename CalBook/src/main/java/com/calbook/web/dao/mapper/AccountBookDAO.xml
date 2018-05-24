@@ -3,5 +3,28 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
     
 <mapper namespace="com.calbook.web.dao.AccountBookDAO">
+	
+	<!-- <resultMap id="SumAccountBook" type="java.util.Map">
+		<result javaType="java.lang.Integer" column="SUM" property="sum"/>
+		<result javaType="java.lang.Integer" column="KIND" property="kind"/>
+	</resultMap> -->
+		<!-- SELECT SAB.* FROM (SELECT SUM(AMOUNT) SUM, KIND FROM ACCOUNTBOOK GROUP BY KIND, M_EMAIL HAVING M_EMAIL=#{email} ORDER BY KIND) SAB -->
+	
+	<select id="getDailySumAccountBook" resultType="com.calbook.web.vo.SumAccountBook">
+		SELECT SUM(AMOUNT) SUM, KIND FROM ACCOUNTBOOK WHERE TO_CHAR(ADATE, 'YYYY/MM/DD')=#{param2} GROUP BY KIND, M_EMAIL HAVING M_EMAIL=#{param1} ORDER BY KIND
+	</select>
+	
+	<select id="getMonthlySumAccountBook" resultType="com.calbook.web.vo.SumAccountBook">
+		SELECT SUM(AMOUNT) SUM, KIND FROM ACCOUNTBOOK WHERE TO_CHAR(ADATE, 'YYYY/MM')=#{param2} GROUP BY KIND, M_EMAIL HAVING M_EMAIL=#{param1} ORDER BY KIND;
+	</select>
+	
+	<select id="getDailyAccountBook" resultType="com.calbook.web.vo.AccountBook">
+		SELECT * FROM ACCOUNTBOOK WHERE TO_CHAR(ADATE, 'YYYY/MM/DD')=#{param2} AND M_EMAIL=#{param1} ORDER BY ADATE
+	</select>
+	
+<!-- 	<update id="updateBudget"> -->
+		
+<!-- 	</update> -->
+
 
 </mapper>

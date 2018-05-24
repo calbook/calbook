@@ -154,7 +154,7 @@ html, body {
        <a href="../social/social.do" class="heading">Group</a>
     </div>
     <div class="half right withText">
-      <a  href="../scheduleBook/scheduleBook.do" class="heading">Schedule</a>
+      <a  href="../scheduleBook/scheduleBook.do?email=${email}" class="heading">Schedule</a>
     </div>
   </div>
 </div>  
