@@ -6,9 +6,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 <!-- css -->
+<link rel='stylesheet' href='../css/fullcalendar/fullcalendar.css' />
 <link rel="stylesheet" href="../css/background.css">
 <link rel="stylesheet" href="../css/calendar.css">
-<link rel="stylesheet" href="../css/fullcalendar/fullcalendar.css" />
+<link rel="stylesheet" href="../css/account.css">
 <!-- <link rel="stylesheet" href="../css/tab2.css"> -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="https://fonts.googleapis.com/css?family=Baloo|Ubuntu" rel="stylesheet">
@@ -19,7 +20,9 @@
 <!-- qtip -->
 <script type="text/javascript" src="../js/jquery.qtip.custom/jquery.qtip.min.js"></script>
 <!-- googlemap -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUsZlyBI_gQ8S_liz_WdZ6U2W2ooRwIoQ"></script>
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUsZlyBI_gQ8S_liz_WdZ6U2W2ooRwIoQ"></script> -->
+<!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUsZlyBI_gQ8S_liz_WdZ6U2W2ooRwIoQ&libraries=places"></script> -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUsZlyBI_gQ8S_liz_WdZ6U2W2ooRwIoQ&libraries=places&callback=initAutocomplete" async defer></script>
 <!-- fullcalendar -->
 <script src='../css/fullcalendar/lib/moment.min.js'></script>
 <script src='../css/fullcalendar/fullcalendar.js'></script>
@@ -37,6 +40,9 @@ $(function(){
 	        var c = new Date(a);
 	        $("#fullcalendar").fullCalendar("gotoDate", c);
 	        $("#fullcalendar").fullCalendar("select", c);
+	        var s = "hello";
+	        alert(typeof(s));
+	        $("#sDate").val(c);
 	    }
 	});
 
@@ -173,11 +179,28 @@ $(function(){
 	        }
 	    }
 	});
-
+	
+	$('.fc-today-button').click(function() {
+		var moment = $('#fullcalendar').fullCalendar('getDate');
+    	alert("The current date of the calendar is " + moment.format());
+	});
+	
 	
 	$("#monthB").click(function(){
-		alert("월별");
+// 		$("#monthB").css("margin-left","20px");
+		$(".plusicon").css("opacity","0");
+		$("#newSchedule").prop("disabled", true);
+		$("#newSchedule").css("cursor", "default");
 	});
+	
+	$("#dayB").click(function(){
+// 		$("#monthB").css("margin-left","0px");
+// 		$("#newSchedule").show();
+		$(".plusicon").css("opacity","1");
+		$("#newSchedule").prop("disabled", false);
+		$("#newSchedule").css("cursor", "pointer");
+	});
+	
 	
 	
 	
@@ -187,19 +210,18 @@ $(function(){
 
 </script>
 <script type="text/javascript">
-
-	function initMap(){
-		var mapCanvas = document.getElementById("googleMap");
+	/* 지도 script */
+	 /* function initMap(){
+		var mapCanvas = document.getElementById("map");
 		var mapOption = {
-				center: new google.maps.LatLng(37.556556, 126.919485),		/* ,로 구분 */
-				zoom: 17													/* 마지막꺼에는 , 넣지 않음  */
+				center: new google.maps.LatLng(37.556556, 126.919485),		
+				zoom: 17													
 		};
 		
-		//var mapObj = new google.maps.Map(맵이 표시될 div, 맵의 옵션);
 		var mapObj = new google.maps.Map(mapCanvas, mapOption);
 	}
 	
-	google.maps.event.addDomListener(window, 'load', initMap);	/* window가 다 load되면 initMap이 실행됨 */
+	google.maps.event.addDomListener(window, 'load', initMap);	  */
 
 </script>
 <style type="text/css">
@@ -340,6 +362,10 @@ $(function(){
 
 .tabs .content {
 	margin-top: 3%;
+}
+
+.sCon{
+	text-align: left;
 }
 
 .tabs .content section {
@@ -526,7 +552,7 @@ to {
 	background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
-.modal2 {
+.accountM_modal {
 	display: none; /* Hidden by default */
 	position: fixed; /* Stay in place */
 	z-index: 1; /* Sit on top */
@@ -550,6 +576,17 @@ to {
 	/*     height: 65%; /* Could be more or less, depending on screen size */
 }
 
+@media ( max-width: 1100px ) {
+  	.modal-content {
+		width: 75%;
+	}
+}
+
+.smbtnDiv{
+	width: 100%;
+	float: right;
+}
+
 /* The Close Button */
 .close {
 	color: white;
@@ -558,11 +595,26 @@ to {
 	float: right;
 	width: 10%;
 	margin-right: 10%;
-	margin-bottom: 50px;
+/* 	margin-bottom: 50px; */
 }
 
 .close:hover, .close:focus {
-	color: black;
+	color: gray;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.sRowModal_close{
+	color: white;
+	font-size: 20px;
+	font-weight: bold;
+	float: right;
+	width: 10%;
+	margin-right: 10%;
+}
+
+.sRowModal_close:hover, .sRowModal_close:focus {
+	color: gray;
 	text-decoration: none;
 	cursor: pointer;
 }
@@ -574,7 +626,7 @@ to {
 	float: right;
 	width: 10%;
 	margin-right: 12%;
-	margin-bottom: 50px;
+/* 	margin-bottom: 50px; */
 }
 
 /* 모달 안 내용 */
@@ -588,11 +640,16 @@ to {
 
 .border {
 	border-radius: 5px;
-	width: 50%;
+	width: 100%;
 }
 
 .borderContent {
 	height: 200px;
+}
+
+.modal-body{
+ 	overflow: hidden; 
+/* 	overflow:visible; */
 }
 
 .add {
@@ -602,22 +659,40 @@ to {
 	margin-left: auto;
 	margin-right: auto;
 	font-size: 25px;
+	padding-top: 10px;
 }
 
+.smcontentsDiv{
+	float: left;
+	width: 40%;
+}
+
+.importantSelect{
+	background-color: #ffc966;
+	color: white;
+}
+
+.modalR div:hover{
+  background-color: red;
+}
 
 .modalR {
 /* 	margin: 0 3px 0 3px; */
-	color: #ffb6c1;
+	background-color: #ffb6c1;
+/* 	color: #ffb6c1; */
 }
+
 
 .modalO {
 /* 	margin: 0 3px 0 3px; */
-	color: #ffc966;
+	background-color: #ffc966;;
+/* 	color: #ffc966; */
 }
 
 .modalG {
 /* 	margin: 0 3px 0 3px; */
-	color: #add8e6;
+	background-color: #add8e6;
+/* 	color: #add8e6; */
 }
 
 /* 추가css */
@@ -721,7 +796,6 @@ to {
 .tab-btn {
 	width: 10%;
 	margin: 0;
-	/* 	text-align: right; */
 }
 
 #newSchedule {
@@ -800,404 +874,79 @@ to {
 	border: 2px solid #666666;
 }
 
-/* 가계부 css */
-.account {
-	margin-top: 10px;
+
+
+/* 지도 css */
+/* Always set the map height explicitly to define the size of the div element that contains the map. */
+#map {
+  width: 100%;
+  height: 200px; 
 }
 
-.topSection {
-	margin-top: 2%;
-	margin-bottom: 2%;
-}
-
-.titleSection {
-	float: left;
-	width: 20%;
-}
-
-.titleContents {
-	float: left;
-	text-align: right;
-	width: 70%;
-}
-
-.btnSection {
-	float: left;
-	width: 6%;
-	margin-top: 3px;
-}
-
-.accountTitle {
-	color: #3f3f3f;
-	width: 15%;
-	font-size: 20px;
-}
-
-.accountText {
-	color: #747474;
-	text-align: right;
-}
-
-.accountInput {
-	background-color: transparent;
-	color: black;
-	height: 5px;
-	padding: 10px;
-	width: 100px;
-	outline: none;
-}
-
-.btn-report {
-	background-color: transparent;
-	border: 0px solid;
-	cursor: pointer;
-}
-
-.report_img {
-	width: 32px;
-	height: 32px;
-}
-
-.account_contents {
-	float: left;
+#srmMap{
 	width: 100%;
+	height: 200px; 
 }
 
-.plusRow {
-	text-align: center;
+/* Optional: Makes the sample page fill the window. */
+.googleMapDiv{
+  float: left;
+  height: 50%;
+  width: 59%;
+  margin: 0;
+  margin-left: 1%;
+  padding: 0;
 }
 
-.accountPlusbtn {
-	color: #747474;
-	background: transparent;
-	border: 0;
-	outline: none;
-	padding-bottom: 0;
+.controls {
+  margin-top: 10px;
+  border: 1px solid transparent;
+  border-radius: 2px 0 0 2px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  height: 32px;
+  outline: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-.accountPlusbtn:HOVER {
-	color: #aaa;
+#pac-input {
+  background-color: #fff;
+  font-family: Roboto;
+  font-size: 15px;
+  font-weight: 300;
+  margin-left: 12px;
+  padding: 0 11px 0 13px;
+  text-overflow: ellipsis;
+  width: 200px;
 }
 
-.accountCRow {
-	background-color: transparent;
-	border: 1px solid #ddd;
-	padding: 5px;
-	overflow: hidden;
+#pac-input:focus {
+  border-color: #4d90fe;
 }
 
-.rowContents {
-	float: left;
+.pac-container {
+  font-family: Roboto;
 }
 
-.rowbtn {
-	float: right;
+#type-selector {
+  color: #fff;
+  background-color: #4d90fe;
+  padding: 5px 11px 0px 11px;
 }
 
-.accountRowSavebtn {
-	color: #747474;
-	background: transparent;
-	border: 0;
-	outline: none;
-	padding-bottom: 0;
-	cursor: pointer;
+#type-selector label {
+  font-family: Roboto;
+  font-size: 13px;
+  font-weight: 300;
+}
+#target {
+  width: 345px;
 }
 
-.accountRowSavebtn:HOVER {
-	color: #aaa;
-}
-
-.account_contents span {
-	color: #747474;
-}
-
-.removebtn {
-	color: #747474;
-	margin: 3px;
-	cursor: pointer;
-}
-
-.modifybtn {
-	color: #747474;
-	margin: 4px;
-	cursor: pointer;
-}
-
-.removebtn:HOVER {
-	color: #aaa;
-}
-
-.modifybtn:HOVER {
-	color: #aaa;
-}
-
-/* account table CSS */
-.accountTable, .totalBudget, .accountTableReg{
-   width: 100%;
-
-}
-.accountTableDiv{
-   width: 100%;
-   height: 40%;
-   overflow: auto;
-}
-.accountTableReg{
-   border-top: 1px solid #747474;
-   border-bottom: 1px solid #747474;
-   text-align: center;
-} 
-.accountTitle{
-   float: left;
-}
-.btn-report{
-   float: right;
-}
-.adate, .kind, .balance, .content{
-   text-align: center;
-}
-.accountTableTh th{
-   background-color: #f2eee5;
-}
-
-
-
-
-.accountM_modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-
-/* Modal Content/Box */
-.accountM_modal-content {
-    background: url("../images/background/accountbook.jpg");
-    margin: 15% auto; /* 15% from the top and centered */
-    padding: 20px;
-    border: 3px solid #888;
-    width: 30%;
-    height: 50%;
-    align-items: center;
-   justify-content: center;
-   flex-direction: column;
-   font-family: "Baloo";
-   
-     /* Could be more or less, depending on screen size */
-}
-
-/* The Close Button */
-.accountM_close {
-    color: black;
-    font-size: 30px;
-    font-weight: bold;
-    display:table; 
-    margin-left:auto; 
-    margin-right:auto;
-
-    
-}
-
-.accountM_close:hover,
-.accountM_close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-body {
-   
-   
-}
-
-.flex {
-   display: flex;
-}
-.flex.center-v {
-   align-items: center;
-}
-.flex.center-h {
-   justify-content: center;
-}
-.flex.center-vh {
-   align-items: center;
-   justify-content: center;
-}
-.flex.start {
-   justify-content: flex-start;
-}
-.flex.end {
-   justify-content: flex-end;
-}
-.flex.around {
-   justify-content: space-around;
-}
-.flex.between {
-   justify-content: space-between;
-}
-.flex.row {
-   flex-direction: row;
-}
-.flex.column {
-   flex-direction: column;
-}
-.flex.wrap {
-   flex-wrap: wrap;
-}
-.disable-select {
-  -webkit-user-select: none;  
-  -moz-user-select: none;    
-  -ms-user-select: none;      
-  user-select: none;
-}
-/* calneder */
-.clickable, #accountM_calender-title, 
-#calender-panel, #calender-buttons {
-   cursor: pointer;
-}
-.colorRed {
-   color: #FF6B6B;
-}
-.bgColorRed {
-   background-color: #FF6B6B;
-}
-.bgColorDarkRed {
-   background-color: #bc6969;   
-}
-.width-full {
-   width: 100%;
-}
-.width-half {
-   width: 50%;
-}
-.width-3-4 {
-   width: 75%;
-}
-.width-1-4 {
-   width: 25%;
-}
-.overflow-hidden {
-   overflow: hidden;
-}
-#accountM_calender-title {
-   background: transparent ;
-   color: black;
-   font-size: 35pt;
-   height: 60px;
-   width:200px;
-   margin:auto;
-}
-
-#accountM_calender-title div {
-   height: 60px;
-   width: 60px;
-   text-align: center;
-}
-
-#accountM_calender-title p {
-   height: 60px;
-   width: 150px;   
-   text-align: center;
-
-}
-
-#accountM_left {
-   margin-left: 25px;
-}
-
-#accountM_calender-title #accountM_left:hover span {
-   padding-right: 10px;
-   transition: .2s;
-   float: right;
-}
-#accountM_calender-title #accountM_right:hover span {
-   padding-left: 10px;
-   transition: .2s;
-   float: left;
-}
-
-.month {
-   width: 100px;
-   height: 100px;
-   transition: .4s;
-}
-
-#days p {
-   width: 100px;
-   text-align: center;   
-   font-size: 15pt;
-}
-
-.month-selector {
-   width: 100%;
-   height: 100%;
-   transition: .4s;
-   position: relative;
-   top: 50%;
-   left: 50%;
-   transform: translate(-50%, -50%);
-}
-.month-selector.clicked {
-      background: #FF6B6B;
-      color: white;
-}
-.month-selector.booked {
-      background: #743131;
-      color: white;
-      overflow: hidden;
-}
-.month-selector.booked:after {
-         content: 'X';
-         position: absolute;
-         margin-top: -3px;
-         font-size: 100pt;
-         font-family: "Ubuntu";
-         opacity: 0.1;
-} 
-.month-selector.booked.clicked {
-      background: #894747;
-      color: white;
-      overflow: hidden;
-}
-
-.clickable:hover {
-   z-index: 3;
-   height: 110px;
-   width: 110px;
-   box-shadow: 0px 0px 13px 4px rgba(0, 0, 0, 0.14);
-   background: #FF6B6B;
-   color: white;
-}
-
-.accountM_image {
-   width:200px;
-   height:200px;
-   display: block;
-   margin-left: auto;
-   margin-right: auto;
-}
-.accountM_comment{
-   color: black;
-    font-size: 30px;
-    display:table; 
-    margin-left:auto; 
-    margin-right:auto;
-    font-style: sans-serif;
-}
-#accountM_calender-wrapper {
-   text-align: center;
-}
 </style>
 </head>
 <body>
-<div>
-	<jsp:include page="../default/navbar.jsp" />
-</div>
+<jsp:include page="../default/navbar.jsp" />
 <br><br>
 	<div class="row">
 		<div class="con">
@@ -1209,7 +958,7 @@ body {
 			</div>
 		</div>
 		<div class="con2">
-			<div class="schedule" style="">
+			<div class="schedule">
 				<div class="tabs">
 				  <input type="radio" id="tab1" name="tab-control" hidden checked>
 				  <input type="radio" id="tab2" name="tab-control" hidden>
@@ -1217,7 +966,7 @@ body {
 				  <input type="radio" id="tab4" name="tab-control" hidden>
 				  <div class="inner-tabs">
 				  	<ul class="tablist date">
-					  <li class="scheduleList_date"><span>5월</span></li>
+					  <li class="scheduleList_date"><span id="sDate">5월</span></li>
 				  	</ul>
 					<ul class="tablist tab_importance" style="align-content: left">
 						    <li class="scheduleList_all"><label for="tab1" role="button"><br><span>전체</span></label></li>
@@ -1233,7 +982,7 @@ body {
 						</ul>
 				  </div>
 <!-- 				  <div class="slider"><div class="indicator"></div></div> -->
-					<div class="content">
+					<div class="content sCon">
 						<section class="all">
 							<h2>전체</h2>
 							<div id="sdrow" class="todo" style="background-color: #add8e6">
@@ -1592,26 +1341,30 @@ body {
 		<div id="scheduleModal" class="modal">
 			Modal content
 			<div class="modal-content">
-
 				<div class="modal-body">
 					 <div class = "add">일정추가</div>
 				     <br><br>
 				    <form>
-				    	<div>
+				    	<div class="smcontentsDiv">
 				       	<input class = "border borderTitle" type = "text" name = "title" size = "50" placeholder="제목을 입력해주세요"><br><br>
 				       	<input class = "border borderDate" type = "text" name = "date" size = "20" placeholder="날짜를 입력해주세요"><br><br>
 				       	<span class="importantSpan">중요도 : </span>
-				       	<select name="importantSelect">
+				       	<select class="importantSelect" placeholder="중요도">
 				              <option value="3" class="modalR">상</option>
-				              <option value="2" class="modalO" selected>중</option>
+				              <option value="2" class="modalO">중</option>
 				              <option value="1" class="modalG">하</option>
 				        </select>
 				        <br> <br>
-						<textarea class = "border borderContent" rows="20" cols="50" placeholder="내용을 입력해주세요."></textarea><br><br><br>
+						<textarea class = "border borderContent" rows="20" cols="50" placeholder = "내용을 입력해주세요."></textarea><br><br><br>
 				    	</div>
-				    	<div id="googleMap" style="width: 700px; height: 500px"></div>
-				       <span class = "close">CLOSE</span>
-				       <a href = "#"><span class="save">SAVE</span></a>
+				    	<div class="googleMapDiv">
+					    	<input id="pac-input" class="controls" type="text" placeholder="Search Box">
+					    	<div id="map"></div>
+				    	</div>
+				    	<div class="smbtnDiv">
+					       <span class = "close">CLOSE</span>
+					       <a href = "#"><span class = "save">SAVE</span></a>
+				    	</div>
 				    </form>
 				</div>
 			</div>
@@ -1631,18 +1384,53 @@ body {
 			            </div>
 			            <p class="flex row center-vh"></p>
 			            <div id="accountM_right" class="flex row center-vh">
-			               <span> > </span>
+			               <span>></span>
 			            </div>
 			            <div id="accountM_calender-content" class="flex row wrap disable-select"></div>
 			         </div>
 			      </div>
 			      <br>
-			      <img  class ="accountM_image" alt="스마일" src="../images/icon/happy.png"><br><span class="accountM_comment">Splendid!  WellDone!</span>
+			      <img  class ="accountM_image" alt="스마일" src="../images/icon/happy.png"><br><span class = "accountM_comment">Splendid!  WellDone!</span>
 			      <br><br>
 			      <span  class="accountM_close">CLOSE</span>
 			   </div>
 			</div>
 
+
+
+		<!-- schedule row Modal -->
+		<div id="sRowModal" class="modal">
+			Modal content
+			<div class="modal-content">
+				<div class="modal-body">
+					 <div class = "add">상세 일정</div>
+				     <br><br>
+				    <form>
+				    	<div class="smcontentsDiv">
+				       	<input class = "border borderTitle" type = "text" name = "title" size = "50" placeholder="제목을 입력해주세요"><br><br>
+				       	<input class = "border borderDate" type = "text" name = "date" size = "20" placeholder="날짜를 입력해주세요"><br><br>
+				       	<span class="importantSpan">중요도 : </span>
+				       	<select class="importantSelect" placeholder="중요도">
+				              <option value="3" class="modalR">상</option>
+				              <option value="2" class="modalO">중</option>
+				              <option value="1" class="modalG">하</option>
+				        </select>
+				        <br> <br>
+						<textarea class = "border borderContent" rows="20" cols="50" placeholder = "내용을 입력해주세요."></textarea><br><br><br>
+				    	</div>
+				    	<div class="googleMapDiv">
+					    	<input id="pac-input" class="controls" type="text" placeholder="Search Box">
+					    	<div id="srmMap"></div>
+				    	</div>
+				    	<div class="smbtnDiv">
+					       <span class = "sRowModal_close">CLOSE</span>
+					       <a href = "#"><span class = "save">EDIT</span></a>
+				    	</div>
+				    </form>
+				</div>
+			</div>
+		</div>
+		
 	</div>
 	
 <script>
@@ -1652,6 +1440,7 @@ body {
     // Get the modal
 	var sModal = document.getElementById('scheduleModal');
 	var aModal = document.getElementById('accountModal');
+	var srModal = document.getElementById('sRowModal');
 
 	// Get the button that opens the modal
 	var nsbtn = document.getElementById("newSchedule");
@@ -1660,6 +1449,7 @@ body {
 	// Get the <span> element that closes the modal
 	var scheduleClose = document.getElementsByClassName("close")[0];
 	var accountClose = document.getElementsByClassName("accountM_close")[0];
+	var sRowClose = document.getElementsByClassName("sRowModal_close")[0];
 	
 	// When the user clicks the button, open the modal 
 	nsbtn.onclick = function() {
@@ -1669,7 +1459,7 @@ body {
 			"z-index":"0"
 		})
 		
-		initMap();
+		initAutocomplete();
 	}
 	
 	srbtn.onclick = function() {
@@ -1678,6 +1468,16 @@ body {
 		$(".fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active").css({
 			"z-index":"0"
 		})
+	}
+	
+	row.onclick = function(){
+		srModal.style.display = "block";
+		$("#datepicker").css("cssText","z-index:0 !important;");
+		$(".fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active").css({
+			"z-index":"0"
+		})
+		
+		initAutocomplete();
 	}
 
 	// When the user clicks on <span> (x), close the modal
@@ -1701,13 +1501,16 @@ body {
 		})
 	}
 	
-	row.onclick = function(){
-		sModal.style.display = "block";
-		$("#datepicker").css("cssText","z-index:0 !important;");
+	sRowClose.onclick = function() {
+		srModal.style.display = "none";
+		$("#datepicker").css({
+			"z-index":"9"
+		});
 		$(".fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active").css({
-			"z-index":"0"
+			"z-index":"4"
 		})
 	}
+	
 
 	// When the user clicks anywhere outside of the modal, close it
 	window.onclick = function(event) {
@@ -1730,6 +1533,17 @@ body {
 			$(".fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active").css({
 				"z-index":"4"
 			})
+		}
+		
+		if (event.target == srModal) {
+			srModal.style.display = "none";
+			$("#datepicker").css({
+				"z-index":"9"
+			});
+			$(".fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active").css({
+				"z-index":"4"
+			})
+		
 		}
 	}
 	
@@ -1835,9 +1649,147 @@ body {
     });
 
 </script>
-<div>
-	<jsp:include page="../default/footer.jsp" />
-</div>
+<script type="text/javascript">
+/* 달력 script */
+ 
+ function initAutocomplete() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 37.565609, lng: 126.977421},
+          zoom: 14,
+          mapTypeId: 'roadmap'
+        });
+
+        // Create the search box and link it to the UI element.
+        var input = document.getElementById('pac-input');
+        var searchBox = new google.maps.places.SearchBox(input);
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+        // Bias the SearchBox results towards current map's viewport.
+        map.addListener('bounds_changed', function() {
+          searchBox.setBounds(map.getBounds());
+        });
+
+        var markers = [];
+        // Listen for the event fired when the user selects a prediction and retrieve
+        // more details for that place.
+        searchBox.addListener('places_changed', function() {
+          var places = searchBox.getPlaces();
+
+          if (places.length == 0) {
+            return;
+          }
+
+          // Clear out the old markers.
+          markers.forEach(function(marker) {
+            marker.setMap(null);
+          });
+          markers = [];
+
+          // For each place, get the icon, name and location.
+          var bounds = new google.maps.LatLngBounds();
+          places.forEach(function(place) {
+            if (!place.geometry) {
+              console.log("Returned place contains no geometry");
+              return;
+            }
+            var icon = {
+              url: place.icon,
+              size: new google.maps.Size(71, 71),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(25, 25)
+            };
+
+            // Create a marker for each place.
+            markers.push(new google.maps.Marker({
+              map: map,
+              icon: icon,
+              title: place.name,
+              position: place.geometry.location
+            }));
+
+            if (place.geometry.viewport) {
+              // Only geocodes have viewport.
+              bounds.union(place.geometry.viewport);
+            } else {
+              bounds.extend(place.geometry.location);
+            }
+          });
+          map.fitBounds(bounds);
+        });
+      }
+ 
+ 
+ 
+ function initsrmMap() {
+     var srmMap = new google.maps.Map(document.getElementById('srmMap'), {
+       center: {lat: 37.565609, lng: 126.977421},
+       zoom: 14,
+       mapTypeId: 'roadmap'
+     });
+
+     // Create the search box and link it to the UI element.
+     var input = document.getElementById('pac-input');
+     var searchBox = new google.maps.places.SearchBox(input);
+     srmMap.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+     // Bias the SearchBox results towards current map's viewport.
+     srmMap.addListener('bounds_changed', function() {
+       searchBox.setBounds(map.getBounds());
+     });
+
+     var markers = [];
+     // Listen for the event fired when the user selects a prediction and retrieve
+     // more details for that place.
+     searchBox.addListener('places_changed', function() {
+       var places = searchBox.getPlaces();
+
+       if (places.length == 0) {
+         return;
+       }
+
+       // Clear out the old markers.
+       markers.forEach(function(marker) {
+         marker.setMap(null);
+       });
+       markers = [];
+
+       // For each place, get the icon, name and location.
+       var bounds = new google.maps.LatLngBounds();
+       places.forEach(function(place) {
+         if (!place.geometry) {
+           console.log("Returned place contains no geometry");
+           return;
+         }
+         var icon = {
+           url: place.icon,
+           size: new google.maps.Size(71, 71),
+           origin: new google.maps.Point(0, 0),
+           anchor: new google.maps.Point(17, 34),
+           scaledSize: new google.maps.Size(25, 25)
+         };
+
+         // Create a marker for each place.
+         markers.push(new google.maps.Marker({
+           map: srmMap,
+           icon: icon,
+           title: place.name,
+           position: place.geometry.location
+         }));
+
+         if (place.geometry.viewport) {
+           // Only geocodes have viewport.
+           bounds.union(place.geometry.viewport);
+         } else {
+           bounds.extend(place.geometry.location);
+         }
+       });
+       srmMap.fitBounds(bounds);
+     });
+   }
+ 
+</script>
+<jsp:include page="../default/footer.jsp" />
 
 </body>
 </html>
