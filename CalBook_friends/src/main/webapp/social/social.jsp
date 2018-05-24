@@ -25,7 +25,8 @@
 				},
 				dataType: "json",
 				success: function(resData){ 
-					printData1(resData);
+					var checkNewFriends = $("#searchNewFriends").is(":checked");
+					printData(resData, checkNewFriends);
 				}
 			});	
 		});
@@ -34,39 +35,83 @@
 			$.ajax({
 				url: "delFriendProc.do",   
 				type: "GET",
-				data: {"f_email":$(this).prev().val()},
+				data: {"f_email":$(this).prev().val(), "searchSelect":$("#searchSelect").val(), "search":$("#search").val(), "searchNewFriends":$("#searchNewFriends").is(":checked")},
 				error: function(jqXHR){
 					alert(jqXHR.status);
 					alert(jqXHR.statusText);
 				},
 				dataType: "json",
-				success: function(resData){ 
-					printData(resData);
+				success: function(resData){
+					var checkNewFriends = $("#searchNewFriends").is(":checked");
+					printData(resData, checkNewFriends);
+				}
+			});
+		});
+		
+		$(document).on("click", ".btnAddFriend", function(){
+			$.ajax({
+				url: "AddFriendProc.do",   
+				type: "GET",
+				data: {"f_email":$(this).prev().val(), "searchSelect":$("#searchSelect").val(), "search":$("#search").val()},
+				error: function(jqXHR){
+					alert(jqXHR.status);
+					alert(jqXHR.statusText);
+				},
+				dataType: "json",
+				success: function(resData){
+					var checkNewFriends = true;
+					printData(resData, checkNewFriends);
+				}
+			});
+		});
+		
+		$(document).on("click", ".btnCancelFriend", function(){
+			$.ajax({
+				url: "CancelFriendProc.do",   
+				type: "GET",
+				data: {"f_email":$(this).prev().val(), "searchSelect":$("#searchSelect").val(), "search":$("#search").val()},
+				error: function(jqXHR){
+					alert(jqXHR.status);
+					alert(jqXHR.statusText);
+				},
+				dataType: "json",
+				success: function(resData){
+					var checkNewFriends = true;
+					printData(resData, checkNewFriends);
 				}
 			});
 		});
 		
 	});
 	
-	function printData(resData){
+	function printData(resData, checkNewFriends){
 		var s='';
-		for(var i in resData){
-			s += '<figure class="snip1157"><img src="../images/basicProfile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
-			s += resData[i]['nick']+'</span><br><span>'+resData[i]['email']+'</span></h5><input class="email" type="hidden" name="f_email" value="'+resData[i]['email']+'" />';
-			s += '<button type="button"><i class="fa fa-minus"></i></button><button type="button"><i class="fa fa-home"></i></button></div></figure>';
+		if(checkNewFriends == true){
+			if(resData == null){
+				s += '<br><h3 style="color:white; text-align:center;">조회된 친구가 없습니다.</h3>';
+			}else{
+				s += '<figure class="snip1157"><img src="../images/basicProfile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
+				s += resData['nick']+'</span><br><span>'+resData['email']+'</span></h5><input class="email" type="hidden" name="f_email" value="'+resData['email']+'" />';
+				if(resData['relation']==3){
+					s += '<button class="btnAddFriend" type="button"><i class="fa fa-plus"></i></button>';
+				}else if(resData['relation']==1){
+					s += '<button class="btnDelFriend" type="button"><i class="fa fa-minus"></i></button>';
+				}else if(resData['relation']==0){
+					s += '<button class="btnCancelFriend" type="button"><i class="fa fa-close"></i></button>';
+				}
+				s += '<button type="button"><i class="fa fa-home"></i></button></div></figure>';
+			}
+		}else if(checkNewFriends == false){
+			for(var i in resData){
+				s += '<figure class="snip1157"><img src="../images/basicProfile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
+				s += resData[i]['nick']+'</span><br><span>'+resData[i]['email']+'</span></h5><input class="email" type="hidden" name="f_email" value="'+resData[i]['email']+'" />';
+				s += '<button class="btnDelFriend" type="button"><i class="fa fa-minus"></i></button><button type="button"><i class="fa fa-home"></i></button></div></figure>';
+			}
 		}
 		$("#scroll").empty();
 		$("#scroll").append(s);
 	}
 	
-	function printData1(resData){
-		var s='';
-			s += '<figure class="snip1157"><img src="../images/basicProfile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
-			s += resData['nick']+'</span><br><span>'+resData['email']+'</span></h5><input class="email" type="hidden" name="f_email" value="'+resData['email']+'" />';
-			s += '<button type="button"><i class="fa fa-minus"></i></button><button type="button"><i class="fa fa-home"></i></button></div></figure>';
-		$("#scroll").empty();
-		$("#scroll").append(s);
-	}
 	
 </script>
 <style>
@@ -550,6 +595,65 @@ figure.snip1157 button:HOVER {
     }
 }
 
+
+
+
+/* 모달 css */
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+   background: url("../images/modal_schedule.jpg");
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 40%;
+    height: 65%; /* Could be more or less, depending on screen size */
+    
+}
+
+/* The Close Button */
+.close {
+    color: white;
+    font-size: 25px;
+    font-weight: bold;
+    float: right; 
+    width: 10%;
+    margin-left: 20px;
+    margin-bottom: 50px;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.save {
+   color: white;
+    font-size: 25px;
+    font-weight: bold;
+    float: right; 
+    width: 10%;
+    margin-bottom: 50px;
+}
+
+/* 모달 css  */
+
 </style>
 </head>
 <body>
@@ -624,6 +728,18 @@ figure.snip1157 button:HOVER {
 		</div>
     </div>
     
+    <!-- The Modal -->
+	<div id="myModal" class="modal">
+	
+	  <!-- Modal content -->
+	  <div class="modal-content">
+	     <div class = "add">일정추가</div>
+	     <br><br>
+	    
+	  </div>
+	</div>
+    
+	
     
     
     <div class="column half">
@@ -757,5 +873,35 @@ figure.snip1157 button:HOVER {
 <div>
    <jsp:include page="../default/footer.jsp" />
 </div>
+
+<script>
+	   //Get the modal
+	   var modal = document.getElementById('myModal');
+	   
+	   // Get the button that opens the modal
+	   var btn = document.getElementById("btnBell");
+	   
+	   // Get the <span> element that closes the modal
+	   var span = document.getElementsByClassName("close")[0];
+	   
+	   // When the user clicks on the button, open the modal 
+	   btn.onclick = function() {
+	       modal.style.display = "block";
+	   }
+	   
+	   // When the user clicks on <span> (x), close the modal
+	   span.onclick = function() {
+	       modal.style.display = "none";
+	   }
+	   
+	   // When the user clicks anywhere outside of the modal, close it
+	   window.onclick = function(event) {
+	       if (event.target == modal) {
+	           modal.style.display = "none";
+	       }
+	   }
+
+
+	</script>
 </body>
 </html>

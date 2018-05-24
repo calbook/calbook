@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.calbook.web.dao.FriendsDAO;
 import com.calbook.web.util.CookieManager;
 import com.calbook.web.vo.Members;
+import com.calbook.web.vo.TmpMember;
 import com.google.gson.Gson;
 
 @Controller
@@ -66,9 +67,6 @@ public class SocialController {
 		
 		if(searchNewFriends.equals("false")) {
 			System.out.println("模备吝 八祸");
-			/*Cookie ckNewFriend = new Cookie("searchNewFriends", searchNewFriends);
-			ckNewFriend.setMaxAge(0);
-			response.addCookie(ckNewFriend);*/
 			
 			List<Members> friends = fdao.getSearchMyFriends(email, searchSelect, search);
 			
@@ -79,23 +77,41 @@ public class SocialController {
 			return friendsJson;
 		}else {
 			System.out.println("货肺款 模备 吝 八祸");
-			/*Cookie ckNewFriend = new Cookie("searchNewFriends", searchNewFriends);
-			ckNewFriend.setMaxAge(60*60*24*30);
-			response.addCookie(ckNewFriend);*/
 			
-			Members friend = fdao.getSearchNewFriends(searchSelect, search);
+			TmpMember friend = fdao.getSearchNewFriends(searchSelect, search);
+			List<TmpMember> friends = fdao.getSearchNewFriendsR(email);
 			
+			
+			if(friend != null) {
+				for(int i=0; i<friends.size(); i++) {
+					System.out.println(friends.get(i).getNick()+"="+friends.get(i).getRelation());
+					
+					if(friends.get(i).getEmail().equals(friend.getEmail())) {
+						friend.setRelation(friends.get(i).getRelation()); //0 : 模备脚没父窃, 1 : 模备
+						break;
+					}else if(i==friends.size()-1) {
+						if(friend.getEmail().equals(email)) {
+							friend.setRelation(2); //2 : 磊脚
+						}else {
+							friend.setRelation(3); //3 : 模备x
+						}
+					}
+					
+				}
+			}
+				
 			Gson gson = new Gson();
 			String friendsJson = gson.toJson(friend);
 			System.out.println(friendsJson);
 			return friendsJson;
+			
 		}
 	}
 	
 	/* 郴模备 昏力 ajax */
 	@RequestMapping(value={"delFriendProc.do"}, method=RequestMethod.GET)
 	@ResponseBody
-	public String delFriendProc(String f_email, HttpServletRequest request,  HttpServletResponse response) {
+	public String delFriendProc(String f_email, String searchSelect, String search, String searchNewFriends, HttpServletRequest request,  HttpServletResponse response) {
 		
 		HttpSession session = request.getSession();
 		String email = (String) session.getAttribute("email");
@@ -106,20 +122,149 @@ public class SocialController {
 		
 		if(af==1) {
 			System.out.println("模备昏力 己傍");
-			List<Members> friends = fdao.getFriends(email);
-			Gson gson = new Gson();
-			String friendsJson = gson.toJson(friends);
-			
-			return friendsJson;
+			if(searchNewFriends.equals("true")) {
+				TmpMember friend = fdao.getSearchNewFriends(searchSelect, search);
+				List<TmpMember> friends = fdao.getSearchNewFriendsR(email);
+				
+				
+				if(friend != null) {
+					for(int i=0; i<friends.size(); i++) {
+						System.out.println(friends.get(i).getNick()+"="+friends.get(i).getRelation());
+						
+						if(friends.get(i).getEmail().equals(friend.getEmail())) {
+							friend.setRelation(friends.get(i).getRelation()); //0 : 模备脚没父窃, 1 : 模备
+							break;
+						}else if(i==friends.size()-1) {
+							if(friend.getEmail().equals(email)) {
+								friend.setRelation(2); //2 : 磊脚
+							}else {
+								friend.setRelation(3); //3 : 模备x
+							}
+						}
+						
+					}
+				}
+					
+				Gson gson = new Gson();
+				String friendsJson = gson.toJson(friend);
+				System.out.println(friendsJson);
+				return friendsJson;
+			}else {
+				List<Members> friends = fdao.getFriends(email);
+				Gson gson = new Gson();
+				String friendsJson = gson.toJson(friends);
+				
+				return friendsJson;
+			}
 		}else {
 			System.out.println("模备昏力 角菩");
 			List<Members> friends = fdao.getFriends(email);
 			Gson gson = new Gson();
 			String friendsJson = gson.toJson(friends);
 			
+			return friendsJson;
+		}
+	}
+	
+	/* 郴模备 脚没 ajax */
+	@RequestMapping(value={"AddFriendProc.do"}, method=RequestMethod.GET)
+	@ResponseBody
+	public String AddFriendProc(String f_email, String searchSelect, String search, HttpServletRequest request,  HttpServletResponse response) {
+		
+		HttpSession session = request.getSession();
+		String email = (String) session.getAttribute("email");
+		System.out.println("session email = "+email);
+		
+		FriendsDAO fdao = ss.getMapper(FriendsDAO.class);
+		int af = fdao.addFriend(email, f_email);
+		
+		if(af==1) {
+			System.out.println("模备脚没 己傍");
+			
+			TmpMember friend = fdao.getSearchNewFriends(searchSelect, search);
+			List<TmpMember> friends = fdao.getSearchNewFriendsR(email);
+			
+			
+			if(friend != null) {
+				for(int i=0; i<friends.size(); i++) {
+					System.out.println(friends.get(i).getNick()+"="+friends.get(i).getRelation());
+					
+					if(friends.get(i).getEmail().equals(friend.getEmail())) {
+						friend.setRelation(friends.get(i).getRelation()); //0 : 模备脚没父窃, 1 : 模备
+						break;
+					}else if(i==friends.size()-1) {
+						if(friend.getEmail().equals(email)) {
+							friend.setRelation(2); //2 : 磊脚
+						}else {
+							friend.setRelation(3); //3 : 模备x
+						}
+					}
+					
+				}
+			}
+				
+			Gson gson = new Gson();
+			String friendsJson = gson.toJson(friend);
+			System.out.println(friendsJson);
+			return friendsJson;
+		}else {
+			System.out.println("模备脚没 角菩");
+			
+			
 			return null;
 		}
 	}
+	
+	/* 郴模备 脚没 秒家 ajax */
+	@RequestMapping(value={"CancelFriendProc.do"}, method=RequestMethod.GET)
+	@ResponseBody
+	public String CancelFriendProc(String f_email, String searchSelect, String search, HttpServletRequest request,  HttpServletResponse response) {
+		
+		HttpSession session = request.getSession();
+		String email = (String) session.getAttribute("email");
+		System.out.println("session email = "+email);
+		
+		FriendsDAO fdao = ss.getMapper(FriendsDAO.class);
+		int af = fdao.delFriend(email, f_email);
+		
+		if(af==1) {
+			System.out.println("模备脚没秒家 己傍");
+			
+			TmpMember friend = fdao.getSearchNewFriends(searchSelect, search);
+			List<TmpMember> friends = fdao.getSearchNewFriendsR(email);
+			
+			
+			if(friend != null) {
+				for(int i=0; i<friends.size(); i++) {
+					System.out.println(friends.get(i).getNick()+"="+friends.get(i).getRelation());
+					
+					if(friends.get(i).getEmail().equals(friend.getEmail())) {
+						friend.setRelation(friends.get(i).getRelation()); //0 : 模备脚没父窃, 1 : 模备
+						break;
+					}else if(i==friends.size()-1) {
+						if(friend.getEmail().equals(email)) {
+							friend.setRelation(2); //2 : 磊脚
+						}else {
+							friend.setRelation(3); //3 : 模备x
+						}
+					}
+					
+				}
+			}
+				
+			Gson gson = new Gson();
+			String friendsJson = gson.toJson(friend);
+			System.out.println(friendsJson);
+			return friendsJson;
+		}else {
+			System.out.println("模备脚没秒家 角菩");
+			
+			
+			return null;
+		}
+	}
+	
+	
 	
 	@RequestMapping(value={"individual_page.do"}, method=RequestMethod.GET)
 	public String individual_page() {

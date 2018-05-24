@@ -4,24 +4,34 @@
     
 <mapper namespace="com.calbook.web.dao.FriendsDAO">
 
-	<!-- 친구리스트 불러오기(친구 페이지 시작) -->
+	<!-- 친구리스트 불러오기(친구 페이지 시작화면) -->
 	<select id="getFriends" resultType="com.calbook.web.vo.Members">
 		SELECT * FROM ((SELECT * FROM FRIENDS F INNER JOIN MEMBERS M ON F.F_EMAIL=M.EMAIL WHERE RELATION=1 AND M_EMAIL=#{email}) UNION (SELECT * FROM FRIENDS F INNER JOIN MEMBERS M ON F.M_EMAIL=M.EMAIL WHERE RELATION=1 AND F_EMAIL=#{email})) ORDER BY NICK
 	</select>
 	
-	<!-- 내친구 검색 리스트 불러오기(내 친구 중 검색) -->
+	<!-- 내친구 검색 리스트 불러오기(내 친구 중 검색 ajax) -->
 	<select id="getSearchMyFriends" resultType="com.calbook.web.vo.Members">
 		SELECT * FROM ((SELECT * FROM FRIENDS F INNER JOIN MEMBERS M ON F.F_EMAIL=M.EMAIL WHERE RELATION=1 AND M_EMAIL=#{param1}) UNION (SELECT * FROM FRIENDS F INNER JOIN MEMBERS M ON F.M_EMAIL=M.EMAIL WHERE RELATION=1 AND F_EMAIL=#{param1})) WHERE ${param2} LIKE '%${param3}%' ORDER BY ${param2}
 	</select>
 	
-	<!-- 새친구 검색 리스트 불러오기(전체 친구 중 검색) -->
-	<select id="getSearchNewFriends" resultType="com.calbook.web.vo.Members">
+	<!-- 전체친구 검색 불러오기(전체 친구 중 검색 ajax 중 검색회원 불러오기) -->
+	<select id="getSearchNewFriends" resultType="com.calbook.web.vo.TmpMember">
 		SELECT * FROM MEMBERS WHERE ${param1} LIKE #{param2}
+	</select>
+	
+	<!-- 전체친구 검색 불러오기(전체 친구 중 검색 ajax 중 친구리스트+관계 불러오기) -->
+	<select id="getSearchNewFriendsR" resultType="com.calbook.web.vo.TmpMember">
+		SELECT * FROM ((SELECT * FROM FRIENDS F INNER JOIN MEMBERS M ON F.F_EMAIL=M.EMAIL WHERE M_EMAIL=#{email}) UNION (SELECT * FROM FRIENDS F INNER JOIN MEMBERS M ON F.M_EMAIL=M.EMAIL WHERE F_EMAIL=#{email})) ORDER BY NICK
 	</select>
 	
 	<!-- 친구 삭제 -->
 	<delete id="delFriend">
 		DELETE FRIENDS WHERE (M_EMAIL=#{param1} AND F_EMAIL=#{param2}) OR (M_EMAIL=#{param2} AND F_EMAIL=#{param1})
 	</delete>
+	
+	<!-- 친구 신청 -->
+	<insert id="addFriend">
+		INSERT INTO FRIENDS VALUES(#{param1},#{param2},0)
+	</insert>
 	
 </mapper>

@@ -1643,8 +1643,8 @@ body {
 			      <img  class ="accountM_image" alt="스마일" src="../images/icon/happy.png"><br><span class="accountM_comment">Splendid!  WellDone!</span>
 			      <br><br>
 			      <span  class="accountM_close">CLOSE</span>
-			   </div>
-			</div>
+			  </div>
+		 </div>
 
 	</div>
 	
