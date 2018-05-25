@@ -40,9 +40,9 @@ $(function(){
 	        var c = new Date(a);
 	        $("#fullcalendar").fullCalendar("gotoDate", c);
 	        $("#fullcalendar").fullCalendar("select", c);
-	        var s = "hello";
-	        alert(typeof(s));
-	        $("#sDate").val(c);
+// 	        var s = "hello";
+// 	        alert(typeof(s));
+// 	        $("#sDate").val(c);
 	    }
 	});
 
@@ -1419,7 +1419,7 @@ to {
 						<textarea class = "border borderContent" rows="20" cols="50" placeholder = "내용을 입력해주세요."></textarea><br><br><br>
 				    	</div>
 				    	<div class="googleMapDiv">
-					    	<input id="pac-input" class="controls" type="text" placeholder="Search Box">
+					    	<input id="srm_pac-input" class="srmcontrols" type="text" placeholder="Search Box">
 					    	<div id="srmMap"></div>
 				    	</div>
 				    	<div class="smbtnDiv">
@@ -1459,7 +1459,7 @@ to {
 			"z-index":"0"
 		})
 		
-		initAutocomplete();
+// 		initAutocomplete();
 	}
 	
 	srbtn.onclick = function() {
@@ -1477,7 +1477,6 @@ to {
 			"z-index":"0"
 		})
 		
-		initAutocomplete();
 	}
 
 	// When the user clicks on <span> (x), close the modal
@@ -1669,7 +1668,7 @@ to {
           searchBox.setBounds(map.getBounds());
         });
 
-        var markers = [];
+         var markers = [];
         // Listen for the event fired when the user selects a prediction and retrieve
         // more details for that place.
         searchBox.addListener('places_changed', function() {
@@ -1716,12 +1715,12 @@ to {
             }
           });
           map.fitBounds(bounds);
-        });
+        }); 
       }
  
+	google.maps.event.addDomListener(window, 'load', initAutocomplete);
  
- 
- function initsrmMap() {
+/*  function initsrmMap() {
      var srmMap = new google.maps.Map(document.getElementById('srmMap'), {
        center: {lat: 37.565609, lng: 126.977421},
        zoom: 14,
@@ -1729,9 +1728,9 @@ to {
      });
 
      // Create the search box and link it to the UI element.
-     var input = document.getElementById('pac-input');
+     var input = document.getElementById('srm_pac-input');
      var searchBox = new google.maps.places.SearchBox(input);
-     srmMap.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+     srmMap.srmcontrols[google.maps.ControlPosition.TOP_LEFT].push(input);
 
      // Bias the SearchBox results towards current map's viewport.
      srmMap.addListener('bounds_changed', function() {
@@ -1786,7 +1785,7 @@ to {
        });
        srmMap.fitBounds(bounds);
      });
-   }
+   } */
  
 </script>
 <jsp:include page="../default/footer.jsp" />
