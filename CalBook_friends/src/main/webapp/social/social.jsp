@@ -600,7 +600,7 @@ figure.snip1157 button:HOVER {
 
 /* 모달 css */
 /* The Modal (background) */
-.modal {
+.friendModal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
@@ -614,10 +614,11 @@ figure.snip1157 button:HOVER {
 }
 
 /* Modal Content/Box */
-.modal-content {
-   background: url("../images/modal_schedule.jpg");
-    background-color: #fefefe;
-    margin: 15% auto; /* 15% from the top and centered */
+.friendModal-content {
+  /*  background: url("../images/modal_schedule.jpg"); */
+   /*  background-color: #fefefe; */
+   background-color: black;
+    margin: 10% auto; /* 10% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
     width: 40%;
@@ -632,25 +633,63 @@ figure.snip1157 button:HOVER {
     font-weight: bold;
     float: right; 
     width: 10%;
-    margin-left: 20px;
-    margin-bottom: 50px;
+    margin-left: 10%;
+    /* margin-bottom: 50px;  */
 }
 
 .close:hover,
 .close:focus {
-    color: black;
+    color: gray;
     text-decoration: none;
     cursor: pointer;
 }
 
-.save {
-   color: white;
-    font-size: 25px;
-    font-weight: bold;
-    float: right; 
-    width: 10%;
-    margin-bottom: 50px;
+/* 모달 안 tab css  */
+/* Style the tab */
+.friendModal_tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
 }
+
+/* Style the buttons inside the tab */
+.friendModal_tab button {
+	width:50%;
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.friendModal_tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.friendModal_tab button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.friendModal_tabcontent {
+    display: none;
+    height:80%;
+    padding: 6px 12px;
+   /*  border: 1px solid #ccc; */
+    border-top: none;
+}
+
+.friendModal_scroll{
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+/* 모달 안 tab css  */
 
 /* 모달 css  */
 
@@ -728,15 +767,46 @@ figure.snip1157 button:HOVER {
 		</div>
     </div>
     
+    <!-- friends Modal -->
     <!-- The Modal -->
-	<div id="myModal" class="modal">
-	
-	  <!-- Modal content -->
-	  <div class="modal-content">
-	     <div class = "add">일정추가</div>
-	     <br><br>
-	    
-	  </div>
+	<div id="friendModal" class="friendModal">
+		<!-- Modal content -->
+		<div class="friendModal-content">
+			<div class="friendModal_tab">
+				<button class="friendModal_tablinks" onclick="openCity(event, 'accepted')" id="defaultOpen acceptedFriends">신청 받은 친구 목록</button>
+				<button class="friendModal_tablinks" onclick="openCity(event, 'apply')" id="applyFriends">신청 한 친구 목록</button>
+			</div>
+			
+			<div id="accepted" class="friendModal_tabcontent">
+				<div id="acceptedFriendModal_scroll" class="friendModal_scroll">
+				
+					<!-- <h3 style="color: white;">위에 탭을 선택하세요</h3> -->
+					<!-- <figure class="snip1157">
+			  			<img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/sq-sample3.jpg" alt="sq-sample3" />
+			  			<div class="author">
+			    			<h5><span>Pelican Steve</span><br><span> LIttleSnippets.net</span></h5>
+			    			<button type="button"><i class="fa fa-check-circle-o"></i></button>
+			    			<button type="button"><i class="fa fa-close"></i></button>
+			  			</div>
+					</figure> -->
+					
+				</div>
+			</div>
+			
+			<div id="apply" class="friendModal_tabcontent">
+				<div id="applyFriendModal_scroll" class="friendModal_scroll">
+					<!-- <figure class="snip1157">
+			  			<img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/sq-sample17.jpg" alt="sq-sample17" />
+			  			<div class="author">
+			    			<h5><span>Eleanor Faint</span><br><span> LIttleSnippets.net</span></h5>
+			    			<button type="button"><i class="fa fa-close"></i></button>
+			  			</div>
+					</figure> -->
+				</div>
+			</div>
+			
+			<a href="social.do"><span class="close">close</span></a>
+	  	</div>
 	</div>
     
 	
@@ -873,35 +943,181 @@ figure.snip1157 button:HOVER {
 <div>
    <jsp:include page="../default/footer.jsp" />
 </div>
-
+<!-- modal cript  -->
 <script>
-	   //Get the modal
-	   var modal = document.getElementById('myModal');
-	   
-	   // Get the button that opens the modal
-	   var btn = document.getElementById("btnBell");
-	   
-	   // Get the <span> element that closes the modal
-	   var span = document.getElementsByClassName("close")[0];
-	   
-	   // When the user clicks on the button, open the modal 
-	   btn.onclick = function() {
-	       modal.style.display = "block";
-	   }
-	   
-	   // When the user clicks on <span> (x), close the modal
-	   span.onclick = function() {
-	       modal.style.display = "none";
-	   }
-	   
-	   // When the user clicks anywhere outside of the modal, close it
-	   window.onclick = function(event) {
-	       if (event.target == modal) {
-	           modal.style.display = "none";
-	       }
-	   }
+//Get the modal
+var modal1 = document.getElementById('friendModal');
+
+// Get the button that opens the modal
+var btn1 = document.getElementById("btnBell");
+
+// Get the <span> element that closes the modal
+/* var span1 = document.getElementsByClassName("close")[0]; */
+
+// When the user clicks on the button, open the modal 
+btn1.onclick = function() {
+    modal1.style.display = "block";
+    
+    $.ajax({
+		url: "getAcceptedFriends.do",   
+		type: "GET",
+		data: {},
+		contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+		error: function(jqXHR){
+			alert(jqXHR.status);
+			alert(jqXHR.statusText);
+		},
+		dataType: "json",
+		success: function(resData){ 
+			printData1(resData);
+		}
+	});	
+}
+
+$(function(){
+	$('#acceptedFriends').click(function(){
+		$.ajax({
+			url: "getAcceptedFriends.do",   
+			type: "GET",
+			data: {},
+			contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+			error: function(jqXHR){
+				alert(jqXHR.status);
+				alert(jqXHR.statusText);
+			},
+			dataType: "json",
+			success: function(resData){ 
+				printData1(resData);
+			}
+		});	
+	});
+	
+	$('#applyFriends').click(function(){
+		$.ajax({
+			url: "getApplyFriends.do",   
+			type: "GET",
+			data: {},
+			contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+			error: function(jqXHR){
+				alert(jqXHR.status);
+				alert(jqXHR.statusText);
+			},
+			dataType: "json",
+			success: function(resData){ 
+				printData2(resData);
+			}
+		});	
+	});
+	
+	$(document).on("click", ".btnModalCancelFriend", function(){
+		$.ajax({
+			url: "ModalCancelFriendProc.do",   
+			type: "GET",
+			data: {"f_email":$(this).prev().val()},
+			error: function(jqXHR){
+				alert(jqXHR.status);
+				alert(jqXHR.statusText);
+			},
+			dataType: "json",
+			success: function(resData){
+				var checkNewFriends = true;
+				printData2(resData);
+			}
+		});
+	});
+	
+	$(document).on("click", ".btnModalAcceptFriend", function(){
+		$.ajax({
+			url: "ModalAcceptFriendProc.do",   
+			type: "GET",
+			data: {"f_email":$(this).prev().val()},
+			error: function(jqXHR){
+				alert(jqXHR.status);
+				alert(jqXHR.statusText);
+			},
+			dataType: "json",
+			success: function(resData){
+				var checkNewFriends = true;
+				printData1(resData);
+			}
+		});
+	});
+	
+	$(document).on("click", ".btnModalRefuseFriend", function(){
+		$.ajax({
+			url: "ModalRefuseFriendProc.do",   
+			type: "GET",
+			data: {"f_email":$(this).prev().prev().val()},
+			error: function(jqXHR){
+				alert(jqXHR.status);
+				alert(jqXHR.statusText);
+			},
+			dataType: "json",
+			success: function(resData){
+				var checkNewFriends = true;
+				printData1(resData);
+			}
+		});
+	});
+	
+	
+});
+
+function printData1(resData){
+	var s='';
+	for(var i in resData){
+		s += '<figure class="snip1157"><img src="../images/basicProfile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
+		s += resData[i]['nick']+'</span><br><span>'+resData[i]['email']+'</span></h5><input class="email" type="hidden" name="f_email" value="'+resData[i]['email']+'" />';
+		s += '<button class="btnModalAcceptFriend" type="button"><i class="fa fa-check-circle-o"></i></button><button class="btnModalRefuseFriend" type="button"><i class="fa fa-close"></i></button></div></figure>';
+	}
+	$("#acceptedFriendModal_scroll").empty();
+	$("#acceptedFriendModal_scroll").append(s);
+}
+
+function printData2(resData){
+	var s='';
+	for(var i in resData){
+		s += '<figure class="snip1157"><img src="../images/basicProfile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
+		s += resData[i]['nick']+'</span><br><span>'+resData[i]['email']+'</span></h5><input class="email" type="hidden" name="f_email" value="'+resData[i]['email']+'" />';
+		s += '<button class="btnModalCancelFriend" type="button"><i class="fa fa-close"></i></button></div></figure>';
+	}
+	$("#applyFriendModal_scroll").empty();
+	$("#applyFriendModal_scroll").append(s);
+}
 
 
-	</script>
+// When the user clicks on <span> (x), close the modal
+/* span1.onclick = function() {
+    modal1.style.display = "none";
+} */
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal1) {
+        modal1.style.display = "none";
+    }
+}
+
+
+</script>
+<!-- modal 안 tab script  -->
+<script>
+function openCity(evt, category) {
+    var i, tabcontent, tablinks;
+    friendModal_tabcontent = document.getElementsByClassName("friendModal_tabcontent");
+    for (i = 0; i < friendModal_tabcontent.length; i++) {
+    	friendModal_tabcontent[i].style.display = "none";
+    }
+    friendModal_tablinks = document.getElementsByClassName("friendModal_tablinks");
+    for (i = 0; i < friendModal_tablinks.length; i++) {
+    	friendModal_tablinks[i].className = friendModal_tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(category).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
 </body>
 </html>

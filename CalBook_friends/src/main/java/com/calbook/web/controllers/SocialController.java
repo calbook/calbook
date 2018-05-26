@@ -1,9 +1,7 @@
 package com.calbook.web.controllers;
 
-import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.calbook.web.dao.FriendsDAO;
-import com.calbook.web.util.CookieManager;
 import com.calbook.web.vo.Members;
 import com.calbook.web.vo.TmpMember;
 import com.google.gson.Gson;
@@ -30,7 +27,7 @@ public class SocialController {
 	private SqlSession ss;
 	
 	
-	/* Ä£±¸ ÆäÀÌÁö ºÒ·¯¿À±â	 */
+	/* ëª¨ì„ page ì²«í™”ë©´ ë¶ˆëŸ¬ì˜¤ê¸° */
 	@RequestMapping(value={"social.do"}, method=RequestMethod.GET)
 	public String social(HttpServletRequest request, Model model) {
 		
@@ -54,7 +51,7 @@ public class SocialController {
 		return "social.jsp";
 	}
 	
-	/* Ä£±¸ °Ë»ö ajax */
+	/* ì¹œêµ¬ê²€ìƒ‰ ajax */
 	@RequestMapping(value={"searchFriends.do"}, method=RequestMethod.GET)
 	@ResponseBody
 	public String searchFriends(String searchSelect, String search, String searchNewFriends,HttpServletRequest request,  HttpServletResponse response) {
@@ -66,7 +63,7 @@ public class SocialController {
 		FriendsDAO fdao = ss.getMapper(FriendsDAO.class);
 		
 		if(searchNewFriends.equals("false")) {
-			System.out.println("Ä£±¸Áß °Ë»ö");
+			System.out.println("Ä£ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½");
 			
 			List<Members> friends = fdao.getSearchMyFriends(email, searchSelect, search);
 			
@@ -76,7 +73,7 @@ public class SocialController {
 			
 			return friendsJson;
 		}else {
-			System.out.println("»õ·Î¿î Ä£±¸ Áß °Ë»ö");
+			System.out.println("ï¿½ï¿½ï¿½Î¿ï¿½ Ä£ï¿½ï¿½ ï¿½ï¿½ ï¿½Ë»ï¿½");
 			
 			TmpMember friend = fdao.getSearchNewFriends(searchSelect, search);
 			List<TmpMember> friends = fdao.getSearchNewFriendsR(email);
@@ -87,13 +84,13 @@ public class SocialController {
 					System.out.println(friends.get(i).getNick()+"="+friends.get(i).getRelation());
 					
 					if(friends.get(i).getEmail().equals(friend.getEmail())) {
-						friend.setRelation(friends.get(i).getRelation()); //0 : Ä£±¸½ÅÃ»¸¸ÇÔ, 1 : Ä£±¸
+						friend.setRelation(friends.get(i).getRelation()); //0 : Ä£ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½, 1 : Ä£ï¿½ï¿½
 						break;
 					}else if(i==friends.size()-1) {
 						if(friend.getEmail().equals(email)) {
-							friend.setRelation(2); //2 : ÀÚ½Å
+							friend.setRelation(2); //2 : ï¿½Ú½ï¿½
 						}else {
-							friend.setRelation(3); //3 : Ä£±¸x
+							friend.setRelation(3); //3 : Ä£ï¿½ï¿½x
 						}
 					}
 					
@@ -108,7 +105,7 @@ public class SocialController {
 		}
 	}
 	
-	/* ³»Ä£±¸ »èÁ¦ ajax */
+	/* ì¹œêµ¬ì‚­ì œ ajax */
 	@RequestMapping(value={"delFriendProc.do"}, method=RequestMethod.GET)
 	@ResponseBody
 	public String delFriendProc(String f_email, String searchSelect, String search, String searchNewFriends, HttpServletRequest request,  HttpServletResponse response) {
@@ -121,7 +118,7 @@ public class SocialController {
 		int af = fdao.delFriend(email, f_email);
 		
 		if(af==1) {
-			System.out.println("Ä£±¸»èÁ¦ ¼º°ø");
+			System.out.println("Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 			if(searchNewFriends.equals("true")) {
 				TmpMember friend = fdao.getSearchNewFriends(searchSelect, search);
 				List<TmpMember> friends = fdao.getSearchNewFriendsR(email);
@@ -132,13 +129,13 @@ public class SocialController {
 						System.out.println(friends.get(i).getNick()+"="+friends.get(i).getRelation());
 						
 						if(friends.get(i).getEmail().equals(friend.getEmail())) {
-							friend.setRelation(friends.get(i).getRelation()); //0 : Ä£±¸½ÅÃ»¸¸ÇÔ, 1 : Ä£±¸
+							friend.setRelation(friends.get(i).getRelation()); //0 : Ä£ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½, 1 : Ä£ï¿½ï¿½
 							break;
 						}else if(i==friends.size()-1) {
 							if(friend.getEmail().equals(email)) {
-								friend.setRelation(2); //2 : ÀÚ½Å
+								friend.setRelation(2); //2 : ï¿½Ú½ï¿½
 							}else {
-								friend.setRelation(3); //3 : Ä£±¸x
+								friend.setRelation(3); //3 : Ä£ï¿½ï¿½x
 							}
 						}
 						
@@ -157,7 +154,7 @@ public class SocialController {
 				return friendsJson;
 			}
 		}else {
-			System.out.println("Ä£±¸»èÁ¦ ½ÇÆĞ");
+			System.out.println("Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 			List<Members> friends = fdao.getFriends(email);
 			Gson gson = new Gson();
 			String friendsJson = gson.toJson(friends);
@@ -166,7 +163,7 @@ public class SocialController {
 		}
 	}
 	
-	/* ³»Ä£±¸ ½ÅÃ» ajax */
+	/* ì¹œêµ¬ì‹ ì²­ ajax */
 	@RequestMapping(value={"AddFriendProc.do"}, method=RequestMethod.GET)
 	@ResponseBody
 	public String AddFriendProc(String f_email, String searchSelect, String search, HttpServletRequest request,  HttpServletResponse response) {
@@ -179,7 +176,7 @@ public class SocialController {
 		int af = fdao.addFriend(email, f_email);
 		
 		if(af==1) {
-			System.out.println("Ä£±¸½ÅÃ» ¼º°ø");
+			System.out.println("Ä£ï¿½ï¿½ï¿½ï¿½Ã» ï¿½ï¿½ï¿½ï¿½");
 			
 			TmpMember friend = fdao.getSearchNewFriends(searchSelect, search);
 			List<TmpMember> friends = fdao.getSearchNewFriendsR(email);
@@ -190,13 +187,13 @@ public class SocialController {
 					System.out.println(friends.get(i).getNick()+"="+friends.get(i).getRelation());
 					
 					if(friends.get(i).getEmail().equals(friend.getEmail())) {
-						friend.setRelation(friends.get(i).getRelation()); //0 : Ä£±¸½ÅÃ»¸¸ÇÔ, 1 : Ä£±¸
+						friend.setRelation(friends.get(i).getRelation()); //0 : Ä£ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½, 1 : Ä£ï¿½ï¿½
 						break;
 					}else if(i==friends.size()-1) {
 						if(friend.getEmail().equals(email)) {
-							friend.setRelation(2); //2 : ÀÚ½Å
+							friend.setRelation(2); //2 : ï¿½Ú½ï¿½
 						}else {
-							friend.setRelation(3); //3 : Ä£±¸x
+							friend.setRelation(3); //3 : Ä£ï¿½ï¿½x
 						}
 					}
 					
@@ -208,14 +205,14 @@ public class SocialController {
 			System.out.println(friendsJson);
 			return friendsJson;
 		}else {
-			System.out.println("Ä£±¸½ÅÃ» ½ÇÆĞ");
+			System.out.println("Ä£ï¿½ï¿½ï¿½ï¿½Ã» ï¿½ï¿½ï¿½ï¿½");
 			
 			
 			return null;
 		}
 	}
 	
-	/* ³»Ä£±¸ ½ÅÃ» Ãë¼Ò ajax */
+	/* ì¹œêµ¬ì‹ ì²­ì·¨ì†Œ ajax */
 	@RequestMapping(value={"CancelFriendProc.do"}, method=RequestMethod.GET)
 	@ResponseBody
 	public String CancelFriendProc(String f_email, String searchSelect, String search, HttpServletRequest request,  HttpServletResponse response) {
@@ -228,7 +225,7 @@ public class SocialController {
 		int af = fdao.delFriend(email, f_email);
 		
 		if(af==1) {
-			System.out.println("Ä£±¸½ÅÃ»Ãë¼Ò ¼º°ø");
+			System.out.println("Ä£ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 			
 			TmpMember friend = fdao.getSearchNewFriends(searchSelect, search);
 			List<TmpMember> friends = fdao.getSearchNewFriendsR(email);
@@ -239,13 +236,13 @@ public class SocialController {
 					System.out.println(friends.get(i).getNick()+"="+friends.get(i).getRelation());
 					
 					if(friends.get(i).getEmail().equals(friend.getEmail())) {
-						friend.setRelation(friends.get(i).getRelation()); //0 : Ä£±¸½ÅÃ»¸¸ÇÔ, 1 : Ä£±¸
+						friend.setRelation(friends.get(i).getRelation()); //0 : Ä£ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½, 1 : Ä£ï¿½ï¿½
 						break;
 					}else if(i==friends.size()-1) {
 						if(friend.getEmail().equals(email)) {
-							friend.setRelation(2); //2 : ÀÚ½Å
+							friend.setRelation(2); //2 : ï¿½Ú½ï¿½
 						}else {
-							friend.setRelation(3); //3 : Ä£±¸x
+							friend.setRelation(3); //3 : Ä£ï¿½ï¿½x
 						}
 					}
 					
@@ -257,13 +254,156 @@ public class SocialController {
 			System.out.println(friendsJson);
 			return friendsJson;
 		}else {
-			System.out.println("Ä£±¸½ÅÃ»Ãë¼Ò ½ÇÆĞ");
+			System.out.println("Ä£ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 			
 			
 			return null;
 		}
 	}
 	
+	/* ì¹œêµ¬ì‹ ì²­ ë°›ì€ ì¹œêµ¬ ë¦¬ìŠ¤íŠ¸ ê°€ì ¸ì˜¤ëŠ” ajax */
+	@RequestMapping(value={"getAcceptedFriends.do"}, method=RequestMethod.GET)
+	@ResponseBody
+	public String getAcceptFriends(HttpServletRequest request,  HttpServletResponse response) {
+		
+		HttpSession session = request.getSession();
+		String email = (String) session.getAttribute("email");
+		System.out.println("session email = "+email);
+		
+		FriendsDAO fdao = ss.getMapper(FriendsDAO.class);
+		
+		List<Members> friends = fdao.getAcceptedFriends(email);
+		
+		Gson gson = new Gson();
+		String friendsJson = gson.toJson(friends);
+		System.out.println(friendsJson);
+		
+		return friendsJson;
+	}
+	
+	/* ì¹œêµ¬ì‹ ì²­ í•œ ì¹œêµ¬ ë¦¬ìŠ¤íŠ¸ ê°€ì ¸ì˜¤ëŠ” ajax */
+	@RequestMapping(value={"getApplyFriends.do"}, method=RequestMethod.GET)
+	@ResponseBody
+	public String getApplyFriends(HttpServletRequest request,  HttpServletResponse response) {
+		
+		HttpSession session = request.getSession();
+		String email = (String) session.getAttribute("email");
+		System.out.println("session email = "+email);
+		
+		FriendsDAO fdao = ss.getMapper(FriendsDAO.class);
+		
+		List<Members> friends = fdao.getApplyFriends(email);
+		
+		Gson gson = new Gson();
+		String friendsJson = gson.toJson(friends);
+		System.out.println(friendsJson);
+		
+		return friendsJson;
+	}
+	
+	/* ëª¨ë‹¬ ì¹œêµ¬ì‹ ì²­ì·¨ì†Œ ajax */
+	@RequestMapping(value={"ModalCancelFriendProc.do"}, method=RequestMethod.GET)
+	@ResponseBody
+	public String ModalCancelFriendProc(String f_email, String searchSelect, String search, HttpServletRequest request,  HttpServletResponse response) {
+		
+		HttpSession session = request.getSession();
+		String email = (String) session.getAttribute("email");
+		System.out.println("session email = "+email);
+		
+		FriendsDAO fdao = ss.getMapper(FriendsDAO.class);
+		int af = fdao.delFriend(email, f_email);
+		
+		if(af==1) {
+			System.out.println("ì¹œêµ¬ì‹ ì²­ ì·¨ì†Œ ì„±ê³µ");
+			
+			List<Members> friends = fdao.getApplyFriends(email);
+				
+			Gson gson = new Gson();
+			String friendsJson = gson.toJson(friends);
+			System.out.println(friendsJson);
+			return friendsJson;
+		}else {
+			System.out.println("ì¹œêµ¬ì‹ ì²­ ì·¨ì†Œ ì‹¤íŒ¨");
+			
+			List<Members> friends = fdao.getApplyFriends(email);
+			
+			Gson gson = new Gson();
+			String friendsJson = gson.toJson(friends);
+			System.out.println(friendsJson);
+			
+			return null;
+		}
+	}
+	
+	/* ëª¨ë‹¬ ì¹œêµ¬ì‹ ì²­ìˆ˜ë½ ajax */
+	@RequestMapping(value={"ModalAcceptFriendProc.do"}, method=RequestMethod.GET)
+	@ResponseBody
+	public String ModalAcceptFriendProc(String f_email, HttpServletRequest request,  HttpServletResponse response) {
+		
+		HttpSession session = request.getSession();
+		String email = (String) session.getAttribute("email");
+		System.out.println("session email = "+email);
+		
+		FriendsDAO fdao = ss.getMapper(FriendsDAO.class);
+		int af = fdao.acceptFriend(email, f_email);
+		
+		if(af==1) {
+			System.out.println("ì¹œêµ¬ì‹ ì²­ ìˆ˜ë½ ì„±ê³µ");
+			
+			List<Members> friends = fdao.getAcceptedFriends(email);
+			
+			Gson gson = new Gson();
+			String friendsJson = gson.toJson(friends);
+			System.out.println(friendsJson);
+			
+			return friendsJson;
+		}else {
+			System.out.println("ì¹œêµ¬ì‹ ì²­ ìˆ˜ë½ ì‹¤íŒ¨");
+			
+			List<Members> friends = fdao.getAcceptedFriends(email);
+			
+			Gson gson = new Gson();
+			String friendsJson = gson.toJson(friends);
+			System.out.println(friendsJson);
+			
+			return friendsJson;
+		}
+	}
+	
+	/* ëª¨ë‹¬ ì¹œêµ¬ì‹ ì²­ê±°ì ˆ ajax */
+	@RequestMapping(value={"ModalRefuseFriendProc.do"}, method=RequestMethod.GET)
+	@ResponseBody
+	public String ModalRefuseFriendProc(String f_email, HttpServletRequest request,  HttpServletResponse response) {
+		
+		HttpSession session = request.getSession();
+		String email = (String) session.getAttribute("email");
+		System.out.println("session email = "+email);
+		
+		FriendsDAO fdao = ss.getMapper(FriendsDAO.class);
+		int af = fdao.delFriend(email, f_email);
+		
+		if(af==1) {
+			System.out.println("ì¹œêµ¬ì‹ ì²­ ê±°ì ˆ ì„±ê³µ");
+			
+			List<Members> friends = fdao.getAcceptedFriends(email);
+			
+			Gson gson = new Gson();
+			String friendsJson = gson.toJson(friends);
+			System.out.println(friendsJson);
+			
+			return friendsJson;
+		}else {
+			System.out.println("ì¹œêµ¬ì‹ ì²­ ê±°ì ˆ ì‹¤íŒ¨");
+			
+			List<Members> friends = fdao.getAcceptedFriends(email);
+			
+			Gson gson = new Gson();
+			String friendsJson = gson.toJson(friends);
+			System.out.println(friendsJson);
+			
+			return friendsJson;
+		}
+	}
 	
 	
 	@RequestMapping(value={"individual_page.do"}, method=RequestMethod.GET)

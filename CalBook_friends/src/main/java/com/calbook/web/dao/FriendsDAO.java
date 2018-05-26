@@ -7,24 +7,30 @@ import com.calbook.web.vo.TmpMember;
 
 public interface FriendsDAO {
 	
-	//Ä£±¸¸®½ºÆ® ºÒ·¯¿À±â(Ä£±¸ ÆäÀÌÁö ½ÃÀÛÈ­¸é)
+	//ì¹œêµ¬ë¦¬ìŠ¤íŠ¸ ë¶ˆëŸ¬ì˜¤ê¸°(ì¹œêµ¬ í˜ì´ì§€ ì‹œì‘í™”ë©´)
 	public List<Members> getFriends(String email);
 	
-	//³»Ä£±¸ °Ë»ö ¸®½ºÆ® ºÒ·¯¿À±â(³» Ä£±¸ Áß °Ë»ö ajax)
+	//ë‚´ì¹œêµ¬ ê²€ìƒ‰ ë¦¬ìŠ¤íŠ¸ ë¶ˆëŸ¬ì˜¤ê¸°(ë‚´ ì¹œêµ¬ ì¤‘ ê²€ìƒ‰ ajax)
 	public List<Members> getSearchMyFriends(String email, String searchSelect, String search);
 	
-	//ÀüÃ¼Ä£±¸ °Ë»ö ºÒ·¯¿À±â(ÀüÃ¼ Ä£±¸ Áß °Ë»ö ajax Áß °Ë»öÈ¸¿ø ºÒ·¯¿À±â)
+	//ì „ì²´ì¹œêµ¬ ê²€ìƒ‰ ë¶ˆëŸ¬ì˜¤ê¸°(ì „ì²´ ì¹œêµ¬ ì¤‘ ê²€ìƒ‰ ajax ì¤‘ ê²€ìƒ‰íšŒì› ë¶ˆëŸ¬ì˜¤ê¸°)
 	public TmpMember getSearchNewFriends(String searchSelect, String search);
 	
-	//ÀüÃ¼Ä£±¸ °Ë»ö ºÒ·¯¿À±â(ÀüÃ¼ Ä£±¸ Áß °Ë»ö ajax Áß Ä£±¸¸®½ºÆ®+°ü°è ºÒ·¯¿À±â)
+	//ì „ì²´ì¹œêµ¬ ê²€ìƒ‰ ë¶ˆëŸ¬ì˜¤ê¸°(ì „ì²´ ì¹œêµ¬ ì¤‘ ê²€ìƒ‰ ajax ì¤‘ ì¹œêµ¬ë¦¬ìŠ¤íŠ¸+ê´€ê³„ ë¶ˆëŸ¬ì˜¤ê¸°)
 	public List<TmpMember> getSearchNewFriendsR(String email);
 	
-	//Ä£±¸ »èÁ¦ÇÏ±â
+	//ì¹œêµ¬ ì‹ ì²­ ì·¨ì†Œ, ì¹œêµ¬ ì‚­ì œ
 	public int delFriend(String email, String f_email);
 	
-	//Ä£±¸ ½ÅÃ»ÇÏ±â
+	//ì¹œêµ¬ ì‹ ì²­
 	public int addFriend(String email, String f_email);
-		
 	
-
+	//ì¹œêµ¬ ì‹ ì²­ ìˆ˜ë½
+	public int acceptFriend(String email, String f_email);
+	
+	//ì‹ ì²­ë°›ì€ ì¹œêµ¬ë¦¬ìŠ¤íŠ¸ ë¶ˆëŸ¬ì˜¤ê¸°(ì¹œêµ¬ ëª¨ë‹¬)
+	public List<Members> getAcceptedFriends(String email);
+	
+	//ì‹ ì²­ í•œ ì¹œêµ¬ë¦¬ìŠ¤íŠ¸ ë¶ˆëŸ¬ì˜¤ê¸°(ì¹œêµ¬ ëª¨ë‹¬)
+	public List<Members> getApplyFriends(String email);
 }

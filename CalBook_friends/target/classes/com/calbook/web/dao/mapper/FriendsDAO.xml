@@ -34,4 +34,18 @@
 		INSERT INTO FRIENDS VALUES(#{param1},#{param2},0)
 	</insert>
 	
+	<!-- 신청 받은 친구리스트 불러오기(친구 모달) -->
+	<select id="getAcceptedFriends" resultType="com.calbook.web.vo.Members">
+		SELECT * FROM FRIENDS F INNER JOIN MEMBERS M ON F.M_EMAIL=M.EMAIL WHERE RELATION=0 AND F_EMAIL=#{email} ORDER BY NICK
+	</select>
+	
+	<!-- 신청 한 친구리스트 불러오기(친구 모달) -->
+	<select id="getApplyFriends" resultType="com.calbook.web.vo.Members">
+		SELECT * FROM FRIENDS F INNER JOIN MEMBERS M ON F.F_EMAIL=M.EMAIL WHERE RELATION=0 AND M_EMAIL=#{email} ORDER BY NICK
+	</select>
+	
+	<!-- 친구신청 수락 -> relation update -->
+	<update id="acceptFriend">
+		UPDATE FRIENDS SET RELATION=1 WHERE F_EMAIL=#{param1} AND M_EMAIL=#{param2}
+	</update>
 </mapper>
