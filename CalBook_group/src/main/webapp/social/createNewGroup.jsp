@@ -52,18 +52,23 @@
 	
 	function printData(resData){
 		var s='';
+		var s2= '';
 		for(var i in resData){
 			s += '<figure class="snip1157"><img src="../images/basicProfile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
 			s += resData[i]['nick']+'</span><br><span>'+resData[i]['email']+'</span></h5><input class="email" type="hidden" name="f_email" value="'+resData[i]['email']+'" />';
 			
 			if(resData[i]['status_accept']==0){
 				s += '<button class="" type="button"><i class="fa fa-close"></i></button></div></figure>';
+				s2 += '<span>'+resData[i]['email']+'</span>';
 			}else{
 				s += '<button class="btnCheckGroupM" type="button"><i class="fa fa-check-circle-o"></i></button></div></figure>';
 			}
 		}
 		$("#scroll").empty();
 		$("#scroll").append(s);
+		
+		$("#groupMemberDiv").empty();
+		$("#groupMemberDiv").append(s2);
 		
 		
 	}
@@ -712,13 +717,16 @@ figure.snip1157 button:HOVER {
 			<h1>모임 멤버초대</h1>
 			<span>모임명 : ${g.name}</span>
 			<span>모임내용 : ${g.content}</span>
+			<span>그룹번호 : ${g.num} </span>
 			<input type="hidden" id="g_num" name="g_num" value="${g.num}">
 			<div style="height:300px;">
 				<span>멤버</span>
-				<div id="scroll" class="scroll">
+				<div id="groupMemberScroll" class="scroll">
 					<span>${g.owner}   
 						<i class="fa fa-fort-awesome"></i>
 					</span>
+					<div id="groupMemberDiv">
+					</div>
 				</div>
 			</div>
 			

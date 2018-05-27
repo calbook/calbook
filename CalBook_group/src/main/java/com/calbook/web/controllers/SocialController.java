@@ -456,8 +456,9 @@ public class SocialController {
 		System.out.println("session email = "+email);
 		
 		GroupsDAO gdao = ss.getMapper(GroupsDAO.class);
+		int num = gdao.getMaxGroupNum();
 		
-		
+		g.setNum(num+1);
 		g.setOwner(email);
 		
 		
@@ -471,9 +472,9 @@ public class SocialController {
 		if(af==1) {
 			System.out.println("그룹생성 성공");
 			
-			FriendsDAO fdao = ss.getMapper(FriendsDAO.class);
+			Group_MembersDAO gmdao = ss.getMapper(Group_MembersDAO.class);
 			
-			List<Members> friends = fdao.getFriends(email); 
+			List<TmpMember> friends = gmdao.getGroupFriendsList(email); 
 			
 			model.addAttribute("g",g);
 			model.addAttribute("friends",friends);
@@ -492,33 +493,33 @@ public class SocialController {
 		HttpSession session = request.getSession();
 		String email = (String) session.getAttribute("email");
 		System.out.println("session email = "+email);
-		
+		System.out.println("g_num="+g_num);
 		int ig_num = Integer.parseInt(g_num);
 		
 		System.out.println("ig_num = "+ig_num);
 		
-		Group_MembersDAO gdao = ss.getMapper(Group_MembersDAO.class);
+		Group_MembersDAO gmdao = ss.getMapper(Group_MembersDAO.class);
 		
-		int af = gdao.addGroupMember(ig_num, f_email);
+		int af = gmdao.addGroupMember(ig_num, f_email);
 		
 		if(af==1) {
 			System.out.println("멤버 추가 성공");
 			
-			List<TmpMember> groups = gdao.getGroupFriendsList(email);
+			List<TmpMember> friends = gmdao.getGroupFriendsList(email);
 			Gson gson = new Gson();
-			String groupJson = gson.toJson(groups);
-			System.out.println(groupJson);
+			String friendsJson = gson.toJson(friends);
+			System.out.println(friendsJson);
 			
-			return groupJson;
+			return friendsJson;
 		}else {
 			System.out.println("멤버추가 실패");
 			
-			List<TmpMember> groups = gdao.getGroupFriendsList(email);
+			List<TmpMember> friends = gmdao.getGroupFriendsList(email);
 			Gson gson = new Gson();
-			String groupJson = gson.toJson(groups);
-			System.out.println(groupJson);
+			String friendsJson = gson.toJson(friends);
+			System.out.println(friendsJson);
 			
-			return groupJson;
+			return friendsJson;
 		}
 	}
 	

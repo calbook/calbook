@@ -4,9 +4,14 @@
     
 <mapper namespace="com.calbook.web.dao.GroupsDAO">
 	
+	<!-- get max group num -->
+	<select id="getMaxGroupNum" resultType="Integer">
+		SELECT MAX(NUM) FROM GROUPS
+	</select>
+	
 	<!-- create a group  -->
 	<insert id="addGroup">
-		INSERT INTO GROUPS (NUM, OWNER, CONTENT, NAME) VALUES((SELECT MAX(NUM+1) FROM GROUPS),#{owner},#{content},#{name})
+		INSERT INTO GROUPS (NUM, OWNER, CONTENT, NAME) VALUES(#{num},#{owner},#{content},#{name})
 	</insert>
 	
 	
