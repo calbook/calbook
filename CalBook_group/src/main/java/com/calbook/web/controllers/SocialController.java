@@ -45,12 +45,17 @@ public class SocialController {
 		FriendsDAO fdao = ss.getMapper(FriendsDAO.class);
 		List<Members> friends = fdao.getFriends(email);
 		
+		GroupsDAO gdao = ss.getMapper(GroupsDAO.class);
+		List<Groups> groups = gdao.getGroupList(email);
+		
+		
 		System.out.println("friends.size() = "+friends.size());
 		for(int i=0; i<friends.size(); i++) {
 			System.out.println(friends.get(i).getNick());
 		}
 		
 		model.addAttribute("friends", friends);
+		model.addAttribute("groups", groups);
 		/*model.addAttribute("ckNewFriend", ckNewFriend);*/
 		
 		return "social.jsp";
@@ -410,46 +415,11 @@ public class SocialController {
 		}
 	}
 	
-	/* CreateGroup ajax */
-	@RequestMapping(value={"CreateGroup.do"}, method=RequestMethod.GET)
-	@ResponseBody
-	public String CreateGroup(String f_email, HttpServletRequest request,  HttpServletResponse response) {
-		
-		HttpSession session = request.getSession();
-		String email = (String) session.getAttribute("email");
-		System.out.println("session email = "+email);
-		
-		FriendsDAO fdao = ss.getMapper(FriendsDAO.class);
-		int af = fdao.delFriend(email, f_email);
-		
-		if(af==1) {
-			System.out.println("移쒓뎄�떊泥� 嫄곗젅 �꽦怨�");
-			
-			List<Members> friends = fdao.getAcceptedFriends(email);
-			
-			Gson gson = new Gson();
-			String friendsJson = gson.toJson(friends);
-			System.out.println(friendsJson);
-			
-			return friendsJson;
-		}else {
-			System.out.println("移쒓뎄�떊泥� 嫄곗젅 �떎�뙣");
-			
-			List<Members> friends = fdao.getAcceptedFriends(email);
-			
-			Gson gson = new Gson();
-			String friendsJson = gson.toJson(friends);
-			System.out.println(friendsJson);
-			
-			return friendsJson;
-		}
-	}
-	
 	
    // add group
 	
 	@RequestMapping(value={"createGroup.do"}, method=RequestMethod.POST)
-	public String createNewGroup(HttpServletRequest request,  HttpServletResponse response, Groups g , Model model) {
+	public String createGroup(HttpServletRequest request,  HttpServletResponse response, Groups g , Model model) {
 		
 		HttpSession session = request.getSession();
 		String email = (String) session.getAttribute("email");
@@ -471,14 +441,20 @@ public class SocialController {
 		
 		if(af==1) {
 			System.out.println("그룹생성 성공");
-			
 			Group_MembersDAO gmdao = ss.getMapper(Group_MembersDAO.class);
+			int af2 = gmdao.addGroupMember(g.getNum(), email);
 			
-			List<TmpMember> friends = gmdao.getGroupFriendsList(email); 
-			
-			model.addAttribute("g",g);
-			model.addAttribute("friends",friends);
-			return "createNewGroup.jsp" ;
+			if(af2 == 1) {
+				System.out.println("그룹생성후 오너 멤버 등록 성공");
+				List<TmpMember> friends = gmdao.getGroupFriendsList(email, g.getNum()); 
+				model.addAttribute("g",g);
+				model.addAttribute("friends",friends);
+				return "createNewGroup.jsp" ;
+			}else {
+				System.out.println("그룹생성 성공후 오너 멤버 등록 실패");
+				int af3 = gdao.deleteGroup(g.getNum());
+				return "social.do";
+			}
 		}else {
 			System.out.println("그룹생성 실패");
 			return "social.do";
@@ -505,7 +481,7 @@ public class SocialController {
 		if(af==1) {
 			System.out.println("멤버 추가 성공");
 			
-			List<TmpMember> friends = gmdao.getGroupFriendsList(email);
+			List<TmpMember> friends = gmdao.getGroupFriendsList(email, ig_num);
 			Gson gson = new Gson();
 			String friendsJson = gson.toJson(friends);
 			System.out.println(friendsJson);
@@ -514,7 +490,45 @@ public class SocialController {
 		}else {
 			System.out.println("멤버추가 실패");
 			
-			List<TmpMember> friends = gmdao.getGroupFriendsList(email);
+			List<TmpMember> friends = gmdao.getGroupFriendsList(email, ig_num);
+			Gson gson = new Gson();
+			String friendsJson = gson.toJson(friends);
+			System.out.println(friendsJson);
+			
+			return friendsJson;
+		}
+	}
+	
+	//그룹생성중 멤버추가 취소 ajax
+	@RequestMapping(value={"cancelGroupMember.do"}, method=RequestMethod.GET)
+	@ResponseBody
+	public String cancelGroupMember(String f_email, String g_num, HttpServletRequest request,  HttpServletResponse response) {
+		
+		HttpSession session = request.getSession();
+		String email = (String) session.getAttribute("email");
+		System.out.println("session email = "+email);
+		System.out.println("g_num="+g_num);
+		int ig_num = Integer.parseInt(g_num);
+		
+		System.out.println("ig_num = "+ig_num);
+		
+		Group_MembersDAO gmdao = ss.getMapper(Group_MembersDAO.class);
+		
+		int af = gmdao.cancelGroupMember(ig_num, f_email);
+		
+		if(af==1) {
+			System.out.println("멤버 추가 취소 성공");
+			
+			List<TmpMember> friends = gmdao.getGroupFriendsList(email, ig_num);
+			Gson gson = new Gson();
+			String friendsJson = gson.toJson(friends);
+			System.out.println(friendsJson);
+			
+			return friendsJson;
+		}else {
+			System.out.println("멤버추가 취소 실패");
+			
+			List<TmpMember> friends = gmdao.getGroupFriendsList(email, ig_num);
 			Gson gson = new Gson();
 			String friendsJson = gson.toJson(friends);
 			System.out.println(friendsJson);
@@ -524,12 +538,73 @@ public class SocialController {
 	}
 	
 	
+	// 그룹생성 완료
+	@RequestMapping(value={"createGroupFinishProc.do"}, method=RequestMethod.GET)
+	public String createGroupFinishProc(String g_num, HttpServletRequest request,  HttpServletResponse response) {
+		
+		HttpSession session = request.getSession();
+		String email = (String) session.getAttribute("email");
+		System.out.println("session email = "+email);
+		
+		Group_MembersDAO gmdao = ss.getMapper(Group_MembersDAO.class);
+		int ig_num = Integer.parseInt(g_num);
+		int af = gmdao.updateMembersStatusAccept(ig_num);
+		
+		if(af != 0) {
+			System.out.println("그룹생성완료 성공");
+			return "redirect:social.do" ;
+		}else {
+			System.out.println("그룹생성완료 실패");
+			return "redirect:social.do";
+		}
+	}
+	
+	// 그룹 친구 추가 취소
+	@RequestMapping(value={"createGroupCancelProc.do"}, method=RequestMethod.GET)
+	public String createGroupCancelProc(String g_num, HttpServletRequest request,  HttpServletResponse response) {
+		
+		HttpSession session = request.getSession();
+		String email = (String) session.getAttribute("email");
+		System.out.println("session email = "+email);
+		
+		Group_MembersDAO gmdao = ss.getMapper(Group_MembersDAO.class);
+		int ig_num = Integer.parseInt(g_num);
+		int af = gmdao.addFriendsCancel(ig_num);
+		
+		if(af != 0) {
+			System.out.println("그룹 친구추가 취소 성공");
+			return "redirect:social.do" ;
+		}else {
+			System.out.println("그룹 친구추가 취소 실패");
+			return "redirect:social.do";
+		}
+	}
+	
+	// 그룹생성중 멤버추가중  검색 친구리스트 불러오기  ajax
+	@RequestMapping(value={"getSearchGroupFriends.do"}, method=RequestMethod.GET)
+	@ResponseBody
+	public String getSearchGroupFriends(String g_num, String searchSelect, String search, HttpServletRequest request,  HttpServletResponse response) {
+		System.out.println("=====getSearchGroupFriends======");
+		HttpSession session = request.getSession();
+		String email = (String) session.getAttribute("email");
+		System.out.println("session email = "+email);
+		
+		Group_MembersDAO gmdao = ss.getMapper(Group_MembersDAO.class);
+		int ig_num = Integer.parseInt(g_num);
+		
+		List<TmpMember> friends = gmdao.getSearchGroupFriendsList(email, ig_num, searchSelect, search);
+		
+		Gson gson = new Gson();
+		String friendsJson = gson.toJson(friends);
+		System.out.println(friendsJson);
+		
+		return friendsJson;
+		
+	}
 	
 	
 	
-	
-	
-	
+		
 	
 	@RequestMapping(value={"individual_page.do"}, method=RequestMethod.GET)
 	public String individual_page() {

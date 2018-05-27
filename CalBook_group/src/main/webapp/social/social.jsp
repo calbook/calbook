@@ -852,18 +852,19 @@ figure.snip1157 button:HOVER {
           <div class="adr-article-container">
              <div id="group" style="max-width: 500px;">
               <!-- PAGE -->
-
+				
               <!-- ACCORDION 1 -->
+              <c:forEach var="g" items="${groups}">
                  <div class="box" id="box1">
                      <img class="ico-accordion" src="http://via.placeholder.com/45x45" />
-                     <span class="accordion-title">ACCORDION 1</span>
+                     <span class="accordion-title">${g.name}</span>
                  </div>
 
                  <div class="contenuto" id="contenuto1">
                       <div class="row">
                          <div class="column middle">
-                            <h1>Title</h1>
-                            <h3>Content</h3>
+                            <h1>${g.name}</h1>
+                            <h3>${g.content}</h3>
                          </div>
                          <div class="column oneside">
                             <button class="faBtn" type="button"><i class="fa fa-sign-out"></i></button>
@@ -871,10 +872,11 @@ figure.snip1157 button:HOVER {
                          </div>
                       </div>
                  </div>
+              </c:forEach>  
               <!-- ACCORDION 1 -->
 
               <!-- ACCORDION 2 -->
-                 <div class="box" id="box2">
+                <!--  <div class="box" id="box2">
                      <img class="ico-accordion" src="http://via.placeholder.com/45x45" />
                      <span class="accordion-title">ACCORDION 2</span>
                  </div>
@@ -884,11 +886,11 @@ figure.snip1157 button:HOVER {
                          <span class="accordion-subtitle">Title </span>
                          <span class="accordion-text">Tante soluzioni di parcheggio per ogni tipo di sosta e di budget, con la possibilità di prenotare o acquistare online risparmiando con speciali tariffe scontate sul web.</span>
                      </div>
-                 </div>
+                 </div> -->
               <!-- ACCORDION 2 -->
 
               <!-- ACCORDION 3 -->
-                 <div class="box" id="box3">
+                 <!-- <div class="box" id="box3">
                      <img class="ico-accordion" src="http://via.placeholder.com/45x45" />
                      <span class="accordion-title">ACCORDION 3</span>
                  </div>
@@ -898,7 +900,7 @@ figure.snip1157 button:HOVER {
                          <span class="accordion-subtitle">Title </span>
                          <span class="accordion-text">Tante soluzioni di parcheggio per ogni tipo di sosta e di budget, con la possibilità di prenotare o acquistare online risparmiando con speciali tariffe scontate sul web.</span>                      
                      </div>
-                 </div>
+                 </div> -->
                  <!-- ACCORDION 3 -->
                  
                  <script>
@@ -937,7 +939,7 @@ figure.snip1157 button:HOVER {
                  btn.click(function(){
                     //alert("hello");
                     //modal.css({"display":"block"});
-                    var newGroup = $('<form action="createGroup.do" method="post" autocomplete="off"><div class="newGroup"><h1>모임 생성</h1><span>모임명</span><input name="name" type="text"><span>내용</span><input name="content" type="text"/><br><br><input class = "form" type = "submit" value = "이동"></div></form>');
+                    var newGroup = $('<form action="createGroup.do" method="post" autocomplete="off"><div class="newGroup"><h1>모임 생성</h1><span>모임명</span><input name="name" type="text"><span>내용</span><input name="content" type="text"/><br><br><input class = "form" type = "submit" value = "모임생성 후 멤버초대 하러가기"></div></form>');
                    
                     $("#createGroup").empty();
                     $("#createGroup").prepend(newGroup);

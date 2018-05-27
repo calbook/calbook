@@ -4,15 +4,36 @@
     
 <mapper namespace="com.calbook.web.dao.Group_MembersDAO">
 	
-	<!-- 그룹 생성중 멤버추가 -->
+	<!-- 그룹 생성중 멤버추가 ajax -->
 	<insert id="addGroupMember">
 		INSERT INTO GROUP_MEMBERS VALUES (#{param1}, #{param2}, 0, null)
 	</insert>
 	
-	<!-- 그룹생성중 멤버추가중 친구리스트 불러오기  ajax -->
+	<!-- 그룹 생성중 멤버추가 취소 ajax -->
+	<delete id="cancelGroupMember">
+		DELETE GROUP_MEMBERS WHERE G_NUM=#{param1} AND M_EMAIL=#{param2}
+	</delete>
 	
+	
+	<!-- 그룹생성중 멤버추가중 친구리스트 불러오기  ajax -->
 	<select id="getGroupFriendsList" resultType="com.calbook.web.vo.TmpMember">
-		SELECT * FROM ((SELECT * FROM FRIENDS F INNER JOIN MEMBERS M ON F.F_EMAIL=M.EMAIL INNER JOIN GROUP_MEMBERS GM ON F.F_EMAIL=GM.M_EMAIL WHERE RELATION=1 AND F.M_EMAIL=#{email}) UNION (SELECT * FROM FRIENDS F INNER JOIN MEMBERS M ON F.M_EMAIL=M.EMAIL INNER JOIN GROUP_MEMBERS GM ON F.M_EMAIL=GM.M_EMAIL WHERE RELATION=1 AND F.F_EMAIL=#{email})) ORDER BY NICK	
+		SELECT * FROM ((SELECT * FROM FRIENDS F INNER JOIN MEMBERS M ON F.F_EMAIL=M.EMAIL LEFT OUTER JOIN (SELECT * FROM GROUP_MEMBERS WHERE G_NUM=#{param2}) GM ON F.F_EMAIL=GM.M_EMAIL WHERE RELATION=1 AND F.M_EMAIL=#{param1}) UNION (SELECT * FROM FRIENDS F INNER JOIN MEMBERS M ON F.M_EMAIL=M.EMAIL LEFT OUTER JOIN (SELECT * FROM GROUP_MEMBERS WHERE G_NUM=#{param2}) GM ON F.M_EMAIL=GM.M_EMAIL WHERE RELATION=1 AND F.F_EMAIL=#{param1})) ORDER BY NICK	
 	</select>
+	
+	<!-- 그룹생성중 멤버추가중  검색 친구리스트 불러오기  ajax -->
+	<select id="getSearchGroupFriendsList" resultType="com.calbook.web.vo.TmpMember">
+		SELECT * FROM ((SELECT * FROM FRIENDS F INNER JOIN MEMBERS M ON F.F_EMAIL=M.EMAIL LEFT OUTER JOIN (SELECT * FROM GROUP_MEMBERS WHERE G_NUM=#{param2}) GM ON F.F_EMAIL=GM.M_EMAIL WHERE RELATION=1 AND F.M_EMAIL=#{param1}) UNION (SELECT * FROM FRIENDS F INNER JOIN MEMBERS M ON F.M_EMAIL=M.EMAIL LEFT OUTER JOIN (SELECT * FROM GROUP_MEMBERS WHERE G_NUM=#{param2}) GM ON F.M_EMAIL=GM.M_EMAIL WHERE RELATION=1 AND F.F_EMAIL=#{param1})) WHERE ${param3} LIKE '%${param4}%' ORDER BY ${param3}	
+	</select>
+	
+	<!-- 그룹생성 완료를 위한 그룹멤버 상태변경 -->
+	<update id="updateMembersStatusAccept">
+		UPDATE GROUP_MEMBERS SET STATUS_ACCEPT=1 WHERE G_NUM=#{g_num} AND STATUS_ACCEPT=0
+	</update>
+	
+	<!-- 그룹 친구추가 취소  -->
+	<delete id="addFriendsCancel">
+		DELETE GROUP_MEMBERS WHERE G_NUM=#{g_num} AND STATUS_ACCEPT=0
+	</delete>
+	
 	
 </mapper>

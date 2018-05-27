@@ -15,9 +15,9 @@
 	$(function(){
 		$('#btnSearch').click(function(){
 			$.ajax({
-				url: "searchFriends.do",   
+				url: "getSearchGroupFriends.do",   
 				type: "GET",
-				data: {"searchSelect":$("#searchSelect").val(), "search":$("#search").val(), "searchNewFriends":$("#searchNewFriends").is(":checked")},
+				data: {"g_num":$("#g_num").val(), "searchSelect":$("#searchSelect").val(), "search":$("#search").val()},
 				contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 				error: function(jqXHR){
 					alert(jqXHR.status);
@@ -25,8 +25,7 @@
 				},
 				dataType: "json",
 				success: function(resData){ 
-					var checkNewFriends = $("#searchNewFriends").is(":checked");
-					printData(resData, checkNewFriends);
+					printData2(resData);
 				}
 			});	
 		});
@@ -48,6 +47,22 @@
 	         });
 	      });
 		
+		
+		$(document).on("click", ".btnCancelGroupM", function(){
+	         $.ajax({
+	            url: "cancelGroupMember.do",   
+	            type: "GET",
+	            data: {"f_email":$(this).prev().val(), "g_num":$("#g_num").val()},
+	            error: function(jqXHR){
+	               alert(jqXHR.status);
+	               alert(jqXHR.statusText);
+	            },
+	            dataType: "json",
+	            success: function(resData){
+	               printData(resData);
+	            }
+	         });
+	      });
 	});
 	
 	function printData(resData){
@@ -57,8 +72,8 @@
 			s += '<figure class="snip1157"><img src="../images/basicProfile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
 			s += resData[i]['nick']+'</span><br><span>'+resData[i]['email']+'</span></h5><input class="email" type="hidden" name="f_email" value="'+resData[i]['email']+'" />';
 			
-			if(resData[i]['status_accept']==0){
-				s += '<button class="" type="button"><i class="fa fa-close"></i></button></div></figure>';
+			if(resData[i]['status_accept']==0 && resData[i]['g_num']==$("#g_num").val()){
+				s += '<button class="btnCancelGroupM" type="button"><i class="fa fa-close"></i></button></div></figure>';
 				s2 += '<span>'+resData[i]['email']+'</span>';
 			}else{
 				s += '<button class="btnCheckGroupM" type="button"><i class="fa fa-check-circle-o"></i></button></div></figure>';
@@ -72,6 +87,25 @@
 		
 		
 	}
+	
+	function printData2(resData){
+		var s='';
+		
+		for(var i in resData){
+			s += '<figure class="snip1157"><img src="../images/basicProfile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
+			s += resData[i]['nick']+'</span><br><span>'+resData[i]['email']+'</span></h5><input class="email" type="hidden" name="f_email" value="'+resData[i]['email']+'" />';
+			if(resData[i]['status_accept']==0 && resData[i]['g_num']==$("#g_num").val()){
+				s += '<button class="btnCancelGroupM" type="button"><i class="fa fa-close"></i></button></div></figure>';
+			}else{
+				s += '<button class="btnCheckGroupM" type="button"><i class="fa fa-check-circle-o"></i></button></div></figure>';
+			}
+		}
+		$("#scroll").empty();
+		$("#scroll").append(s);
+		
+	}
+	
+	
 	
 	
 </script>
@@ -735,9 +769,9 @@ figure.snip1157 button:HOVER {
               <col style="width:6%;">
               <col style="width:47%;">
               <tr>
-                 <td><a href =""><span class = "move">CREATE</span></a></td>
+                 <td><a href="createGroupFinishProc.do?g_num=${g.num}"><span class = "move">멤버초대</span></a></td>
                  <td></td>
-                 <td><a href =""><span class = "move">CANCEL</span></a></td>
+                 <td><a href="createGroupCancelProc.do?g_num=${g.num}"><span class = "move">멤버초대취소</span></a></td>
               </tr>
            	</table>
 		</div>
