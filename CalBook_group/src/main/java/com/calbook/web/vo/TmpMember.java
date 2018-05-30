@@ -9,14 +9,14 @@ public class TmpMember {
 	private int open;
 	private String regdate;
 	private int relation;
-	private String status_accept;
+	private int status_accept;
 	private int g_num;
 	
 	public TmpMember() {
-		this(null, null, null, null, null, 0, null, 0, null, 0);
+		this(null, null, null, null, null, 0, null, 0, -1, 0);
 	}
 	
-	public TmpMember(String email, String pwd, String nick, String phone, String profile, int open, String regdate, int relation, String status_accept, int g_num) {
+	public TmpMember(String email, String pwd, String nick, String phone, String profile, int open, String regdate, int relation, int status_accept, int g_num) {
 		this.email = email;
 		this.pwd = pwd;
 		this.nick = nick;
@@ -78,11 +78,11 @@ public class TmpMember {
 		this.relation = relation;
 	}
 
-	public String getStatus_accept() {
+	public int getStatus_accept() {
 		return status_accept;
 	}
 
-	public void setStatus_accept(String status_accept) {
+	public void setStatus_accept(int status_accept) {
 		this.status_accept = status_accept;
 	}
 

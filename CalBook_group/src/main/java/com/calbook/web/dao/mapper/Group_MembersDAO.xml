@@ -6,7 +6,7 @@
 	
 	<!-- 그룹 생성중 멤버추가 ajax -->
 	<insert id="addGroupMember">
-		INSERT INTO GROUP_MEMBERS VALUES (#{param1}, #{param2}, 0, null)
+		INSERT INTO GROUP_MEMBERS VALUES (#{param1}, #{param2}, #{param3}, null)
 	</insert>
 	
 	<!-- 그룹 생성중 멤버추가 취소 ajax -->
@@ -33,6 +33,29 @@
 	<!-- 그룹 친구추가 취소  -->
 	<delete id="addFriendsCancel">
 		DELETE GROUP_MEMBERS WHERE G_NUM=#{g_num} AND STATUS_ACCEPT=0
+	</delete>
+	
+	<!-- 초대받은 그룹가입완료 -->
+	<update id="updateAcceptGroup">
+		UPDATE GROUP_MEMBERS SET STATUS_ACCEPT=2 WHERE M_EMAIL=#{param1} AND G_NUM=#{param2}
+	</update>
+	
+	<!-- 초대받은 그룹가입거절 -->
+	<delete id="deleteRefuseGroup">
+		DELETE GROUP_MEMBERS WHERE M_EMAIL=#{param1} AND G_NUM=#{param2}
+	</delete>
+	
+	<!-- 그룹 탈퇴 ajax-->
+	<update id="signOutGroup">
+		UPDATE GROUP_MEMBERS SET STATUS=SYSDATE, STATUS_ACCEPT=NULL WHERE M_EMAIL=#{param1} AND G_NUM=#{param2}
+	</update>
+	
+	<!--그룹 삭제를위한 모든 멤버 탈퇴 (1) -->
+	<update id="signOutGroupMembers1">
+		UPDATE GROUP_MEMBERS SET STATUS=SYSDATE, STATUS_ACCEPT=NULL WHERE STATUS_ACCEPT=2 AND G_NUM=#{param2}
+	</update>
+	<delete id="signOutGroupMembers2">
+		DELETE GROUP_MEMBERS WHERE STATUS_ACCEPT IN(0,1)
 	</delete>
 	
 	

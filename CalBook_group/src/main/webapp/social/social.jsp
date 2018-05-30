@@ -12,106 +12,163 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript">
-   $(function(){
-      $('#btnSearch').click(function(){
-         $.ajax({
-            url: "searchFriends.do",   
-            type: "GET",
-            data: {"searchSelect":$("#searchSelect").val(), "search":$("#search").val(), "searchNewFriends":$("#searchNewFriends").is(":checked")},
-            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-            error: function(jqXHR){
-               alert(jqXHR.status);
-               alert(jqXHR.statusText);
-            },
-            dataType: "json",
-            success: function(resData){ 
-               var checkNewFriends = $("#searchNewFriends").is(":checked");
-               printData(resData, checkNewFriends);
-            }
-         });   
-      });
-      
-      $(document).on("click", ".btnDelFriend", function(){
-         $.ajax({
-            url: "delFriendProc.do",   
-            type: "GET",
-            data: {"f_email":$(this).prev().val(), "searchSelect":$("#searchSelect").val(), "search":$("#search").val(), "searchNewFriends":$("#searchNewFriends").is(":checked")},
-            error: function(jqXHR){
-               alert(jqXHR.status);
-               alert(jqXHR.statusText);
-            },
-            dataType: "json",
-            success: function(resData){
-               var checkNewFriends = $("#searchNewFriends").is(":checked");
-               printData(resData, checkNewFriends);
-            }
-         });
-      });
-      
-      $(document).on("click", ".btnAddFriend", function(){
-         $.ajax({
-            url: "AddFriendProc.do",   
-            type: "GET",
-            data: {"f_email":$(this).prev().val(), "searchSelect":$("#searchSelect").val(), "search":$("#search").val()},
-            error: function(jqXHR){
-               alert(jqXHR.status);
-               alert(jqXHR.statusText);
-            },
-            dataType: "json",
-            success: function(resData){
-               var checkNewFriends = true;
-               printData(resData, checkNewFriends);
-            }
-         });
-      });
-      
-      $(document).on("click", ".btnCancelFriend", function(){
-         $.ajax({
-            url: "CancelFriendProc.do",   
-            type: "GET",
-            data: {"f_email":$(this).prev().val(), "searchSelect":$("#searchSelect").val(), "search":$("#search").val()},
-            error: function(jqXHR){
-               alert(jqXHR.status);
-               alert(jqXHR.statusText);
-            },
-            dataType: "json",
-            success: function(resData){
-               var checkNewFriends = true;
-               printData(resData, checkNewFriends);
-            }
-         });
-      });
-      
+$(function(){
+   $('#btnSearch').click(function(){
+      $.ajax({
+         url: "searchFriends.do",   
+         type: "GET",
+         data: {"searchSelect":$("#searchSelect").val(), "search":$("#search").val(), "searchNewFriends":$("#searchNewFriends").is(":checked")},
+         contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+         error: function(jqXHR){
+            alert(jqXHR.status);
+            alert(jqXHR.statusText);
+         },
+         dataType: "json",
+         success: function(resData){ 
+            var checkNewFriends = $("#searchNewFriends").is(":checked");
+            printData(resData, checkNewFriends);
+         }
+      });   
    });
    
-   function printData(resData, checkNewFriends){
-      var s='';
-      if(checkNewFriends == true){
-         if(resData == null){
-            s += '<br><h3 style="color:white; text-align:center;">조회된 친구가 없습니다.</h3>';
-         }else{
-            s += '<figure class="snip1157"><img src="../images/basicProfile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
-            s += resData['nick']+'</span><br><span>'+resData['email']+'</span></h5><input class="email" type="hidden" name="f_email" value="'+resData['email']+'" />';
-            if(resData['relation']==3){
-               s += '<button class="btnAddFriend" type="button"><i class="fa fa-plus"></i></button>';
-            }else if(resData['relation']==1){
-               s += '<button class="btnDelFriend" type="button"><i class="fa fa-minus"></i></button>';
-            }else if(resData['relation']==0){
-               s += '<button class="btnCancelFriend" type="button"><i class="fa fa-close"></i></button>';
-            }
-            s += '<button type="button"><i class="fa fa-home"></i></button></div></figure>';
+   $(document).on("click", ".btnDelFriend", function(){
+      $.ajax({
+         url: "delFriendProc.do",   
+         type: "GET",
+         data: {"f_email":$(this).prev().val(), "searchSelect":$("#searchSelect").val(), "search":$("#search").val(), "searchNewFriends":$("#searchNewFriends").is(":checked")},
+         error: function(jqXHR){
+            alert(jqXHR.status);
+            alert(jqXHR.statusText);
+         },
+         dataType: "json",
+         success: function(resData){
+            var checkNewFriends = $("#searchNewFriends").is(":checked");
+            printData(resData, checkNewFriends);
          }
-      }else if(checkNewFriends == false){
-         for(var i in resData){
-            s += '<figure class="snip1157"><img src="../images/basicProfile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
-            s += resData[i]['nick']+'</span><br><span>'+resData[i]['email']+'</span></h5><input class="email" type="hidden" name="f_email" value="'+resData[i]['email']+'" />';
-            s += '<button class="btnDelFriend" type="button"><i class="fa fa-minus"></i></button><button type="button"><i class="fa fa-home"></i></button></div></figure>';
-         }
-      }
-      $("#scroll").empty();
-      $("#scroll").append(s);
-   }
+      });
+   });
    
+   $(document).on("click", ".btnAddFriend", function(){
+      $.ajax({
+         url: "AddFriendProc.do",   
+         type: "GET",
+         data: {"f_email":$(this).prev().val(), "searchSelect":$("#searchSelect").val(), "search":$("#search").val()},
+         error: function(jqXHR){
+            alert(jqXHR.status);
+            alert(jqXHR.statusText);
+         },
+         dataType: "json",
+         success: function(resData){
+            var checkNewFriends = true;
+            printData(resData, checkNewFriends);
+         }
+      });
+   });
+   
+   $(document).on("click", ".btnCancelFriend", function(){
+      $.ajax({
+         url: "CancelFriendProc.do",   
+         type: "GET",
+         data: {"f_email":$(this).prev().val(), "searchSelect":$("#searchSelect").val(), "search":$("#search").val()},
+         error: function(jqXHR){
+            alert(jqXHR.status);
+            alert(jqXHR.statusText);
+         },
+         dataType: "json",
+         success: function(resData){
+            var checkNewFriends = true;
+            printData(resData, checkNewFriends);
+         }
+      });
+   });
+   
+   $(document).on("click", ".btnSignOutGroup", function(){
+       $.ajax({
+          url: "SignOutGroupProc.do",   
+          type: "GET",
+          data: {"g_num":$(this).prev().val()},
+          error: function(jqXHR){
+             alert(jqXHR.status);
+             alert(jqXHR.statusText);
+          },
+          dataType: "json",
+          success: function(resData){
+         	var myEmail = $('#myEmail').val()
+             printData4(resData, myEmail);
+          }
+       });
+    });
+   
+   $(document).on("click", ".btnRemoveGroup", function(){
+       $.ajax({
+          url: "RemoveGroupProc.do",   
+          type: "GET",
+          data: {"g_num":$(this).prev().val()},
+          error: function(jqXHR){
+             alert(jqXHR.status);
+             alert(jqXHR.statusText);
+          },
+          dataType: "json",
+          success: function(resData){
+         	var myEmail = $('#myEmail').val()
+             printData4(resData, myEmail);
+          }
+       });
+    });
+});
+   
+   
+// 친구 리스트 출력
+function printData(resData, checkNewFriends){
+	var s='';
+	if(checkNewFriends == true){
+	   if(resData == null){
+	      s += '<br><h3 style="color:white; text-align:center;">조회된 친구가 없습니다.</h3>';
+	   }else{
+	      s += '<figure class="snip1157"><img src="../images/basicProfile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
+	      s += resData['nick']+'</span><br><span>'+resData['email']+'</span></h5><input class="email" type="hidden" name="f_email" value="'+resData['email']+'" />';
+	      if(resData['relation']==3){
+	         s += '<button class="btnAddFriend" type="button"><i class="fa fa-plus"></i></button>';
+	      }else if(resData['relation']==1){
+	         s += '<button class="btnDelFriend" type="button"><i class="fa fa-minus"></i></button>';
+	      }else if(resData['relation']==0){
+	         s += '<button class="btnCancelFriend" type="button"><i class="fa fa-close"></i></button>';
+	      }
+	      s += '<button type="button"><i class="fa fa-home"></i></button></div></figure>';
+	   }
+	}else if(checkNewFriends == false){
+	   for(var i in resData){
+	      s += '<figure class="snip1157"><img src="../images/basicProfile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
+	      s += resData[i]['nick']+'</span><br><span>'+resData[i]['email']+'</span></h5><input class="email" type="hidden" name="f_email" value="'+resData[i]['email']+'" />';
+	      s += '<button class="btnDelFriend" type="button"><i class="fa fa-minus"></i></button><button type="button"><i class="fa fa-home"></i></button></div></figure>';
+	   }
+	}
+	$("#scroll").empty();
+	$("#scroll").append(s);
+}
+
+/* group list 출력 */
+function printData4(resData, myEmail){
+	var s='<div class="adr-article-container"><div id="group" style="max-width: 500px;">';
+	
+	for(var i in resData){
+		s += '<div class="box acco"><img class="ico-accordion" src="http://via.placeholder.com/45x45" /><span class="accordion-title">'+resData[i]["name"]+'</span></div>';
+		s += '<div class="contenuto" id="contenuto1"><div class="row"><div class="column middle">';
+		s += '<h1>'+resData[i]["name"]+'</h1><h3>'+resData[i]["content"]+'</h3></div>';
+		s += '<div class="column oneside"><input type="hidden" name="g_num" value="'+resData[i]["num"]+'">';
+	 
+		if(resData[i]['owner'] != myEmail){
+			s += '<button class="faBtn btnSignOutGroup" type="button"><i class="fa fa-sign-out"></i></button>';
+		}else if(resData[i]['owner'] == myEmail){
+			s += '<button class="faBtn btnRemoveGroup" type="button"><i class="fa fa-sign-out"></i></button><a href="editGroups.do?g_num=${g.num}"><button class="faBtn" type="button"><i class="fa fa-edit"></i></button></a>';
+		}
+			s += '</div></div></div>';
+		}
+			s += '</div></div>';
+	
+	$('#groupsScroll').empty();
+	$('#groupsScroll').append(s);
+}
    
 </script>
 <style>
@@ -654,7 +711,7 @@ figure.snip1157 button:HOVER {
 
 /* Style the buttons inside the tab */
 .friendModal_tab button {
-   width:50%;
+	width:33.33%;
     background-color: inherit;
     float: left;
     border: none;
@@ -724,302 +781,219 @@ figure.snip1157 button:HOVER {
 </div>
 
 <div class="row">
-  <div class="column side"></div>
+	<div class="column side"></div>
   
-  <div class="column middle">  
-    <div class="column half">
-       <h1 class="menuTitle">FRIEND</h1>
+	<div class="column middle">  
+	
+		<!-- FRIEND -->
+		<div class="column half">
+			<h1 class="menuTitle">FRIEND</h1>
        
-       <div class="search-box">
-          <select id="searchSelect" class="searchSelect" name="searchSelect">
-             <option value="EMAIL">Email</option>
-             <option value="NICK">Nick</option>
-             <!-- <option value="PHONE">Phone</option> -->
-          </select>
-           <input id="search" class="search" placeholder="Search"/>
-           <button id="btnSearch" class="new"><span><i class="fa fa-search"></i></span></button>
-           <button id ="btnBell" class="new"><span><i class="fa fa-bell"></i></span></button>
-           <c:if test="${!empty ckNewFriend}">
-            <button class="new"><span><input id="searchNewFriends" type="checkbox" name="searchNewFriends"  checked="checked"><i class="fa fa-user-plus"></i></span></button>
-           </c:if>
-           <c:if test="${empty ckNewFriend}">
-            <button class="new"><span><input id="searchNewFriends" type="checkbox" name="searchNewFriends"><i class="fa fa-user-plus"></i></span></button>
-           </c:if>
-      </div>
+			<div class="search-box">
+				<select id="searchSelect" class="searchSelect" name="searchSelect">
+					<option value="EMAIL">Email</option>
+					<option value="NICK">Nick</option>
+					<!-- <option value="PHONE">Phone</option> -->
+				</select>
+				<input id="search" class="search" placeholder="Search" autocomplete="off"/>
+				<button id="btnSearch" class="new"><span><i class="fa fa-search"></i></span></button>
+				<button id ="btnBell" class="new"><span><i class="fa fa-bell"></i></span></button>
+				<c:if test="${!empty ckNewFriend}">
+					<button class="new"><span><input id="searchNewFriends" type="checkbox" name="searchNewFriends"  checked="checked"><i class="fa fa-user-plus"></i></span></button>
+				</c:if>
+				<c:if test="${empty ckNewFriend}">
+					<button class="new"><span><input id="searchNewFriends" type="checkbox" name="searchNewFriends"><i class="fa fa-user-plus"></i></span></button>
+				</c:if>
+			</div>
       
-      <div id="scroll" class="scroll">
-         <c:forEach var="m" items="${friends}">
-            <figure class="snip1157">
-                 <img src="../images/basicProfile.jpg" alt="sq-sample3" />
-                 <div class="author">
-                   <%-- <h5>${m.nick}<br><span>${m.email}</span></h5> --%>
-                   <h5><span style="font-size: 17px;">${m.nick}</span><br><span>${m.email}</span></h5>
-                   <input class="email" type="hidden" name="f_email" value="${m.email}" />
-                   <button class="btnDelFriend" type="button"><i class="fa fa-minus"></i></button>
-                   <button type="button"><i class="fa fa-home"></i></button>
-                 </div>
-            </figure>
-         </c:forEach>
-         <!-- <figure class="snip1157">
-              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/sq-sample3.jpg" alt="sq-sample3" />
-              <div class="author">
-                <h5>Pelican Steve <span> LIttleSnippets.net</span></h5>
-                <button type="button"><i class="fa fa-minus"></i></button>
-                <button type="button"><i class="fa fa-home"></i></button>
-              </div>
-         </figure>
-      
-         <figure class="snip1157 hover">
-              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/sq-sample27.jpg" alt="sq-sample27" />
-              <div class="author">
-                <h5>Max Conversion<span> LIttleSnippets.net</span></h5>
-                <button type="button"><i class="fa fa-plus"></i></button>
-                <button type="button"><i class="fa fa-home"></i></button>
-              </div>
-         </figure>
-         
-         <figure class="snip1157">
-              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/sq-sample17.jpg" alt="sq-sample17" />
-              <div class="author">
-                <h5>Eleanor Faint<span> LIttleSnippets.net</span></h5>
-                <button type="button"><i class="fa fa-check-circle-o"></i></button>
-                <button type="button"><i class="fa fa-home"></i></button>
-              </div>
-         </figure> -->
-         
-      </div>
-    </div>
+			<div id="scroll" class="scroll">
+				<c:forEach var="m" items="${friends}">
+					<figure class="snip1157">
+						<img src="../images/basicProfile.jpg" alt="sq-sample3" />
+						<div class="author">
+						<%-- <h5>${m.nick}<br><span>${m.email}</span></h5> --%>
+							<h5><span style="font-size: 17px;">${m.nick}</span><br><span>${m.email}</span></h5>
+							<input class="email" type="hidden" name="f_email" value="${m.email}" />
+							<button class="btnDelFriend" type="button"><i class="fa fa-minus"></i></button>
+							<button type="button"><i class="fa fa-home"></i></button>
+						</div>
+					</figure>
+				</c:forEach>
+			</div>
+		</div>
     
-    <!-- friends Modal -->
-    <!-- The Modal -->
-   <div id="friendModal" class="friendModal">
-      <!-- Modal content -->
-      <div class="friendModal-content">
-         <div class="friendModal_tab">
-            <button class="friendModal_tablinks" onclick="openCity(event, 'accepted')" id="defaultOpen acceptedFriends">신청 받은 친구 목록</button>
-            <button class="friendModal_tablinks" onclick="openCity(event, 'apply')" id="applyFriends">신청 한 친구 목록</button>
-         </div>
-         
-         <div id="accepted" class="friendModal_tabcontent">
-            <div id="acceptedFriendModal_scroll" class="friendModal_scroll">
-            
-               <!-- <h3 style="color: white;">위에 탭을 선택하세요</h3> -->
-               <!-- <figure class="snip1157">
-                    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/sq-sample3.jpg" alt="sq-sample3" />
-                    <div class="author">
-                      <h5><span>Pelican Steve</span><br><span> LIttleSnippets.net</span></h5>
-                      <button type="button"><i class="fa fa-check-circle-o"></i></button>
-                      <button type="button"><i class="fa fa-close"></i></button>
-                    </div>
-               </figure> -->
-               
-            </div>
-         </div>
-         
-         <div id="apply" class="friendModal_tabcontent">
-            <div id="applyFriendModal_scroll" class="friendModal_scroll">
-               <!-- <figure class="snip1157">
-                    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/sq-sample17.jpg" alt="sq-sample17" />
-                    <div class="author">
-                      <h5><span>Eleanor Faint</span><br><span> LIttleSnippets.net</span></h5>
-                      <button type="button"><i class="fa fa-close"></i></button>
-                    </div>
-               </figure> -->
-            </div>
-         </div>
-         
-         <a href="social.do"><span class="close">close</span></a>
-        </div>
-   </div>
+		<!-- friends Modal -->
+		<div id="friendModal" class="friendModal">
+			<!-- Modal content -->
+			<div class="friendModal-content">
+				<div class="friendModal_tab">
+				<button class="friendModal_tablinks" onclick="openCity(event, 'accepted')" id="defaultOpen acceptedFriends">신청 받은 친구 목록</button>
+				<button class="friendModal_tablinks" onclick="openCity(event, 'apply')" id="applyFriends">신청 한 친구 목록</button>
+				<button class="friendModal_tablinks" onclick="openCity(event, 'acceptedG')" id="acceptedGroups">초대 받은 모임 목록</button>
+				</div>
+				
+				<div id="accepted" class="friendModal_tabcontent">
+					<div id="acceptedFriendModal_scroll" class="friendModal_scroll">
+					<c:forEach var="m" items="${acceptedFriends}">
+						<figure class="snip1157">
+						<img src="../images/basicProfile.jpg" alt="sq-sample3" />
+						<div class="author">
+							<h5><span style="font-size: 17px;">${m.nick}</span><br><span>${m.email}</span></h5>
+							<input class="email" type="hidden" name="f_email" value="${m.email}" />
+							<button class="btnModalAcceptFriend" type="button"><i class="fa fa-check-circle-o"></i></button>
+							<button class="btnModalRefuseFriend" type="button"><i class="fa fa-close"></i></button>
+						</div>
+						</figure>
+					</c:forEach>
+					</div>
+				</div>
+				
+				<div id="apply" class="friendModal_tabcontent">
+					<div id="applyFriendModal_scroll" class="friendModal_scroll">
+					</div>
+				</div>
+				
+				<div id="acceptedG" class="friendModal_tabcontent">
+					<div id="acceptedGroupsModal_scroll" class="friendModal_scroll">
+					</div>
+				</div>
+				
+				<a href="social.do"><span class="close">close</span></a>
+			</div>
+		</div>
+		<!-- friends Modal end -->
+		<!-- FRIEND end -->
     
    
-    <!-- 그룹 시작 -->
-    
-    <div class="column half">
-       <h1 class="menuTitle">GROUP</h1>
-       
-       <div class="search-box">
-           <button class="group" id="newGroup">New Group</button>
-      </div>
-      
-      <div id="createGroup"></div>
-      
-      
-      
-      
-       
-       <div class="scroll center">
-          <div class="adr-article-container">
-             <div id="group" style="max-width: 500px;">
-              <!-- PAGE -->
-				
-              <!-- ACCORDION 1 -->
-              <c:forEach var="g" items="${groups}">
-                 <div class="box" id="box1">
-                     <img class="ico-accordion" src="http://via.placeholder.com/45x45" />
-                     <span class="accordion-title">${g.name}</span>
-                 </div>
-
-                 <div class="contenuto" id="contenuto1">
-                      <div class="row">
-                         <div class="column middle">
-                            <h1>${g.name}</h1>
-                            <h3>${g.content}</h3>
-                         </div>
-                         <div class="column oneside">
-                            <button class="faBtn" type="button"><i class="fa fa-sign-out"></i></button>
-                            <button class="faBtn" type="button"><i class="fa fa-edit"></i></button>
-                         </div>
-                      </div>
-                 </div>
-              </c:forEach>  
-              <!-- ACCORDION 1 -->
-
-              <!-- ACCORDION 2 -->
-                <!--  <div class="box" id="box2">
-                     <img class="ico-accordion" src="http://via.placeholder.com/45x45" />
-                     <span class="accordion-title">ACCORDION 2</span>
-                 </div>
-
-                 <div class="contenuto" id="contenuto2">
-                     <div class="contenuto-bianco">
-                         <span class="accordion-subtitle">Title </span>
-                         <span class="accordion-text">Tante soluzioni di parcheggio per ogni tipo di sosta e di budget, con la possibilità di prenotare o acquistare online risparmiando con speciali tariffe scontate sul web.</span>
-                     </div>
-                 </div> -->
-              <!-- ACCORDION 2 -->
-
-              <!-- ACCORDION 3 -->
-                 <!-- <div class="box" id="box3">
-                     <img class="ico-accordion" src="http://via.placeholder.com/45x45" />
-                     <span class="accordion-title">ACCORDION 3</span>
-                 </div>
-
-                 <div class="contenuto" id="contenuto3">
-                     <div class="contenuto-bianco">
-                         <span class="accordion-subtitle">Title </span>
-                         <span class="accordion-text">Tante soluzioni di parcheggio per ogni tipo di sosta e di budget, con la possibilità di prenotare o acquistare online risparmiando con speciali tariffe scontate sul web.</span>                      
-                     </div>
-                 </div> -->
-                 <!-- ACCORDION 3 -->
-                 
-                 <script>
-                  $(document).ready(function() {
-                        $("div#box1").click(function() {
-                                $("div#contenuto1").slideToggle("fast").addClass("view_content");
-                        $("div#box1").toggleClass("position_barra");
-                            });
-
-                            $("div#box2").click(function() {
-                                $("div#contenuto2").slideToggle("fast").addClass("view_content");
-                                $("div#box2").toggleClass("position_barra");
-                            });
-
-                            $("div#box3").click(function() {
-                                $("div#contenuto3").slideToggle("fast").addClass("view_content");
-                                $("div#box3").toggleClass("position_barra");
-                            });
-                     });
-                 </script>
-                 
-                 
-                 <script>
-                 // Get the modal
-                 var modal = $("#myModal");
-                 //var modal = document.getElementById('myModal');
-
-                 // Get the button that opens the modal
-                 var btn = $("#newGroup");
-                 
-                 // Get the <span> element that closes the modal
-                 //var span = document.getElementsByClassName("close")[0];
-                 
-
-                 // When the user clicks the button, open the modal 
-                 btn.click(function(){
-                    //alert("hello");
-                    //modal.css({"display":"block"});
-                    var newGroup = $('<form action="createGroup.do" method="post" autocomplete="off"><div class="newGroup"><h1>모임 생성</h1><span>모임명</span><input name="name" type="text"><span>내용</span><input name="content" type="text"/><br><br><input class = "form" type = "submit" value = "모임생성 후 멤버초대 하러가기"></div></form>');
-                   
-                    $("#createGroup").empty();
-                    $("#createGroup").prepend(newGroup);
-                 });
-
-                 // When the user clicks on <span> (x), close the modal
-                 /* span.onclick = function() {
-                     modal.style.display = "none";
-                 } */
-
-                 // When the user clicks anywhere outside of the modal, close it
-                 /* window.onclick = function(event) {
-                     if (event.target == modal) {
-                         modal.style.display = "none";
-                     }
-                 } */
-                 </script>
-             </div>
-             <!-- FINE PAGE -->
-         </div>
-      </div>
-    </div>
-  </div>
+		<!-- GROUP -->
+		<div class="column half">
+			<h1 class="menuTitle">GROUP</h1>
+	       
+			<div class="search-box">
+				<button class="group" id="newGroup">New Group</button>
+			</div>
+		      
+			<div id="createGroup"></div>
+			<input type="hidden" id="myEmail" value="${email}" />
+			
+			<div id="groupsScroll" class="scroll center">
+				<div class="adr-article-container">
+					<div id="group" style="max-width: 500px;">
+						<!-- ACCORDION-->
+						<c:forEach var="g" items="${groups}" >
+							<div class="box acco">
+								<img class="ico-accordion" src="http://via.placeholder.com/45x45" />
+								<span class="accordion-title">${g.name}</span>
+							</div>
+							<div class="contenuto" id="contenuto1">
+								<div class="row">
+									<div class="column middle">
+									<h1>${g.name}</h1>
+									<h3>${g.content}</h3>
+									</div>
+									
+									<div class="column oneside">
+										<input type="hidden" name="g_num" value="${g.num}">
+										<c:if test="${g.owner != email }">
+											<button class="faBtn btnSignOutGroup" type="button"><i class="fa fa-sign-out"></i></button>
+										</c:if>	                      	
+										<c:if test="${g.owner == email}">
+											<button class="faBtn btnRemoveGroup" type="button"><i class="fa fa-sign-out"></i></button>
+											<a href="editGroups.do?g_num=${g.num}"><button class="faBtn" type="button"><i class="fa fa-edit"></i></button></a>
+										</c:if>
+									</div>
+								</div>
+							</div>
+						</c:forEach>  
+						<!-- ACCORDION-->
+					</div>
+				</div>
+			</div>
+	    </div>
+	    <!-- GROUP end -->
+	</div>
   
-  
-  
-  <div class="column side"></div>
+	<div class="column side"></div>
 </div>
 
 <div>
    <jsp:include page="../default/footer.jsp" />
 </div>
-<!-- modal cript  -->
+ 
+<script>
+/* accordion */
+$(document).ready(function() {
+	 $(document).on("click", "div.acco", this, function(){
+      	$(this).next().slideToggle("fast").addClass("view_content");
+      	$(this).toggleClass("position_barra");
+      });
+});
+</script>
+
+
+<script>
+/* make a new Group form */
+$("#newGroup").click(function(){
+   var newGroup = $('<form action="createGroup.do" method="post" autocomplete="off"><div class="newGroup"><h1>모임 생성</h1><span>모임명</span><input name="name" type="text"><span>내용</span><input name="content" type="text"/><br><br><input class = "form" type = "submit" value = "모임생성 후 멤버초대 하러가기"></div></form>');
+  
+   $("#createGroup").empty();
+   $("#createGroup").prepend(newGroup);
+});
+</script>
+
+<!-- modal 안 tab script  -->
+<script>
+function openCity(evt, category) {
+    var i, tabcontent, tablinks;
+    friendModal_tabcontent = document.getElementsByClassName("friendModal_tabcontent");
+    
+    for (i = 0; i < friendModal_tabcontent.length; i++) {
+		friendModal_tabcontent[i].style.display = "none";
+    }
+    
+    friendModal_tablinks = document.getElementsByClassName("friendModal_tablinks");
+    for (i = 0; i < friendModal_tablinks.length; i++) {
+       friendModal_tablinks[i].className = friendModal_tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(category).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+
+//Get the element with id="defaultOpen" and click on it
+/* document.getElementById("defaultOpen").click(); */
+</script>
+
+<!-- modal script  -->
 <script>
 //Get the modal
-var modal1 = document.getElementById('friendModal');
+// var modal1 = document.getElementById('friendModal');
 
 // Get the button that opens the modal
-var btn1 = document.getElementById("btnBell");
+// var btn1 = document.getElementById("btnBell");
 
 // Get the <span> element that closes the modal
 /* var span1 = document.getElementsByClassName("close")[0]; */
 
 // When the user clicks on the button, open the modal 
-btn1.onclick = function() {
-    modal1.style.display = "block";
-    
-    $.ajax({
-      url: "getAcceptedFriends.do",   
-      type: "GET",
-      data: {},
-      contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-      error: function(jqXHR){
-         alert(jqXHR.status);
-         alert(jqXHR.statusText);
-      },
-      dataType: "json",
-      success: function(resData){ 
-         printData1(resData);
-      }
-   });   
+/* btn1.onclick = function() {
+	$("#acceptedFriends").trigger('click');
+	modal1.style.display = "block";
 }
+ */
 
 $(function(){
-   $('#acceptedFriends').click(function(){
-      $.ajax({
-         url: "getAcceptedFriends.do",   
-         type: "GET",
-         data: {},
-         contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-         error: function(jqXHR){
-            alert(jqXHR.status);
-            alert(jqXHR.statusText);
-         },
-         dataType: "json",
-         success: function(resData){ 
-            printData1(resData);
-         }
-      });   
-   });
+	$(document).on("click", "#btnBell", function(){
+// 	$('#btnBell').click(function(){
+		$('#friendModal').css({
+			"display":"block"
+		});
+		$('#acceptedFriends').trigger("click");
+// 	});
+	});
+	
+	$('#acceptedFriends').click(function(){
+		acceptedFriends();
+	});
    
    $('#applyFriends').click(function(){
       $.ajax({
@@ -1034,6 +1008,23 @@ $(function(){
          dataType: "json",
          success: function(resData){ 
             printData2(resData);
+         }
+      });   
+   });
+   
+   $('#acceptedGroups').click(function(){
+      $.ajax({
+         url: "getAcceptedGroups.do",   
+         type: "GET",
+         data: {},
+         contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+         error: function(jqXHR){
+            alert(jqXHR.status);
+            alert(jqXHR.statusText);
+         },
+         dataType: "json",
+         success: function(resData){ 
+            printData3(resData);
          }
       });   
    });
@@ -1089,9 +1080,42 @@ $(function(){
       });
    });
    
+   $(document).on("click", ".btnModalAcceptGroup", function(){
+      $.ajax({
+         url: "ModalAcceptGroupProc.do",   
+         type: "GET",
+         data: {"g_num":$(this).prev().val()},
+         error: function(jqXHR){
+            alert(jqXHR.status);
+            alert(jqXHR.statusText);
+         },
+         dataType: "json",
+         success: function(resData){
+            var checkNewFriends = true;
+            printData3(resData);
+         }
+      });
+   });
    
+   $(document).on("click", ".btnModalRefuseGroup", function(){
+      $.ajax({
+         url: "ModalRefuseGroupProc.do",   
+         type: "GET",
+         data: {"g_num":$(this).prev().prev().val()},
+         error: function(jqXHR){
+            alert(jqXHR.status);
+            alert(jqXHR.statusText);
+         },
+         dataType: "json",
+         success: function(resData){
+            var checkNewFriends = true;
+            printData3(resData);
+         }
+      });
+   });
 });
 
+/* modal get accepted friend list */
 function printData1(resData){
    var s='';
    for(var i in resData){
@@ -1103,6 +1127,7 @@ function printData1(resData){
    $("#acceptedFriendModal_scroll").append(s);
 }
 
+/* modal get apply friend list  */
 function printData2(resData){
    var s='';
    for(var i in resData){
@@ -1114,39 +1139,36 @@ function printData2(resData){
    $("#applyFriendModal_scroll").append(s);
 }
 
-
-// When the user clicks on <span> (x), close the modal
-/* span1.onclick = function() {
-    modal1.style.display = "none";
-} */
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal1) {
-        modal1.style.display = "none";
-    }
+/* modal get accepted group list  */
+function printData3(resData){
+   var s='';
+   for(var i in resData){
+	  s += '<figure class="snip1157"><img src="../images/basicProfile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
+      s += resData[i]['name']+'</span><br><span>'+resData[i]['content']+'</span></h5><input class="email" type="hidden" name="g_num" value="'+resData[i]['num']+'" />';
+      s += '<button class="btnModalAcceptGroup" type="button"><i class="fa fa-check-circle-o"></i></button><button class="btnModalRefuseGroup" type="button"><i class="fa fa-close"></i></button></div></figure>';
+   }
+   $("#acceptedGroupsModal_scroll").empty();
+   $("#acceptedGroupsModal_scroll").append(s);
 }
 
-
-</script>
-<!-- modal 안 tab script  -->
-<script>
-function openCity(evt, category) {
-    var i, tabcontent, tablinks;
-    friendModal_tabcontent = document.getElementsByClassName("friendModal_tabcontent");
-    for (i = 0; i < friendModal_tabcontent.length; i++) {
-       friendModal_tabcontent[i].style.display = "none";
-    }
-    friendModal_tablinks = document.getElementsByClassName("friendModal_tablinks");
-    for (i = 0; i < friendModal_tablinks.length; i++) {
-       friendModal_tablinks[i].className = friendModal_tablinks[i].className.replace(" active", "");
-    }
-    document.getElementById(category).style.display = "block";
-    evt.currentTarget.className += " active";
+function acceptedFriends(){
+	$.ajax({
+        url: "getAcceptedFriends.do",   
+        type: "GET",
+        data: {},
+        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+        error: function(jqXHR){
+           alert(jqXHR.status);
+           alert(jqXHR.statusText);
+        },
+        dataType: "json",
+        success: function(resData){ 
+           printData1(resData);
+        }
+     }); 
 }
-
-// Get the element with id="defaultOpen" and click on it
-document.getElementById("defaultOpen").click();
 </script>
+
+
 </body>
 </html>
