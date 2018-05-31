@@ -10,7 +10,6 @@
 <link rel="stylesheet" href="../css/background.css">
 <link rel="stylesheet" href="../css/calendar.css">
 <link rel="stylesheet" href="../css/account.css">
-<!-- <link rel="stylesheet" href="../css/tab2.css"> -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="https://fonts.googleapis.com/css?family=Baloo|Ubuntu" rel="stylesheet">
 <!-- jquery-ui -->
@@ -20,210 +19,11 @@
 <!-- qtip -->
 <script type="text/javascript" src="../js/jquery.qtip.custom/jquery.qtip.min.js"></script>
 <!-- googlemap -->
-<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUsZlyBI_gQ8S_liz_WdZ6U2W2ooRwIoQ"></script> -->
-<!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUsZlyBI_gQ8S_liz_WdZ6U2W2ooRwIoQ&libraries=places"></script> -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUsZlyBI_gQ8S_liz_WdZ6U2W2ooRwIoQ&libraries=places&callback=initAutocomplete" async defer></script>
 <!-- fullcalendar -->
 <script src='../css/fullcalendar/lib/moment.min.js'></script>
 <script src='../css/fullcalendar/fullcalendar.js'></script>
-<script type="text/javascript">
-
-$(function(){
-	$("#datepicker").datepicker({
-	    changeMonth: true,
-	    changeYear: true,
-	    showOtherMonths: true,
-	    selectOtherMonths: true,
-	    showAnim: "drop",
-	    inline: true,
-	    onSelect: function(a, b) {
-	        var c = new Date(a);
-	        $("#fullcalendar").fullCalendar("gotoDate", c);
-	        $("#fullcalendar").fullCalendar("select", c);
-// 	        var s = "hello";
-// 	        alert(typeof(s));
-// 	        $("#sDate").val(c);
-	    }
-	});
-
-
-	!function() {
-	    var a = new Date();
-	    var b = a.getDate();
-	    var c = a.getMonth();
-	    var d = a.getFullYear();
-	    var e = $("<div/>").qtip({
-	        id: "fullcalendar",
-	        prerender: true,
-	        content: {
-	            text: " ",
-	            title: " ",
-	            button: true
-	        },
-	        events: {
-	            render: function(a, b) {
-	                var c = b.elements.bgiframe;
-	            }
-	        },
-	        position: {
-	            my: "bottom center",
-	            at: "top center",
-	            target: "event",
-	            viewport: $(window),
-	            adjust: {
-	                mouse: false,
-	                scroll: true,
-	                method: "shift",
-	                resize: true
-	            }
-	        },
-	        show: {
-	            modal: {
-	                on: false,
-	                blur: true,
-	                stealfocus: false
-	            }
-	        },
-	        hide: false,
-	        style: {
-	            classes: "qtip-bootstrap qtip-shadow qtip-events",
-	            border: {
-	                radius: 2
-	            }
-	        }
-	    }).qtip("api");
-	    $("#fullcalendar").fullCalendar({
-	       /*  eventSources: [ $.fullCalendar.gcalFeed("https://www.google.com/calendar/feeds/en.usa%23holiday%40group.v.calendar.google.com/public/basic", {
-	            className: "bmesevents"
-	        }), $.fullCalendar.gcalFeed("https://www.google.com/calendar/feeds/en.german%23holiday%40group.v.calendar.google.com/public/basic", {
-	            className: "wsubmesevents"
-	        }), $.fullCalendar.gcalFeed("https://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic", {
-	            className: "holidaysevents"
-	        }) ],*/
-	       
-	        header: {
-	            left: "month,agendaList",
-	            center: "title",
-	            right: "prev,today,next"
-	        },
-	        selectable: true,
-	        eventClick: function(a, b, c) {
-	            var d = $.fullCalendar.formatDate(a.start, "dddd, MMM yyyy @ HH:mmtt");
-	            var f = $.fullCalendar.formatDate(a.end, "dddd, MMM yyyy @ HH:mmtt");
-	            var g = '<h5 style="margin:0;padding:0;">' + a.title + "</h5>";
-	            var h = '<p style="margin:0;padding:2px;"><b>Start:</b> ' + d + "<br />" + (f && '<p style="margin:0;padding:2px;"><b>End:</b> ' + f + "</p>" || "") + (a.description && '<p style="margin:0;padding:2px;"><b>What:</b> ' + a.description + "</p>" || "") + (a.location && '<p style="margin:0;padding:2px;"><b>Where:</b> ' + a.location + "</p>" || "");
-	            e.set({
-	                "content.title": g,
-	                "content.text": h
-	            }).reposition(b).show(b);
-	            var i = b.pageX;
-	            var j = b.pageY;
-	            $("td").each(function(a) {
-	                var b = $(this).offset();
-	                if (b.left + $(this).outerWidth() > i && b.left < i && b.top + $(this).outerHeight() > j && b.top < j) {
-	                    if ($(this).hasClass("fc-cell-overlay")) $(this).addClass("fc-cell-overlay"); else $("td").removeClass("fc-cell-overlay");
-	                    $(this).addClass("fc-cell-overlay");
-	                }
-	            });
-	        },
-	        dayClick: function(date) {
-	            e.hide();
-	            $("td").removeClass("fc-cell-overlay");
-	            /* 클릭한 날짜 잡아오기 */
-	            alert('Clicked on: ' + date.format());
-	        },
-	        eventResizeStart: true,
-	        eventDragStart: false,
-	        viewDisplay: function() {
-	            e.hide();
-	        },
-	       events : [
-	                      /* 일정 출력 */
-	                      {
-	                    	title: '어린이날',
-	                  		start: '2018-05-05',
-	                  		end: '2018-05-06',
-	                  		color: 'lightblue'
-	                      },
-	                      {
-	                    	title: '제주도 여행',
-	                  		start: '2018-05-11',
-	                  		end: '2018-05-14',
-	                  		color: 'lightpink'
-	                      },
-	                      {
-	                    	title: '맛집탐방',
-	                  		start: '2018-05-25',
-	                  		end: '2018-05-25',
-	                  		color: 'lightpink',
-	                      }
-	                      ]
-	    });
-	}();
-	
-	
-	
-	$("[title]").qtip({
-	    style: {
-	        classes: "qtip-blue qtip-shadow qtip-rounded qtip-custom"
-	    },
-	    position: {
-	        my: "top center",
-	        at: "bottom center",
-	        viewport: $(window),
-	        adjust: {
-	            mouse: false,
-	            scroll: true,
-	            method: "shift",
-	            resize: true
-	        }
-	    }
-	});
-	
-	$('.fc-today-button').click(function() {
-		var moment = $('#fullcalendar').fullCalendar('getDate');
-    	alert("The current date of the calendar is " + moment.format());
-	});
-	
-	
-	$("#monthB").click(function(){
-// 		$("#monthB").css("margin-left","20px");
-		$(".plusicon").css("opacity","0");
-		$("#newSchedule").prop("disabled", true);
-		$("#newSchedule").css("cursor", "default");
-	});
-	
-	$("#dayB").click(function(){
-// 		$("#monthB").css("margin-left","0px");
-// 		$("#newSchedule").show();
-		$(".plusicon").css("opacity","1");
-		$("#newSchedule").prop("disabled", false);
-		$("#newSchedule").css("cursor", "pointer");
-	});
-	
-	
-	
-	
-});
-	
-
-
-</script>
-<script type="text/javascript">
-	/* 지도 script */
-	 /* function initMap(){
-		var mapCanvas = document.getElementById("map");
-		var mapOption = {
-				center: new google.maps.LatLng(37.556556, 126.919485),		
-				zoom: 17													
-		};
-		
-		var mapObj = new google.maps.Map(mapCanvas, mapOption);
-	}
-	
-	google.maps.event.addDomListener(window, 'load', initMap);	  */
-
-</script>
+<script src='../js/scheduleBook.js'></script>
 <style type="text/css">
 .con {
 	float: left;
@@ -588,7 +388,7 @@ to {
 }
 
 /* The Close Button */
-.close {
+.close ,.sRowModalEdit_close {
 	color: white;
 	font-size: 20px;
 	font-weight: bold;
@@ -598,7 +398,7 @@ to {
 /* 	margin-bottom: 50px; */
 }
 
-.close:hover, .close:focus {
+.close:hover, .close:focus, .sRowModalEdit_close:hover, .sRowModalEdit_close:focus {
 	color: gray;
 	text-decoration: none;
 	cursor: pointer;
@@ -619,6 +419,7 @@ to {
 	cursor: pointer;
 }
 
+
 .save {
 	color: white;
 	font-size: 20px;
@@ -627,6 +428,15 @@ to {
 	width: 10%;
 	margin-right: 12%;
 /* 	margin-bottom: 50px; */
+}
+
+.edit{
+	color: white;
+	font-size: 20px;
+	font-weight: bold;
+	float: right;
+	width: 10%;
+	margin-right: 12%;
 }
 
 /* 모달 안 내용 */
@@ -721,8 +531,9 @@ to {
 
 .scheduleList_date {
 	margin: 0 0;
-	width: 60px;
+	width: 115px;
 }
+
 
 .scheduleList {
 	margin: 0 0em 0 0em;
@@ -739,7 +550,7 @@ to {
 
 @media ( max-width :1024px) {
 	.scheduleList_date {
-		width: 40px;
+		width: 90px;
 	}
 	.date {
 		font-size: 20px;
@@ -790,7 +601,13 @@ to {
 }
 
 .blank {
-	width: 15%;
+	width: 40%;
+}
+
+@media ( max-width :1024px) {
+	.blank {
+		width: 3%;
+	}
 }
 
 .tab-btn {
@@ -885,6 +702,11 @@ to {
 
 #srmMap{
 	width: 100%;
+	height: 250px; 
+}
+
+#srmEditMap{
+	width: 100%;
 	height: 200px; 
 }
 
@@ -909,7 +731,7 @@ to {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-#pac-input {
+#pac-input, #srmEdit_pac-input {
   background-color: #fff;
   font-family: Roboto;
   font-size: 15px;
@@ -920,9 +742,10 @@ to {
   width: 200px;
 }
 
-#pac-input:focus {
+#pac-input:focus, #srmEdit_pac-input:focus {
   border-color: #4d90fe;
 }
+
 
 .pac-container {
   font-family: Roboto;
@@ -966,13 +789,13 @@ to {
 				  <input type="radio" id="tab4" name="tab-control" hidden>
 				  <div class="inner-tabs">
 				  	<ul class="tablist date">
-					  <li class="scheduleList_date"><span id="sDate">5월</span></li>
+				  		<li class="scheduleList_date"><span id="sDate"></span></li>
 				  	</ul>
 					<ul class="tablist tab_importance" style="align-content: left">
-						    <li class="scheduleList_all"><label for="tab1" role="button"><br><span>전체</span></label></li>
-						    <li class="scheduleList"><label for="tab2" role="button"><br><span><i class="fa fa-circle btnRed"></i></span></label></li>
-						    <li class="scheduleList"><label for="tab3" role="button"><br><span><i class="fa fa-circle btnOrange"></i></span></label></li>
-						    <li class="scheduleList"><label for="tab4" role="button"><br><span><i class="fa fa-circle btnGreen"></i></span></label></li>
+					    <li class="scheduleList_all"><label for="tab1" role="button"><br><span>전체</span></label></li>
+					    <li class="scheduleList"><label for="tab2" role="button"><br><span><i class="fa fa-circle btnRed"></i></span></label></li>
+					    <li class="scheduleList"><label for="tab3" role="button"><br><span><i class="fa fa-circle btnOrange"></i></span></label></li>
+					    <li class="scheduleList"><label for="tab4" role="button"><br><span><i class="fa fa-circle btnGreen"></i></span></label></li>
 					</ul>
 					<div class="blank"></div>
 						<ul class="tablist tab-btn">
@@ -1339,7 +1162,6 @@ to {
 		
 		<!-- schedule Modal -->
 		<div id="scheduleModal" class="modal">
-			Modal content
 			<div class="modal-content">
 				<div class="modal-body">
 					 <div class = "add">일정추가</div>
@@ -1351,15 +1173,15 @@ to {
 				       	<span class="importantSpan">중요도 : </span>
 				       	<select class="importantSelect" placeholder="중요도">
 				              <option value="3" class="modalR">상</option>
-				              <option value="2" class="modalO">중</option>
+				              <option value="2" class="modalO" selected>중</option>
 				              <option value="1" class="modalG">하</option>
 				        </select>
 				        <br> <br>
 						<textarea class = "border borderContent" rows="20" cols="50" placeholder = "내용을 입력해주세요."></textarea><br><br><br>
 				    	</div>
 				    	<div class="googleMapDiv">
-					    	<input id="pac-input" class="controls" type="text" placeholder="Search Box">
 					    	<div id="map"></div>
+					    	<input id="pac-input" class="controls" type="text" placeholder="Search Box">
 				    	</div>
 				    	<div class="smbtnDiv">
 					       <span class = "close">CLOSE</span>
@@ -1400,10 +1222,36 @@ to {
 
 		<!-- schedule row Modal -->
 		<div id="sRowModal" class="modal">
-			Modal content
 			<div class="modal-content">
 				<div class="modal-body">
 					 <div class = "add">상세 일정</div>
+				     <br><br>
+				    	<div class="smcontentsDiv">
+				       	<p>어린이날</p>
+				       	<p>2018-05-05</p>
+				       	<span class="importantSpan">중요도 : </span>
+				        <span style="color:skyblue;">하</span>
+				        <br> <br>
+				        <p>5월은 푸르구나 우리들은 자란다</p>
+				    	</div>
+				    	<div class="googleMapDiv">
+					    	<div id="srmMap"></div>
+				    	</div>
+				    	<div class="smbtnDiv">
+				    		<br>
+					       <span class = "sRowModal_close">CLOSE</span>
+					       <a href = "#"><span id="edit" class = "edit">EDIT</span></a>
+				    	</div>
+				</div>
+			</div>
+		</div>
+		
+		
+		<!-- schedule row Modal edit -->
+		<div id="sRowModalEdit" class="modal">
+			<div class="modal-content">
+				<div class="modal-body">
+					 <div class = "add">일정 수정</div>
 				     <br><br>
 				    <form>
 				    	<div class="smcontentsDiv">
@@ -1419,12 +1267,12 @@ to {
 						<textarea class = "border borderContent" rows="20" cols="50" placeholder = "내용을 입력해주세요."></textarea><br><br><br>
 				    	</div>
 				    	<div class="googleMapDiv">
-					    	<input id="srm_pac-input" class="srmcontrols" type="text" placeholder="Search Box">
-					    	<div id="srmMap"></div>
+					    	<div id="srmEditMap"></div>
+					    	<input id="srmEdit_pac-input" class="controls" type="text" placeholder="Search Box">
 				    	</div>
 				    	<div class="smbtnDiv">
-					       <span class = "sRowModal_close">CLOSE</span>
-					       <a href = "#"><span class = "save">EDIT</span></a>
+					       <span class = "sRowModalEdit_close">CLOSE</span>
+					       <a href = "#"><span id="editSave" class = "edit">SAVE</span></a>
 				    	</div>
 				    </form>
 				</div>
@@ -1432,363 +1280,8 @@ to {
 		</div>
 		
 	</div>
-	
-<script>
-	// Get schedule row
-	var row = document.getElementById('sdrow');
 
-    // Get the modal
-	var sModal = document.getElementById('scheduleModal');
-	var aModal = document.getElementById('accountModal');
-	var srModal = document.getElementById('sRowModal');
-
-	// Get the button that opens the modal
-	var nsbtn = document.getElementById("newSchedule");
-	var srbtn = document.getElementById("saleReport");
-
-	// Get the <span> element that closes the modal
-	var scheduleClose = document.getElementsByClassName("close")[0];
-	var accountClose = document.getElementsByClassName("accountM_close")[0];
-	var sRowClose = document.getElementsByClassName("sRowModal_close")[0];
-	
-	// When the user clicks the button, open the modal 
-	nsbtn.onclick = function() {
-		sModal.style.display = "block";
-		$("#datepicker").css("cssText","z-index:0 !important;");
-		$(".fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active").css({
-			"z-index":"0"
-		})
-		
-// 		initAutocomplete();
-	}
-	
-	srbtn.onclick = function() {
-		aModal.style.display = "block";
-		$("#datepicker").css("cssText","z-index:0 !important;");
-		$(".fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active").css({
-			"z-index":"0"
-		})
-	}
-	
-	row.onclick = function(){
-		srModal.style.display = "block";
-		$("#datepicker").css("cssText","z-index:0 !important;");
-		$(".fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active").css({
-			"z-index":"0"
-		})
-		
-	}
-
-	// When the user clicks on <span> (x), close the modal
-	scheduleClose.onclick = function() {
-		sModal.style.display = "none";
-		$("#datepicker").css({
-			"z-index":"9"
-		});
-		$(".fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active").css({
-			"z-index":"4"
-		})
-	}
-	
-	accountClose.onclick = function() {
-		aModal.style.display = "none";
-		$("#datepicker").css({
-			"z-index":"9"
-		});
-		$(".fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active").css({
-			"z-index":"4"
-		})
-	}
-	
-	sRowClose.onclick = function() {
-		srModal.style.display = "none";
-		$("#datepicker").css({
-			"z-index":"9"
-		});
-		$(".fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active").css({
-			"z-index":"4"
-		})
-	}
-	
-
-	// When the user clicks anywhere outside of the modal, close it
-	window.onclick = function(event) {
-		if (event.target == sModal) {
-			sModal.style.display = "none";
-			$("#datepicker").css({
-				"z-index":"9"
-			});
-			$(".fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active").css({
-				"z-index":"4"
-			})
-		
-		}
-		
-		if (event.target == aModal) {
-			aModal.style.display = "none";
-			$("#datepicker").css({
-				"z-index":"9"
-			});
-			$(".fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active").css({
-				"z-index":"4"
-			})
-		}
-		
-		if (event.target == srModal) {
-			srModal.style.display = "none";
-			$("#datepicker").css({
-				"z-index":"9"
-			});
-			$(".fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active").css({
-				"z-index":"4"
-			})
-		
-		}
-	}
-	
-	var currentMonth = new Date().getMonth();
-    var currentYear = new Date().getFullYear();
-    var clickedDays = 0;
-    var bookingSteps = 0;
-    var lastClickedDay;
-    var startDate = "";
-    var endDate = "";
-    var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "June",
-       "July", "Aug", "Sept", "Oct", "Nov", "Dec"
-    ];
-    var monthShortNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    var bookedDates = [];
-    var selectedDates = [];
-    
-    Date.prototype.addDays = function(days) {
-       var dat = new Date(this.valueOf())
-       dat.setDate(dat.getDate() + days);
-       return dat;
-    }
-    function clearCalender() {
-       clickedDays = 0;
-       $(".month div").removeClass("clicked");
-       $("#startdate").html("");
-       $("#enddate").html("");
-    
-       startDate = "";
-       endDate = "";
-       selectedDates = [];
-       bookingSteps = 0;
-    }
-    
-    function daysInMonth(month) {
-       return new Date(currentYear, month, 0).getDate();
-    }
-    function displayCalender() {
-       var days = daysInMonth(currentMonth + 1);
-    
-       $("#accountM_calender-title p").html(monthNames[currentMonth].toUpperCase());
-       $("#accountM_calender-content").html("");
-    
-    
-//        checkSelected();
-//        checkBookings();
-    }
-    function monthClick(e) {
-          clickedDays += 1;
-    
-          if (clickedDays == 1) {
-             $(e).toggleClass("clicked");
-             startDateIndex = parseInt($(e).attr('id').split('-')[1]);
-             startDate = new Date(currentYear, currentMonth, startDateIndex);
-          }
-          if (clickedDays > 1) {
-             endDateIndex = parseInt($(e).attr('id').split('-')[1]);
-             endDate = new Date(currentYear, currentMonth, endDateIndex);
-          }
-          if (endDate > startDate) {
-             var clicked = $(".clicked");
-             $(clicked).not(clicked[0]).removeClass("clicked");
-             $(e).toggleClass("clicked");
-    
-             dateArray = getDates(startDate, endDate);
-             dateArray = formatDates(dateArray)
-             selectedDates = dateArray;
-    
-             for (var i = 0; i < dateArray.length; i++) {
-                $("#" + dateArray[i]).addClass("clicked");
-             }
-          }
-          $("#startdate").html(startDate.toString().split(' ').slice(0, 3).join(' '));
-          $("#enddate").html(endDate.toString().split(' ').slice(0, 3).join(' '));
-    }
-    function firstDayOffset(date) {
-       return new Date(currentYear, currentMonth, 1).getDay();
-    }
-    
-    
-    $(function() {
-       displayCalender(currentMonth)
-       $("#date").append(new Date);
-    });
-    
-    $("#accountM_left").on("click", function() {
-       if (currentMonth > 0)
-          currentMonth -= 1;
-       else {
-          currentMonth = 11;
-          currentYear -= 1;
-       }
-       displayCalender();
-    });
-    $("#accountM_right").on("click", function() {
-       if (currentMonth < 11)
-          currentMonth += 1;
-       else {
-          currentMonth = 0;
-          currentYear += 1;
-       }
-       displayCalender();
-    });
-
-</script>
-<script type="text/javascript">
-/* 달력 script */
- 
- function initAutocomplete() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: 37.565609, lng: 126.977421},
-          zoom: 14,
-          mapTypeId: 'roadmap'
-        });
-
-        // Create the search box and link it to the UI element.
-        var input = document.getElementById('pac-input');
-        var searchBox = new google.maps.places.SearchBox(input);
-        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-        // Bias the SearchBox results towards current map's viewport.
-        map.addListener('bounds_changed', function() {
-          searchBox.setBounds(map.getBounds());
-        });
-
-         var markers = [];
-        // Listen for the event fired when the user selects a prediction and retrieve
-        // more details for that place.
-        searchBox.addListener('places_changed', function() {
-          var places = searchBox.getPlaces();
-
-          if (places.length == 0) {
-            return;
-          }
-
-          // Clear out the old markers.
-          markers.forEach(function(marker) {
-            marker.setMap(null);
-          });
-          markers = [];
-
-          // For each place, get the icon, name and location.
-          var bounds = new google.maps.LatLngBounds();
-          places.forEach(function(place) {
-            if (!place.geometry) {
-              console.log("Returned place contains no geometry");
-              return;
-            }
-            var icon = {
-              url: place.icon,
-              size: new google.maps.Size(71, 71),
-              origin: new google.maps.Point(0, 0),
-              anchor: new google.maps.Point(17, 34),
-              scaledSize: new google.maps.Size(25, 25)
-            };
-
-            // Create a marker for each place.
-            markers.push(new google.maps.Marker({
-              map: map,
-              icon: icon,
-              title: place.name,
-              position: place.geometry.location
-            }));
-
-            if (place.geometry.viewport) {
-              // Only geocodes have viewport.
-              bounds.union(place.geometry.viewport);
-            } else {
-              bounds.extend(place.geometry.location);
-            }
-          });
-          map.fitBounds(bounds);
-        }); 
-      }
- 
-	google.maps.event.addDomListener(window, 'load', initAutocomplete);
- 
-/*  function initsrmMap() {
-     var srmMap = new google.maps.Map(document.getElementById('srmMap'), {
-       center: {lat: 37.565609, lng: 126.977421},
-       zoom: 14,
-       mapTypeId: 'roadmap'
-     });
-
-     // Create the search box and link it to the UI element.
-     var input = document.getElementById('srm_pac-input');
-     var searchBox = new google.maps.places.SearchBox(input);
-     srmMap.srmcontrols[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-     // Bias the SearchBox results towards current map's viewport.
-     srmMap.addListener('bounds_changed', function() {
-       searchBox.setBounds(map.getBounds());
-     });
-
-     var markers = [];
-     // Listen for the event fired when the user selects a prediction and retrieve
-     // more details for that place.
-     searchBox.addListener('places_changed', function() {
-       var places = searchBox.getPlaces();
-
-       if (places.length == 0) {
-         return;
-       }
-
-       // Clear out the old markers.
-       markers.forEach(function(marker) {
-         marker.setMap(null);
-       });
-       markers = [];
-
-       // For each place, get the icon, name and location.
-       var bounds = new google.maps.LatLngBounds();
-       places.forEach(function(place) {
-         if (!place.geometry) {
-           console.log("Returned place contains no geometry");
-           return;
-         }
-         var icon = {
-           url: place.icon,
-           size: new google.maps.Size(71, 71),
-           origin: new google.maps.Point(0, 0),
-           anchor: new google.maps.Point(17, 34),
-           scaledSize: new google.maps.Size(25, 25)
-         };
-
-         // Create a marker for each place.
-         markers.push(new google.maps.Marker({
-           map: srmMap,
-           icon: icon,
-           title: place.name,
-           position: place.geometry.location
-         }));
-
-         if (place.geometry.viewport) {
-           // Only geocodes have viewport.
-           bounds.union(place.geometry.viewport);
-         } else {
-           bounds.extend(place.geometry.location);
-         }
-       });
-       srmMap.fitBounds(bounds);
-     });
-   } */
- 
-</script>
 <jsp:include page="../default/footer.jsp" />
-
+<input id="myEmail" type="hidden" value="${email}">
 </body>
 </html>
