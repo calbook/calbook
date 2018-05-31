@@ -13,7 +13,7 @@ public class TmpMember {
 	private int g_num;
 	
 	public TmpMember() {
-		this(null, null, null, null, null, 0, null, 0, -1, 0);
+		this(null, null, null, null, null, 0, null, -1, -1, 0);
 	}
 	
 	public TmpMember(String email, String pwd, String nick, String phone, String profile, int open, String regdate, int relation, int status_accept, int g_num) {

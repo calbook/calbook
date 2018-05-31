@@ -76,7 +76,7 @@ public class SocialController {
 		FriendsDAO fdao = ss.getMapper(FriendsDAO.class);
 		
 		if(searchNewFriends.equals("false")) {
-			System.out.println("친占쏙옙占쏙옙 占싯삼옙");
+			System.out.println("friends");
 			
 			List<Members> friends = fdao.getSearchMyFriends(email, searchSelect, search);
 			
@@ -86,28 +86,36 @@ public class SocialController {
 			
 			return friendsJson;
 		}else {
-			System.out.println("占쏙옙占싸울옙 친占쏙옙 占쏙옙 占싯삼옙");
+			System.out.println("all members");
 			
 			TmpMember friend = fdao.getSearchNewFriends(searchSelect, search);
 			List<TmpMember> friends = fdao.getSearchNewFriendsR(email);
 			
-			
+			System.out.println(friends.size());
 			if(friend != null) {
-				for(int i=0; i<friends.size(); i++) {
-					System.out.println(friends.get(i).getNick()+"="+friends.get(i).getRelation());
-					
-					if(friends.get(i).getEmail().equals(friend.getEmail())) {
-						friend.setRelation(friends.get(i).getRelation()); //0 : 친占쏙옙占쏙옙청占쏙옙占쏙옙, 1 : 친占쏙옙
-						break;
-					}else if(i==friends.size()-1) {
-						if(friend.getEmail().equals(email)) {
-							friend.setRelation(2); //2 : 占쌘쏙옙
-						}else {
-							friend.setRelation(3); //3 : 친占쏙옙x
+				if(friends.size()==0) {
+					if(friend.getEmail().equals(email)) {
+						friend.setRelation(2); //2 : me
+					}else {
+						friend.setRelation(3); //3 : friend x
+					}
+				}else {
+					for(int i=0; i<friends.size(); i++) {
+						System.out.println(friends.get(i).getNick()+"="+friends.get(i).getRelation());
+						
+						if(friends.get(i).getEmail().equals(friend.getEmail())) {
+							friend.setRelation(friends.get(i).getRelation()); //0 : not yet friend, 1 : friend
+							break;
+						}else if(i==friends.size()-1) {
+							if(friend.getEmail().equals(email)) {
+								friend.setRelation(2); //2 : me
+							}else {
+								friend.setRelation(3); //3 : friend x
+							}
 						}
 					}
-					
 				}
+				
 			}
 				
 			Gson gson = new Gson();

@@ -734,11 +734,15 @@ figure.snip1157 button:HOVER {
 
 /* Style the tab content */
 .friendModal_tabcontent {
-    display: none;
+    display: block;
     height:80%;
     padding: 6px 12px;
    /*  border: 1px solid #ccc; */
     border-top: none;
+}
+
+.acceptedG, .apply{
+	display: none;
 }
 
 .friendModal_scroll{
@@ -772,6 +776,19 @@ figure.snip1157 button:HOVER {
 	 color: white;
 }
 
+#groupclosebtn { 
+   background-color: Transparent;
+   background-repeat: no-repeat;
+   border: none;
+   outline: none;
+   margin: 0 0 0 20px;
+   cursor: pointer;
+   width: 35px;
+   height: 35px;
+   font-size: 30px;
+   color: #7F8283;
+   float:right;
+}
 
 </style>
 </head>
@@ -848,12 +865,12 @@ figure.snip1157 button:HOVER {
 					</div>
 				</div>
 				
-				<div id="apply" class="friendModal_tabcontent">
+				<div id="apply" class="friendModal_tabcontent apply">
 					<div id="applyFriendModal_scroll" class="friendModal_scroll">
 					</div>
 				</div>
 				
-				<div id="acceptedG" class="friendModal_tabcontent">
+				<div id="acceptedG" class="friendModal_tabcontent acceptedG">
 					<div id="acceptedGroupsModal_scroll" class="friendModal_scroll">
 					</div>
 				</div>
@@ -934,7 +951,7 @@ $(document).ready(function() {
 <script>
 /* make a new Group form */
 $("#newGroup").click(function(){
-   var newGroup = $('<form action="createGroup.do" method="post" autocomplete="off"><div class="newGroup"><h1>모임 생성</h1><span>모임명</span><input name="name" type="text"><span>내용</span><input name="content" type="text"/><br><br><input class = "form" type = "submit" value = "모임생성 후 멤버초대 하러가기"></div></form>');
+   var newGroup = $('<form action="createGroup.do" method="post" autocomplete="off"><div class="newGroup"><h1>모임 생성<button type="button" id="groupclosebtn"><i class="fa fa-close"></i></button></h1><span>모임명</span><input name="name" type="text"><span>내용</span><input name="content" type="text"/><br><br><input class = "form" type = "submit" value = "모임생성 후 멤버초대 하러가기"></div></form>');
   
    $("#createGroup").empty();
    $("#createGroup").prepend(newGroup);
@@ -960,7 +977,7 @@ function openCity(evt, category) {
 }
 
 //Get the element with id="defaultOpen" and click on it
-/* document.getElementById("defaultOpen").click(); */
+// document.getElementById("defaultOpen").click();
 </script>
 
 <!-- modal script  -->
@@ -987,12 +1004,29 @@ $(function(){
 		$('#friendModal').css({
 			"display":"block"
 		});
-		$('#acceptedFriends').trigger("click");
+// 		$('#acceptedFriends').trigger('click');
+		$('#acceptedFriends').show();
 // 	});
+	});
+	$(document).on("click", "#groupclosebtn", function(){
+		$("#createGroup").empty();
 	});
 	
 	$('#acceptedFriends').click(function(){
-		acceptedFriends();
+		$.ajax({
+	        url: "getAcceptedFriends.do",   
+	        type: "GET",
+	        data: {},
+	        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+	        error: function(jqXHR){
+	           alert(jqXHR.status);
+	           alert(jqXHR.statusText);
+	        },
+	        dataType: "json",
+	        success: function(resData){ 
+	           printData1(resData);
+	        }
+	     });
 	});
    
    $('#applyFriends').click(function(){
