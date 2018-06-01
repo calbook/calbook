@@ -1,0 +1,24 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.calbook.web.dao.MembersDAO">
+	<!-- 회원가입(개인정보 저장) -->
+	<insert id="addMembers">
+		INSERT INTO MEMBERS (EMAIL,PWD,NICK,PHONE) VALUES (#{email},#{pwd},#{nick},#{phone})
+	</insert>
+	
+	<!-- 개인정보 불러오기(닉네임) -->
+	<select id="getMembersNick" resultType="com.calbook.web.vo.Members">
+		SELECT * FROM MEMBERS WHERE NICK=#{nick}
+	</select>
+	
+	
+	<!-- 개인정보 불러오기(이메일) -->
+	<select id="getMembersEmail" resultType="com.calbook.web.vo.Members">
+		SELECT * FROM MEMBERS WHERE EMAIL=#{email}
+	</select>
+	
+
+
+</mapper>
