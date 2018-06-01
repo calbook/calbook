@@ -11,4 +11,6 @@
 	<select id="getSchedulesMonth" resultType="com.calbook.web.vo.Schedules">
 		SELECT * FROM SCHEDULES WHERE M_EMAIL = #{param1} AND START_DATE LIKE '${param2}%' AND FINISH_DATE LIKE '${param2}%'
 	</select>
+	
+	
 </mapper>

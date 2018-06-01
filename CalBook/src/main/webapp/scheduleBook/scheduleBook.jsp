@@ -19,7 +19,7 @@
 <!-- qtip -->
 <script type="text/javascript" src="../js/jquery.qtip.custom/jquery.qtip.min.js"></script>
 <!-- googlemap -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUsZlyBI_gQ8S_liz_WdZ6U2W2ooRwIoQ&libraries=places&callback=initAutocomplete" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUsZlyBI_gQ8S_liz_WdZ6U2W2ooRwIoQ&libraries=places" async defer></script>
 <!-- fullcalendar -->
 <script src='../css/fullcalendar/lib/moment.min.js'></script>
 <script src='../css/fullcalendar/fullcalendar.js'></script>
@@ -372,8 +372,12 @@ to {
 	margin: 8% auto; /* 15% from the top and centered */
 	padding: 20px;
 	border: 1px solid #888;
-	width: 50%;
+	width: 60%;
 	/*     height: 65%; /* Could be more or less, depending on screen size */
+}
+
+.smbtnDiv {
+   margin: 10px 10px 10px 10px;
 }
 
 @media ( max-width: 1100px ) {
@@ -388,17 +392,17 @@ to {
 }
 
 /* The Close Button */
-.close ,.sRowModalEdit_close {
+.save, .close ,.sRowModalEdit_close {
+	margin: 0px 10px 10px 20px;
 	color: white;
 	font-size: 20px;
 	font-weight: bold;
 	float: right;
 	width: 10%;
-	margin-right: 10%;
+	/* margin-right: 10%; */
 /* 	margin-bottom: 50px; */
 }
-
-.close:hover, .close:focus, .sRowModalEdit_close:hover, .sRowModalEdit_close:focus {
+.save:hover, .save:focus, .close:hover, .close:focus, .sRowModalEdit_close:hover, .sRowModalEdit_close:focus {
 	color: gray;
 	text-decoration: none;
 	cursor: pointer;
@@ -420,16 +424,6 @@ to {
 }
 
 
-.save {
-	color: white;
-	font-size: 20px;
-	font-weight: bold;
-	float: right;
-	width: 10%;
-	margin-right: 12%;
-/* 	margin-bottom: 50px; */
-}
-
 .edit{
 	color: white;
 	font-size: 20px;
@@ -449,6 +443,7 @@ to {
 }
 
 .border {
+	margin: 10px 0 10px 0;
 	border-radius: 5px;
 	width: 100%;
 }
@@ -456,6 +451,11 @@ to {
 .borderContent {
 	height: 200px;
 }
+
+.importantSpan {
+   margin: 0 0 0 10px;
+}
+
 
 .modal-body{
  	overflow: hidden; 
@@ -472,10 +472,10 @@ to {
 	padding-top: 10px;
 }
 
-.smcontentsDiv{
+/* .smcontentsDiv{
 	float: left;
 	width: 40%;
-}
+} */
 
 .importantSelect{
 	background-color: #ffc966;
@@ -712,7 +712,8 @@ to {
 
 /* Optional: Makes the sample page fill the window. */
 .googleMapDiv{
-  float: left;
+  display: inline;
+  /* float: left; */
   height: 50%;
   width: 59%;
   margin: 0;
@@ -1165,29 +1166,27 @@ to {
 			<div class="modal-content">
 				<div class="modal-body">
 					 <div class = "add">일정추가</div>
-				     <br><br>
 				    <form>
 				    	<div class="smcontentsDiv">
-				       	<input class = "border borderTitle" type = "text" name = "title" size = "50" placeholder="제목을 입력해주세요"><br><br>
-				       	<input class = "border borderDate" type = "text" name = "date" size = "20" placeholder="날짜를 입력해주세요"><br><br>
+				       	<input class = "border borderTitle" type = "text" name = "title" size = "50" placeholder="제목을 입력해주세요">
+				       	<input class = "border borderDate" type = "text" name = "date" size = "20" placeholder="날짜를 입력해주세요">
 				       	<span class="importantSpan">중요도 : </span>
 				       	<select class="importantSelect" placeholder="중요도">
 				              <option value="3" class="modalR">상</option>
 				              <option value="2" class="modalO" selected>중</option>
 				              <option value="1" class="modalG">하</option>
 				        </select>
-				        <br> <br>
-						<textarea class = "border borderContent" rows="20" cols="50" placeholder = "내용을 입력해주세요."></textarea><br><br><br>
-				    	</div>
-				    	<div class="googleMapDiv">
-					    	<div id="map"></div>
-					    	<input id="pac-input" class="controls" type="text" placeholder="Search Box">
-				    	</div>
-				    	<div class="smbtnDiv">
-					       <span class = "close">CLOSE</span>
-					       <a href = "#"><span class = "save">SAVE</span></a>
+						<textarea class = "border borderContent" rows="20" cols="50" placeholder = "내용을 입력해주세요."></textarea>
 				    	</div>
 				    </form>
+					<div class="googleMapDiv">
+						<div id="map"></div>
+					    <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+				    </div>
+				    <div class="smbtnDiv">
+					    <span class = "close">CLOSE</span>
+					    <a href = "#"><span class = "save">SAVE</span></a>
+				    </div>
 				</div>
 			</div>
 		</div>

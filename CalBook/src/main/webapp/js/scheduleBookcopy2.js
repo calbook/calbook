@@ -3,9 +3,8 @@ $(function(){
 	
 	var clickedDate;	// 클릭 날짜
 	var today = moment().format('YYYY/MM/DD');
-	var startD = today;
+	var startD;
 	var endD;
-	var selectedM = moment().format('YYYY/MM/DD');
 	
     var email = $("#myEmail").val();
     
@@ -17,12 +16,10 @@ $(function(){
 	    selectOtherMonths: true,
 	    showAnim: "drop",
 	    inline: true,
-	    onSelect: function(a,b) {
+	    onSelect: function(a, b) {
 	        var c = new Date(a);
-	        var d = new Date(a);
-	        d.setDate(d.getDate()+1); 
 	        $("#fullcalendar").fullCalendar("gotoDate", c);
-	        $("#fullcalendar").fullCalendar("select", c, d);
+	        $("#fullcalendar").fullCalendar("select", c);
 	    }
 	});
 
@@ -72,134 +69,126 @@ $(function(){
 	            }
 	        }
 	    }).qtip("api");
-	    $("#fullcalendar").fullCalendar({
-			 /*  eventSources: [ $.fullCalendar.gcalFeed("https://www.google.com/calendar/feeds/en.usa%23holiday%40group.v.calendar.google.com/public/basic", {
-	           className: "bmesevents"
-	       }), $.fullCalendar.gcalFeed("https://www.google.com/calendar/feeds/en.german%23holiday%40group.v.calendar.google.com/public/basic", {
-	           className: "wsubmesevents"
-	       }), $.fullCalendar.gcalFeed("https://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic", {
-	           className: "holidaysevents"
-	       }) ],*/
-	       header: {
-	           left: "month,agendaList",
-	           center: "title",
-	           right: "prev,today,next"
-	       },
-	       selectable: true,
-	       select: function(startDate, endDate) {
-//	    	   var a = new Date(endDate);
-//	           alert('selected ' + startDate.format() + ' to ' + endDate.format());
-	           startD = startDate.format().replace(/-/gi,"/");
-	           endD = endDate.format().replace(/-/gi,"/");
-	           var subendD = endDate.add(-1, 'days').format().replace(/-/gi,"/");
-//	           var subendD = endD;
-//	           alert(startD+","+subendD);
-	           var sdate;
-	           var edate;
-	           
-	           if(startD.substr(8,1)==0){
-	        	   sdate = startD.substr(9,1);
-	           }else{
-	        	   sdate = startD.substr(8,2);
-	           }
-	           if(subendD.substr(8,1)==0){
-	        	   edate = subendD.substr(9,1);
-	           }else{
-	        	   edate = subendD.substr(8,2);
-	           }
-	           
-	           //선택한 시작날의 달과 끝 날의 달이 같을때
-	           if(startD.substr(5,2) == subendD.substr(5,2)){
-	        	   var tempS = sdate;
-	        	   if(startD.substr(5,2) != selectedM.substr(5,2)){
-	        		   if(startD.substr(5,1)==0){
-	        			   sdate = startD.substr(6,1)+"/"+sdate;
-		        	   }else{
-		        		   sdate = startD.substr(5,2)+"/"+sdate;
-		        	   }
-	        	   }
-        		   if((edate-tempS)==0){
-        			   $("#sDate").text(sdate+"일");
-        		   }else{
-        			   $("#sDate").text(sdate+"~"+edate+"일");
-	        	   }
-	           }else{ 
-	        	   if(startD.substr(5,1)==0){
-	        		   sdate = startD.substr(6,5);
-	        	   }else{
-	        		   sdate = startD.substr(5,5);
-	        	   }
-	        	   if(subendD.substr(5,1)==0){
-	        		   edate = subendD.substr(6,1)+"/"+edate;
-	        		   $("#sDate").text(sdate+"~"+edate+"일");
-	        	   }else{
-	        		   edate = subendD.substr(5,2)+"/"+edate;
-	        		   $("#sDate").text(sdate+"~"+edate+"일");
-	        	   }
-	           }
-
-	           $(".plusicon").css("opacity","1");
-	           $("#newSchedule").prop("disabled", false);
-	           $("#newSchedule").css("cursor", "pointer");
-	         },
-	       eventClick: function(a, b, c) {
-	       		startD = a.start.format().replace(/-/gi,"/");
-	           var d = $.fullCalendar.formatDate(a.start, "dddd, YYYY/MM/DD");
-	           var f = $.fullCalendar.formatDate(a.end, "dddd, YYYY/MM/DD");
-//	           var g = '<h5 style="margin:0;padding:0;">' + a.title + "</h5>";
-//	           var h = '<p style="margin:0;padding:2px;"><b>Start:</b> ' + d + "<br />" + (f && '<p style="margin:0;padding:2px;"><b>End:</b> ' + f + "</p>" || "") + (a.description && '<p style="margin:0;padding:2px;"><b>What:</b> ' + a.description + "</p>" || "") + (a.location && '<p style="margin:0;padding:2px;"><b>Where:</b> ' + a.location + "</p>" || "");
-//	           e.set({
-//	               "content.title": g,
-//	               "content.text": h
-//	           }).reposition(b).show(b);
-//	           var i = b.pageX;
-//	           var j = b.pageY;
-//	           $("td").each(function(a) {
-//	               var b = $(this).offset();
-//	               if (b.left + $(this).outerWidth() > i && b.left < i && b.top + $(this).outerHeight() > j && b.top < j) {
-//	                   if ($(this).hasClass("fc-cell-overlay")) 
-//	                   	$(this).addClass("fc-cell-overlay"); 
-//	                   else 
-//	                   	$("td").removeClass("fc-cell-overlay");
-//	                   $(this).addClass("fc-cell-overlay");
-//	               }
-//	           });
-	          /* if(startD.substr(8,1)==0){
-	        	   var date = startD.substr(9,1)+"일";
-	        	   $("#sDate").text(date);
-	           }else{
-	        	   var date = startD.substr(8,2)+"일";
-	        	   $("#sDate").text(date);
-	           }*/
-	           $(".plusicon").css("opacity","1");
-	           $("#newSchedule").prop("disabled", false);
-	           $("#newSchedule").css("cursor", "pointer");
-	       },
-	       dayClick: function(date) {
-//	    	   var moment = $('#fullcalendar').fullCalendar('getDate');
-//	    	   alert("The current date of the calendar is " + moment.format())
-	    	   e.hide();
-	    	   $("td").removeClass("fc-cell-overlay");
-//	    	   $(this).addClass('fc-cell-overlay');
-	    	   /* 클릭한 날짜 잡아오기 */
-//	    	   alert('Clicked on: ' + date.format());
-	    	   clickedDate = date.format().replace(/-/gi,"/");
-//	    	   alert(clickedDate.substr(0,4));
-//	    	   alert(clickedDate.substr(5,2));
-//	    	   alert(clickedDate.substr(8,2));
-//	    	   alert('Clicked on: ' + clickedDate);
-	       },
-	       eventResizeStart: true,
-	       eventDragStart: false,
-	       viewDisplay: function() {
-	    	   e.hide();
-	       },
-	       displayEventTime: false,
-	       events : {
-	    	   url: './getcalSchedules.do',
-	    	   cache: true
-	       }
-	    });
+	   /* $("#fullcalendar").fullCalendar({
+	         eventSources: [ $.fullCalendar.gcalFeed("https://www.google.com/calendar/feeds/en.usa%23holiday%40group.v.calendar.google.com/public/basic", {
+	            className: "bmesevents"
+	        }), $.fullCalendar.gcalFeed("https://www.google.com/calendar/feeds/en.german%23holiday%40group.v.calendar.google.com/public/basic", {
+	            className: "wsubmesevents"
+	        }), $.fullCalendar.gcalFeed("https://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic", {
+	            className: "holidaysevents"
+	        }) ],
+	       
+	        header: {
+	            left: "month,agendaList",
+	            center: "title",
+	            right: "prev,today,next"
+	        },
+	        selectable: true,
+	        select: function(startDate, endDate) {
+// 	            alert('selected ' + startDate.format() + ' to ' + endDate.format());
+	            startD = startDate.format().replace(/-/gi,"/");
+	            endD = endDate.format().replace(/-/gi,"/");
+	            var sdate;
+	            var edate;
+	            
+	            if(startD.substr(8,1)==0){
+	        		sdate = startD.substr(9,1);
+	        	}else{
+	        		sdate = startD.substr(8,2);
+	        	}
+	            if(endD.substr(8,1)==0){
+	            	edate = endD.substr(9,1);
+	        	}else{
+	        		edate = endD.substr(8,2);
+	        		$("#sDate").text(edate);
+	        	}
+	            if(startD.substr(5,2)==endD.substr(5,2)){
+	            	if((edate-sdate)==1){
+	            		$("#sDate").text(sdate+"일");
+	            	}else{
+	            		$("#sDate").text(sdate+"~"+edate+"일");
+	            	}
+//	            	$("#sDate").css("font-size","")
+	            }
+	            
+	            $(".plusicon").css("opacity","1");
+	    		$("#newSchedule").prop("disabled", false);
+	    		$("#newSchedule").css("cursor", "pointer");
+	          },
+	        eventClick: function(a, b, c) {
+	        	startD = a.start.format().replace(/-/gi,"/");
+	            var d = $.fullCalendar.formatDate(a.start, "dddd, YYYY/MM/DD");
+	            var f = $.fullCalendar.formatDate(a.end, "dddd, YYYY/MM/DD");
+//	            var g = '<h5 style="margin:0;padding:0;">' + a.title + "</h5>";
+//	            var h = '<p style="margin:0;padding:2px;"><b>Start:</b> ' + d + "<br />" + (f && '<p style="margin:0;padding:2px;"><b>End:</b> ' + f + "</p>" || "") + (a.description && '<p style="margin:0;padding:2px;"><b>What:</b> ' + a.description + "</p>" || "") + (a.location && '<p style="margin:0;padding:2px;"><b>Where:</b> ' + a.location + "</p>" || "");
+//	            e.set({
+//	                "content.title": g,
+//	                "content.text": h
+//	            }).reposition(b).show(b);
+//	            var i = b.pageX;
+//	            var j = b.pageY;
+//	            $("td").each(function(a) {
+//	                var b = $(this).offset();
+//	                if (b.left + $(this).outerWidth() > i && b.left < i && b.top + $(this).outerHeight() > j && b.top < j) {
+//	                    if ($(this).hasClass("fc-cell-overlay")) 
+//	                    	$(this).addClass("fc-cell-overlay"); 
+//	                    else 
+//	                    	$("td").removeClass("fc-cell-overlay");
+//	                    $(this).addClass("fc-cell-overlay");
+//	                }
+//	            });
+	            if(startD.substr(8,1)==0){
+	        		var date = startD.substr(9,1)+"일";
+	        		$("#sDate").text(date);
+	        	}else{
+	        		var date = startD.substr(8,2)+"일";
+	        		$("#sDate").text(date);
+	        	}
+	            $(".plusicon").css("opacity","1");
+	    		$("#newSchedule").prop("disabled", false);
+	    		$("#newSchedule").css("cursor", "pointer");
+	        },
+	        dayClick: function(date) {
+// 	        	var moment = $('#fullcalendar').fullCalendar('getDate');
+// 				alert("The current date of the calendar is " + moment.format())
+	            e.hide();
+	            $("td").removeClass("fc-cell-overlay");
+//	            $(this).addClass('fc-cell-overlay');
+	             클릭한 날짜 잡아오기 
+// 	            alert('Clicked on: ' + date.format());
+	            clickedDate = date.format().replace(/-/gi,"/");
+// 				alert(clickedDate.substr(0,4));
+// 				alert(clickedDate.substr(5,2));
+// 				alert(clickedDate.substr(8,2));
+// 				alert('Clicked on: ' + clickedDate);
+	        },
+	        eventResizeStart: true,
+	        eventDragStart: false,
+	        viewDisplay: function() {
+	            e.hide();
+	        },
+	       events : [
+	                       일정 출력 
+	                      {
+	                    	title: '어린이날',
+	                  		start: '2018-05-05',
+	                  		end: '2018-05-06',
+	                  		color: 'lightblue'
+	                      },
+	                      {
+	                    	title: '제주도 여행',
+	                  		start: '2018-05-11',
+	                  		end: '2018-05-14',
+	                  		color: 'lightpink'
+	                      },
+	                      {
+	                    	title: '맛집탐방',
+	                  		start: '2018-05-25',
+	                  		end: '2018-05-26',
+	                  		color: 'lightpink',
+	                      }
+	                ]
+	    });*/
 	}();
 	
 	
@@ -226,7 +215,7 @@ $(function(){
 // 		alert(typeof moment);
 //     	alert("The current date of the calendar is " + moment.format());
 		today = moment().format('YYYY/MM/DD');
-		startD=today;
+		
 		if(today.substr(8,1)==0){
     		var date = today.substr(9,1)+"일";
     		$("#sDate").text(date);
@@ -242,8 +231,9 @@ $(function(){
 	
 	$('.fc-prev-button').click(function() {
 		var date = $("#fullcalendar").fullCalendar("getDate");
-		selectedM = date.format('YYYY/MM/DD');
+		var selectedM = date.format('YYYY/MM/DD');
 		
+		alert(intervalEnd);
 		if(selectedM.substr(5,1)==0){
 			var month = selectedM.substr(6,1)+"월";
 			$("#sDate").text(month);
@@ -259,7 +249,7 @@ $(function(){
 	
 	$('.fc-next-button').click(function() {
 		var date = $("#fullcalendar").fullCalendar("getDate");
-		selectedM = date.format('YYYY/MM/DD');
+		var selectedM = date.format('YYYY/MM/DD');
 		if(selectedM.substr(5,1)==0){
 			var month = selectedM.substr(6,1)+"월";
 			$("#sDate").text(month);
@@ -275,13 +265,13 @@ $(function(){
 	
 	
 	$("#monthB").click(function(){
+// 		$("#monthB").css("margin-left","20px");
 		$(".plusicon").css("opacity","0");
 		$("#newSchedule").prop("disabled", true);
 		$("#newSchedule").css("cursor", "default");
 		
 		var date = $("#fullcalendar").fullCalendar("getDate");
 		var selectedM = date.format('YYYY/MM/DD');
-		startD=selectedM;
 		if(selectedM.substr(5,1)==0){
 			var month = selectedM.substr(6,1)+"월";
 			$("#sDate").text(month);
@@ -289,18 +279,16 @@ $(function(){
 			var month = selectedM.substr(5,2)+"월";
 			$("#sDate").text(month);
 		}
-		
-//		getSchedulesMonth(selectedM);
 	});
 	
 	$("#dayB").click(function(){
+// 		$("#monthB").css("margin-left","0px");
+// 		$("#newSchedule").show();
 		$(".plusicon").css("opacity","1");
 		$("#newSchedule").prop("disabled", false);
 		$("#newSchedule").css("cursor", "pointer");
 		
-		var date = $("#fullcalendar").fullCalendar("getDate");
-		var selectedM = date.format('YYYY/MM/DD');
-		startD=selectedM;
+		alert(startD);
 		if(startD.substr(8,1)==0){
     		var sdate = startD.substr(9,1)+"일";
     		$("#sDate").text(sdate);
@@ -312,8 +300,200 @@ $(function(){
 	
 	
 	
+	///////////////////* 일정  *//////////////////////////
+	
 	/* init 일정 */
 	initSchedule(today);
+	
+	
+	function initSchedule(today){
+//		alert(today);
+		
+		if(today.substr(5,1)==0){
+			var date = today.substr(6,1)+"월";
+			$("#sDate").text(date);
+		}else{
+			var date = today.substr(5,2)+"월";
+			$("#sDate").text(date);
+		}
+		
+		$(".plusicon").css("opacity","0");
+		$("#newSchedule").prop("disabled", true);
+		$("#newSchedule").css("cursor", "default");
+		
+//		getSchedulesDates(today,today);
+		getSchedulesMonth(today);
+	}
+	
+	
+	function getSchedulesMonth(date){
+		var month = date.substr(2,7);
+		
+		$.ajax({				
+			url: "getScheduleMonth.do",
+			type:"GET",					
+				data:{"month":month},
+			error: function(jqXHR){
+				alert(jqXHR.status);
+				alert(jqXHR.statusText)
+			},					
+			dataType: "json",						
+			success: function(resData){
+//				alert(resData);
+				printSchedule(resData);
+				/*var result = $.trim(resData);
+				if(result != "null"){
+					
+				} else if (result == "null") {
+						$("#joinEF").text("등록된 일정이 없습니다.").css({
+								'color' : '#00A591',
+								'text-align' : 'center',
+					});
+				}*/
+			}
+		});
+	}
+	
+	function getSchedulesDates(startDate, endDate){
+//		alert(startDate);
+//		alert(endDate)
+		$.ajax({				
+			url: "getScheduleDate.do",
+			type:"GET",					
+				data:{"startDate":startDate, "endDate":endDate},
+			error: function(jqXHR){
+				alert(jqXHR.status);
+				alert(jqXHR.statusText)
+			},					
+			dataType: "json",						
+			success: function(resData){
+//				alert(resData);
+				printSchedule(resData);
+				if(result != null){
+				} else if (result == null) {
+						/*$("#joinEF").text("등록된 일정이 없습니다.").css({
+								'color' : '#00A591',
+								'text-align' : 'center',
+					});*/
+				}
+			}
+		});
+	}
+	
+	function printSchedule(resData){
+		 /* 일정 출력 */
+		 /*for(var i in resData){
+			 for(var key in resData[i]){
+				 alert(resData[i][key]);
+			 }
+		 }*/
+		 
+		 /*var schData="[{title: '어린이날',start: '2018-05-05',end: '2018-05-06',color: 'lightblue'}," +
+		 		"{title: '제주도 여행',start: '2018-05-11',end: '2018-05-14',color: 'lightpink'}," +
+		 		"{title: '맛집탐방',start: '2018-05-25',end: '2018-05-26',color: 'lightpink'}]";
+		
+		 		alert(schData);*/
+		
+		 $("#fullcalendar").fullCalendar({
+			 /*  eventSources: [ $.fullCalendar.gcalFeed("https://www.google.com/calendar/feeds/en.usa%23holiday%40group.v.calendar.google.com/public/basic", {
+	            className: "bmesevents"
+	        }), $.fullCalendar.gcalFeed("https://www.google.com/calendar/feeds/en.german%23holiday%40group.v.calendar.google.com/public/basic", {
+	            className: "wsubmesevents"
+	        }), $.fullCalendar.gcalFeed("https://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic", {
+	            className: "holidaysevents"
+	        }) ],*/
+	        header: {
+	            left: "month,agendaList",
+	            center: "title",
+	            right: "prev,today,next"
+	        },
+	        selectable: true,
+	        select: function(startDate, endDate) {
+//	            alert('selected ' + startDate.format() + ' to ' + endDate.format());
+	            startD = startDate.format().replace(/-/gi,"/");
+	            endD = endDate.format().replace(/-/gi,"/");
+	            var sdate;
+	            var edate;
+	            
+	            if(startD.substr(8,1)==0){
+	        		sdate = startD.substr(9,1);
+	        	}else{
+	        		sdate = startD.substr(8,2);
+	        	}
+	            if(endD.substr(8,1)==0){
+	            	edate = endD.substr(9,1);
+	        	}else{
+	        		edate = endD.substr(8,2);
+	        		$("#sDate").text(edate);
+	        	}
+	            if(startD.substr(5,2)==endD.substr(5,2)){
+	            	if((edate-sdate)==1){
+	            		$("#sDate").text(sdate+"일");
+	            	}else{
+	            		$("#sDate").text(sdate+"~"+edate+"일");
+	            	}
+//	            	$("#sDate").css("font-size","")
+	            }
+	            
+	            $(".plusicon").css("opacity","1");
+	    		$("#newSchedule").prop("disabled", false);
+	    		$("#newSchedule").css("cursor", "pointer");
+	          },
+	        eventClick: function(a, b, c) {
+	        	startD = a.start.format().replace(/-/gi,"/");
+	            var d = $.fullCalendar.formatDate(a.start, "dddd, YYYY/MM/DD");
+	            var f = $.fullCalendar.formatDate(a.end, "dddd, YYYY/MM/DD");
+//	            var g = '<h5 style="margin:0;padding:0;">' + a.title + "</h5>";
+//	            var h = '<p style="margin:0;padding:2px;"><b>Start:</b> ' + d + "<br />" + (f && '<p style="margin:0;padding:2px;"><b>End:</b> ' + f + "</p>" || "") + (a.description && '<p style="margin:0;padding:2px;"><b>What:</b> ' + a.description + "</p>" || "") + (a.location && '<p style="margin:0;padding:2px;"><b>Where:</b> ' + a.location + "</p>" || "");
+//	            e.set({
+//	                "content.title": g,
+//	                "content.text": h
+//	            }).reposition(b).show(b);
+//	            var i = b.pageX;
+//	            var j = b.pageY;
+//	            $("td").each(function(a) {
+//	                var b = $(this).offset();
+//	                if (b.left + $(this).outerWidth() > i && b.left < i && b.top + $(this).outerHeight() > j && b.top < j) {
+//	                    if ($(this).hasClass("fc-cell-overlay")) 
+//	                    	$(this).addClass("fc-cell-overlay"); 
+//	                    else 
+//	                    	$("td").removeClass("fc-cell-overlay");
+//	                    $(this).addClass("fc-cell-overlay");
+//	                }
+//	            });
+	            if(startD.substr(8,1)==0){
+	        		var date = startD.substr(9,1)+"일";
+	        		$("#sDate").text(date);
+	        	}else{
+	        		var date = startD.substr(8,2)+"일";
+	        		$("#sDate").text(date);
+	        	}
+	            $(".plusicon").css("opacity","1");
+	    		$("#newSchedule").prop("disabled", false);
+	    		$("#newSchedule").css("cursor", "pointer");
+	        },
+	        dayClick: function(date) {
+//	        	var moment = $('#fullcalendar').fullCalendar('getDate');
+//				alert("The current date of the calendar is " + moment.format())
+	            e.hide();
+	            $("td").removeClass("fc-cell-overlay");
+//	            $(this).addClass('fc-cell-overlay');
+	            /* 클릭한 날짜 잡아오기 */
+//	            alert('Clicked on: ' + date.format());
+	            clickedDate = date.format().replace(/-/gi,"/");
+//				alert(clickedDate.substr(0,4));
+//				alert(clickedDate.substr(5,2));
+//				alert(clickedDate.substr(8,2));
+//				alert('Clicked on: ' + clickedDate);
+	        },
+	        eventResizeStart: true,
+	        eventDragStart: false,
+	        viewDisplay: function() {
+	            e.hide();
+	        },
+	       events : resData
+		 });
+	}
 	
 	
 	
@@ -564,86 +744,7 @@ $(function(){
 
 
 
-///////////////////* 일정  *//////////////////////////
 
-
-function initSchedule(today){
-//	alert(today);
-	
-	if(today.substr(5,1)==0){
-		var date = today.substr(6,1)+"월";
-		$("#sDate").text(date);
-	}else{
-		var date = today.substr(5,2)+"월";
-		$("#sDate").text(date);
-	}
-	
-	$(".plusicon").css("opacity","0");
-	$("#newSchedule").prop("disabled", true);
-	$("#newSchedule").css("cursor", "default");
-	
-	getSchedulesMonth(today);
-}
-
-
-function getSchedulesMonth(date){
-	var month = date.substr(2,5);
-//	alert(month);
-	
-	$.ajax({		
-		url: "getScheduleMonth.do",
-		type:"GET",					
-			data:{"month":month},
-		error: function(jqXHR){
-			alert(jqXHR.status);
-			alert(jqXHR.statusText)
-		},					
-		dataType: "json",						
-		success: function(resData){
-			printSchedule(resData);
-		}
-	});
-}
-
-function getSchedulesDates(startDate, endDate){
-//	alert(startDate);
-//	alert(endDate)
-	$.ajax({				
-		url: "getScheduleDate.do",
-		type:"GET",					
-			data:{"startDate":startDate, "endDate":endDate},
-		error: function(jqXHR){
-			alert(jqXHR.status);
-			alert(jqXHR.statusText)
-		},					
-		dataType: "json",						
-		success: function(resData){
-//			alert(resData);
-			printSchedule(resData);
-			if(result != null){
-			} else if (result == null) {
-					/*$("#joinEF").text("등록된 일정이 없습니다.").css({
-							'color' : '#00A591',
-							'text-align' : 'center',
-				});*/
-			}
-		}
-	});
-}
-
-function printSchedule(resData){
-	 /* 일정 출력 */
-	/*var result = $.trim(resData);
-	if(result != "null"){
-		
-	} else if (result == "null") {
-			$("#joinEF").text("등록된 일정이 없습니다.").css({
-					'color' : '#00A591',
-					'text-align' : 'center',
-		});
-	}*/
-	$(".all").append('<div id="sdrow" class="todo" style="background-color: #add8e6"><div class="todo_date">5일</div><div class="todo_content">어린이날</div><div class="todo-btn"><i class="fa fa-minus minus-btn"></i></div></div>');
-}
 
 
 ////////////////////////지도////////////////////////
