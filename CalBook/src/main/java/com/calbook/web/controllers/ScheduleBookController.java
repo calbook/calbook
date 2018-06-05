@@ -35,13 +35,13 @@ public class ScheduleBookController {
 	
 	@RequestMapping(value= {"getScheduleDate.do"}, method=RequestMethod.GET, produces = "text/json; charset=UTF-8")
 	@ResponseBody
-	public String getScheduleDate(String startDate, String endDate, HttpServletRequest request) {
+	public String getScheduleDate(String startDate, String endDateM1, String startDateM1, String endDate, HttpServletRequest request) {
 		System.out.println("getScheduleDate");
 		
 		HttpSession session = request.getSession();	
 		
 		SchedulesDAO sdao = ss.getMapper(SchedulesDAO.class);
-		List<Schedules> slist = sdao.getSchedulesDates(session.getAttribute("email").toString(), startDate, endDate);
+		List<Schedules> slist = sdao.getSchedulesDates(session.getAttribute("email").toString(), startDate, endDateM1, startDateM1, endDate);
 		
 		for(Schedules s : slist) {
 			System.out.println(s.toString());
@@ -55,18 +55,17 @@ public class ScheduleBookController {
 	
 	@RequestMapping(value= {"getScheduleMonth.do"}, method=RequestMethod.GET, produces = "text/json; charset=UTF-8")
 	@ResponseBody
-	public String getScheduleMonth(String month, HttpServletRequest request) {
+	public String getScheduleMonth(String startDate, String endDate, HttpServletRequest request) {
 		System.out.println("getScheduleMonth");
-		System.out.println(month);
+//		System.out.println(month);
 		
 		HttpSession session = request.getSession();	
 		
 		SchedulesDAO sdao = ss.getMapper(SchedulesDAO.class);
-		List<Schedules> slist = sdao.getSchedulesMonth(session.getAttribute("email").toString(), month);
+		List<Schedules> slist = sdao.getSchedulesMonth(session.getAttribute("email").toString(), startDate, endDate);
 		
-//		for(Schedules s : slist) {
-//			System.out.println(s.toString());
-//		}
+		System.out.println();
+		
 		
 		Gson gson = new Gson();
 		String slistJson = gson.toJson(slist);
@@ -84,7 +83,7 @@ public class ScheduleBookController {
 		HttpSession session = request.getSession();	
 		
 		SchedulesDAO sdao = ss.getMapper(SchedulesDAO.class);
-		List<Schedules> slist = sdao.getSchedulesDates(session.getAttribute("email").toString(), start, end);
+		List<Schedules> slist = sdao.getSchedulesCal(session.getAttribute("email").toString(), start, end);
 		List<CalSchedules> clist = new ArrayList<CalSchedules>();
 		
 		

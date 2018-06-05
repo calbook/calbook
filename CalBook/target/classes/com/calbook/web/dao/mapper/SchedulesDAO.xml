@@ -4,13 +4,16 @@
     
 <mapper namespace="com.calbook.web.dao.SchedulesDAO">
 	<!-- 일정 가져오기 -->
-	<select id="getSchedulesDates" resultType="com.calbook.web.vo.Schedules">
+	<select id="getSchedulesCal" resultType="com.calbook.web.vo.Schedules">
 		SELECT * FROM SCHEDULES WHERE M_EMAIL = #{param1} AND (START_DATE BETWEEN #{param2} AND #{param3} OR FINISH_DATE BETWEEN #{param2} AND #{param3})
+	</select>
+	
+	<select id="getSchedulesDates" resultType="com.calbook.web.vo.Schedules">
+		SELECT * FROM SCHEDULES WHERE M_EMAIL = #{param1} AND (START_DATE BETWEEN #{param2} AND #{param3} OR FINISH_DATE BETWEEN #{param4} AND #{param5}) ORDER BY START_DATE , FINISH_DATE
 	</select>
 
 	<select id="getSchedulesMonth" resultType="com.calbook.web.vo.Schedules">
-		SELECT * FROM SCHEDULES WHERE M_EMAIL = #{param1} AND START_DATE LIKE '${param2}%' AND FINISH_DATE LIKE '${param2}%'
+		SELECT * FROM SCHEDULES WHERE M_EMAIL = #{param1} AND (START_DATE BETWEEN #{param2} AND (SELECT TO_DATE(#{param3}) - 1 FROM DUAL) AND FINISH_DATE BETWEEN (SELECT TO_DATE(#{param2}) + 1 FROM DUAL) AND #{param3}) ORDER BY START_DATE, FINISH_DATE
 	</select>
-	
 	
 </mapper>

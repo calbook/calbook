@@ -809,26 +809,12 @@ to {
 					<div class="content sCon">
 						<section class="all">
 							<h2>전체</h2>
-							<div id="sdrow" class="todo" style="background-color: #add8e6">
-								<div class="todo_date">5일</div>
-								<div class="todo_content">어린이날</div>
-                                <div class="todo-btn"><i class="fa fa-minus minus-btn"></i></div>
-							</div> 
-							<div class="todo" style="background-color: #ffb6c1">
-								<div class="todo_date">11~13일</div>
-								<div class="todo_content">제주도 여행</div>
-                                <div class="todo-btn"><i class="fa fa-minus minus-btn"></i></div>
-							</div>
-							<div class="todo" style="background-color: #ffb6c1">
-								<div class="todo_date">25일</div>
-								<div class="todo_content">맛집탐방</div>
-                                <div class="todo-btn"><i class="fa fa-minus minus-btn"></i></div>
-							</div>
-                            <div class="todo" style="background-color: #FFB52B">
-								<div class="todo_date">25일</div>
-								<div class="todo_content">약속</div>
-                                <div class="todo-btn"><i class="fa fa-minus minus-btn"></i></div>
-							</div>
+<!-- 							<div id="sdrow" class="todo" style="background-color: #add8e6"> -->
+<!-- 								<div class="todo_date">5일</div> -->
+<!-- 								<div class="todo_content">어린이날</div> -->
+<!--                                 <div class="todo-btn"><i class="fa fa-minus minus-btn"></i></div> -->
+<!-- 							</div>  -->
+							
 						</section>
 						<section class="first">
 							<h2>
