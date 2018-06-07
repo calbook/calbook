@@ -1,0 +1,31 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.calbook.web.dao.CommunityDAO">
+	<select id="getCommunityList" resultType="com.calbook.web.vo.Community">
+		SELECT RN, N.* FROM (SELECT ROWNUM AS RN, M.* FROM 
+			(SELECT * FROM COMMUNITY WHERE WRITER=#{param1} AND (TITLE LIKE '%${param2}%' OR CONTENT LIKE '%${param2}%') ORDER BY SEQ DESC) M) N 
+				WHERE RN BETWEEN 1+(#{param3}-1)*15 AND 1+(#{param3}-1)*15 + 9
+	</select>
+	
+	<select id="getCommunityCount" resultType="Integer">
+		SELECT COUNT(SEQ) FROM COMMUNITY WHERE WRITER=#{param1} AND (TITLE LIKE '%${param2}%' OR CONTENT LIKE '%${param2}%')
+	</select>
+	
+	<select id="getCommunity" resultType="com.calbook.web.vo.Community">
+		SELECT SEQ, TITLE, CONTENT, TO_CHAR(CDATE, 'YYYY/MM/DD') CDATE, WRITER, HIT, URL FROM COMMUNITY WHERE SEQ=#{SEQ}
+	</select>
+	
+	<update id="updateHit">
+		UPDATE COMMUNITY SET HIT=HIT+1 WHERE SEQ=#{seq}
+	</update>
+	
+	<insert id="addCommunity">
+		INSERT INTO COMMUNITY VALUES(NVL((SELECT MAX(SEQ) FROM COMMUNITY)+1,1), #{title}, #{content}, TO_CHAR(SYSDATE, 'YYYY/MM/DD'), #{writer}, 0, #{url})
+	</insert>
+	
+	<delete id="delCommunity">
+		DELETE COMMUNITY WHERE SEQ=#{seq}
+	</delete>
+</mapper>

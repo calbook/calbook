@@ -1,0 +1,48 @@
+@charset "EUC-KR";
+/* »ó´Ü¹Ù css  */
+.navbar{
+  padding-left:1%;
+  padding-right:1%;
+  overflow:hidden;
+  font-family: 'Roboto', sans-serif;
+}
+.navbar a{
+  transition: background 0.2s ease-out;
+  text-decoration:none;
+}
+.right:hover{
+  transition:background 0.2s ease-in;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.right{
+  float:right;
+  padding:30px;
+}
+.left:hover{
+  transition:background 0.2s ease-in;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.left{
+  float:left;
+  padding:30px;
+}
+/* Navbar Dark */
+.navbar-dark{
+  background-color:#292c2f;
+  height: 80px;
+}
+.navbar-dark a{
+  color:white;
+  font-size: 16px;
+}
+
+/* Navbar Img */
+.navImg{
+	width: 28px;
+	height: 28px;
+}
+
+.navLogo {
+	height: 40px;
+	width: auto;
+}
