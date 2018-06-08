@@ -35,13 +35,13 @@ public class ScheduleBookController {
 	
 	@RequestMapping(value= {"getScheduleDate.do"}, method=RequestMethod.GET, produces = "text/json; charset=UTF-8")
 	@ResponseBody
-	public String getScheduleDate(String startDate, String endDateM1, String startDateM1, String endDate, HttpServletRequest request) {
+	public String getScheduleDate(String startDate, String endDate, HttpServletRequest request) {
 		System.out.println("getScheduleDate");
 		
 		HttpSession session = request.getSession();	
 		
 		SchedulesDAO sdao = ss.getMapper(SchedulesDAO.class);
-		List<Schedules> slist = sdao.getSchedulesDates(session.getAttribute("email").toString(), startDate, endDateM1, startDateM1, endDate);
+		List<Schedules> slist = sdao.getSchedulesDates(session.getAttribute("email").toString(), startDate, endDate);
 		
 		for(Schedules s : slist) {
 			System.out.println(s.toString());
@@ -112,6 +112,17 @@ public class ScheduleBookController {
 		String clistJson = gson.toJson(clist);
 		System.out.println(clistJson);
 		return clistJson;
+	}
+	
+	@RequestMapping(value= {"delSchdule.do"}, method=RequestMethod.GET, produces = "text/json; charset=UTF-8")
+	@ResponseBody
+	public String delSchdule(HttpServletRequest request, String seq) {
+		System.out.println("delSchdule");
+		
+		SchedulesDAO sdao = ss.getMapper(SchedulesDAO.class);
+		Integer af = sdao.delSchedule(seq);
+		
+		return af.toString();
 	}
 	
 }

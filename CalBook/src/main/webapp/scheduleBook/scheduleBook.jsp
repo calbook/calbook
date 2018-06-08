@@ -5,6 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+
 <!-- css -->
 <link rel='stylesheet' href='../css/fullcalendar/fullcalendar.css' />
 <link rel="stylesheet" href="../css/background.css">
@@ -18,12 +19,11 @@
 <script src="http://code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
 <!-- qtip -->
 <script type="text/javascript" src="../js/jquery.qtip.custom/jquery.qtip.min.js"></script>
-<!-- googlemap -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUsZlyBI_gQ8S_liz_WdZ6U2W2ooRwIoQ&libraries=places" async defer></script>
 <!-- fullcalendar -->
 <script src='../css/fullcalendar/lib/moment.min.js'></script>
 <script src='../css/fullcalendar/fullcalendar.js'></script>
 <script src='../js/scheduleBook.js'></script>
+
 <style type="text/css">
 .con {
 	float: left;
@@ -448,6 +448,14 @@ to {
 	width: 100%;
 }
 
+.spanDE{
+	padding : 6px;
+}
+
+.startD, .endD {
+	width: 90%;
+}
+
 .borderContent {
 	height: 200px;
 }
@@ -477,10 +485,10 @@ to {
 	width: 40%;
 } */
 
-.importantSelect{
+/* .importantSelect{
 	background-color: #ffc966;
 	color: white;
-}
+} */
 
 .modalR div:hover{
   background-color: red;
@@ -817,36 +825,13 @@ to {
 							
 						</section>
 						<section class="first">
-							<h2>
-							</h2>
-							<div class="todo">
-								<div class="todo_date">11~13일</div>
-								<div class="todo_content">제주도 여행</div>
-                                <div class="todo-btn"><i class="fa fa-minus minus-btn"></i></div>
-							</div>
-							<div class="todo" >
-								<div class="todo_date">25일</div>
-								<div class="todo_content">맛집탐방</div>
-                                <div class="todo-btn"><i class="fa fa-minus minus-btn"></i></div>
-							</div>  
+							 
 						</section>
 						<section class="second">
-							<h2>
-							</h2>
-							<div class="todo" >
-								<div class="todo_date">25일</div>
-								<div class="todo_content">약속</div>
-                                <div class="todo-btn"><i class="fa fa-minus minus-btn"></i></div>
-							</div>
+							
 						</section>
 						<section class="third">
-							<h2>
-							</h2>
-							<div class="todo">
-								<div class="todo_date">5일</div>
-								<div class="todo_content">어린이날</div>
-                                <div class="todo-btn"><i class="fa fa-minus minus-btn"></i></div>
-							</div> 
+							
 						</section>
 					</div>
 				</div>
@@ -1155,7 +1140,8 @@ to {
 				    <form>
 				    	<div class="smcontentsDiv">
 				       	<input class = "border borderTitle" type = "text" name = "title" size = "50" placeholder="제목을 입력해주세요">
-				       	<input class = "border borderDate" type = "text" name = "date" size = "20" placeholder="날짜를 입력해주세요">
+				       	<span class="spanDS">시작 날짜 : </span><input class = "border borderDate startD" type = "text" name = "sdate" size = "20" disabled>
+				       	<span class="spanDE">끝 날짜 : </span><input class = "border borderDate endD" type = "text" name = "edate" size = "20" disabled>
 				       	<span class="importantSpan">중요도 : </span>
 				       	<select class="importantSelect" placeholder="중요도">
 				              <option value="3" class="modalR">상</option>
@@ -1268,5 +1254,8 @@ to {
 
 <jsp:include page="../default/footer.jsp" />
 <input id="myEmail" type="hidden" value="${email}">
+
+<!-- googlemap -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUsZlyBI_gQ8S_liz_WdZ6U2W2ooRwIoQ&libraries=places" async defer></script>
 </body>
 </html>

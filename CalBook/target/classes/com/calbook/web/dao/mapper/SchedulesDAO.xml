@@ -9,11 +9,15 @@
 	</select>
 	
 	<select id="getSchedulesDates" resultType="com.calbook.web.vo.Schedules">
-		SELECT * FROM SCHEDULES WHERE M_EMAIL = #{param1} AND (START_DATE BETWEEN #{param2} AND #{param3} OR FINISH_DATE BETWEEN #{param4} AND #{param5}) ORDER BY START_DATE , FINISH_DATE
+		SELECT * FROM SCHEDULES WHERE M_EMAIL = #{param1} AND (START_DATE >= #{param2} AND FINISH_DATE <![CDATA[<=]]> #{param3}) OR (START_DATE <![CDATA[<=]]> #{param2} AND FINISH_DATE >= #{param3}) ORDER BY START_DATE, FINISH_DATE
 	</select>
 
 	<select id="getSchedulesMonth" resultType="com.calbook.web.vo.Schedules">
 		SELECT * FROM SCHEDULES WHERE M_EMAIL = #{param1} AND (START_DATE BETWEEN #{param2} AND (SELECT TO_DATE(#{param3}) - 1 FROM DUAL) AND FINISH_DATE BETWEEN (SELECT TO_DATE(#{param2}) + 1 FROM DUAL) AND #{param3}) ORDER BY START_DATE, FINISH_DATE
 	</select>
+	
+	<delete id="delSchedule">
+		DELETE SCHEDULES WHERE SEQ = #{seq}
+	</delete>
 	
 </mapper>
