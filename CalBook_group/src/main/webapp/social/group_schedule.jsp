@@ -13,8 +13,6 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 <style type="text/css">
 * {
     box-sizing: border-box;
@@ -24,6 +22,7 @@
 
 body {
    margin: 0;
+   background: url("../images/background/group_schedule.jpg");
 }
 
 html, body {
@@ -69,7 +68,7 @@ html, body {
 	margin-top: 100px;
 }
 
-img {
+.profileimg {
 	width: 100%;
 }
 
@@ -240,155 +239,7 @@ h1 i:hover {
 	box-shadow: 0 0 0 3px #ddd;
 }
 
-/* paging */
-.pagination-container {
-  width: 40%;
-  margin-left: 40%;
-  margin-bottom: 20px;
-  text-align: center;
-}
-.pagination {
-  /* position: relative; */
-  
-}
-.pagination a {
-  position: relative;
-  display: inline-block;
-  color: #2c3e50;
-  text-decoration: none;
-  font-size: 1.2rem;
-  padding: 8px 16px 10px;
-}
 
-.pagination a:before {
-  z-index: -1;
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  content: "";
-  top: 0;
-  left: 0;
-  background-color: #2c3e50;
-  border-radius: 24px;
-  -webkit-transform: scale(0);
-          transform: scale(0);
-  -webkit-transition: all 0.2s;
-  transition: all 0.2s;
-}
-
-.pagination a:hover,
-.pagination a .pagination-active {
-  color: #fff;
-}
-
-.pagination a:hover:before,
-.pagination a .pagination-active:before {
-  -webkit-transform: scale(1);
-          transform: scale(1);
-}
-
-.pagination .pagination-active {
-  color: #fff;
-}
-
-.pagination .pagination-active:before {
-  -webkit-transform: scale(1);
-          transform: scale(1);
-}
-
-.pagination-newer {
-  margin-right: 50px;
-}
-
-.pagination-older {
-  margin-left: 50px;
-}
-
-/* modal */
-/* The Modal (background) */
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-
-/* Modal Content */
-.modal-content {
-    position: relative;
-    background-color: #fefefe;
-    margin: auto;
-    padding: 0;
-    border: 1px solid #888;
-    width: 50%;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-    -webkit-animation-name: animatetop;
-    -webkit-animation-duration: 0.4s;
-    animation-name: animatetop;
-    animation-duration: 0.4s
-}
-
-/* Add Animation */
-@-webkit-keyframes animatetop {
-    from {top:-300px; opacity:0} 
-    to {top:0; opacity:1}
-}
-
-@keyframes animatetop {
-    from {top:-300px; opacity:0}
-    to {top:0; opacity:1}
-}
-
-/* The Close Button */
-.close {
-    color: white;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.modal-header {
-    padding: 2px 16px;
-    background-image: url("../images/background/modal_title_background.png");
-    background-size: cover;
-    color: white;
-    text-align: center;
-}
-
-.modal-header h2 {
-	margin: 30px 0 10px 0;	
-    font-size: 30px;
-}
-
-.modal-header p {
-	font-size: 15px;
-}
-
-.modal-body {padding: 2px 16px;}
-
-.modal-body-title {
-
-}
-
-.modal-footer {
-    padding: 2px 16px;
-    background-color: #5cb85c;
-    color: white;
-}
 
 /* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 1190px) {
@@ -423,23 +274,32 @@ h1 i:hover {
   padding: 50px;
   background-color: white;
   border-radius: 5px;
+  margin:auto;
+}
+
+.reg_icon {
+	width:50px;
+ 	 height:50px; 
 }
 
 #container .buttons {
   float: right;
-  padding-right: 50px; 
+  padding-right: 50px;
+  
+ 
 }
 
 #container .buttons button {
   border: 0;
   background-color: #dddddd;
   border-radius: 5px;
-  
+  height:30px;
+  width:30px;
 }
 
 #container span.glyphicon {
   font-size: 2em;
-  color: #FF4444;
+  color: black;
   
 }
 
@@ -485,64 +345,16 @@ h3{
   display: block;
 }
 
+.fa {
+	    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+}
+
 </style>
-
-<script>
-	$(function(){
-		$('.pagination-inner a').on('click', function() {
-			$(this).siblings().removeClass('pagination-active');
-			$(this).addClass('pagination-active');
-		})
-		
-		$('#modalBtn').click(function(){
-			$('#myModal').css({
-				"display":"block"
-			});
-			
-			$('.item__details').css({
-				"z-index":"0"
-			});
-		});
-		
-		$('.close').click(function(){
-			$('#myModal').css({
-				"display":"none"
-			});
-			
-			$('.item__details').css({
-				"z-index":"1"
-			});
-		});
-	});
-	
-/* 	// Get the modal
-	var modal = document.getElementById('myModal');
-
-	// Get the button that opens the modal
-	var btn = document.getElementById("myBtn");
-
-	// Get the <span> element that closes the modal
-	var span = document.getElementsByClassName("close")[0];
-
-	// When the user clicks the button, open the modal 
-	btn.onclick = function() {
-	    modal.style.display = "block";
-	}
-
-	// When the user clicks on <span> (x), close the modal
-	span.onclick = function() {
-	    modal.style.display = "none";
-	}
-
-	// When the user clicks anywhere outside of the modal, close it
-	window.onclick = function(event) {
-	    if (event.target == modal) {
-	        modal.style.display = "none";
-	    }
-	} */
-</script>
 </head>
-
 <body>
 <div>
 	<jsp:include page="../default/navbar.jsp" />
@@ -552,65 +364,40 @@ h3{
 		<div class="profile">
 			<div class="container">
 				<div class="card">
-					<img src="https://www.w3schools.com/w3images/team2.jpg" alt="prof">
-					<h1>John Doe<a><i class="fa fa-camera"></i></a></h1>
-					<span>CEO &amp; Founder, Example</span>
-					<p>Harvard University</p>
-					
-					<span>닉네임</span> <input type="text">
-					<span>전화번호</span> <input type="text">
-					<span>비밀번호</span> <input type="text">
-					<span>비밀번호 확인</span> <input type="text">
-					
-					<button class="blue">친구 신청</button>
-					<button class="red">친구 삭제</button>
-					<button class="yellow">프로필 수정</button>
-					<button class="half green">확인</button>
-					<button class="half yellow">취소</button>
+					<img class="profileimg" src="https://www.w3schools.com/w3images/team2.jpg" alt="prof">
+					<h1>${group.name}<a><i class="fa fa-camera"></i></a></h1>
+					<p>${group.content}</p>
+					<p>Owner: ${group.owner}</p>
 				</div>
 			</div>
 		</div>
 		
 		<!-- 모임 일정  -->
 		
-
+	<br><br><br><br><br>
 	<div class="container-fluid">
 		<div id="container" class="col-md-8">
-			 <br><br><br>
 			 <div class="buttons">
-			 	<a href="register.jsp"><button class="table-hover"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></a>
+			 	<a href="register.jsp"><button class="table-hover"><i class="fa fa-plus"></i></button></a>
 			 </div> 
 			<table class="table table-hover" id="oi">
 				<thead>
 					<tr>
-					  <th>#</th>
-					  <th></th>
-					  <th>Group Name</th>
-					  <th>Schedule</th>
-					  <th>Gender</th>
-					  <th>Religion</th>
-					  <th>Status</th>
+					  <th>Title</th>
+					  <th>Content</th>
+					  <th>StartDate</th>
+					  <th>EndDate</th>
 					  </tr>
 				</thead>
 				<tbody>
-				  <tr>
-				    <th scope="row">1</th>
-				    <td><div class="img-circle"></div></td>
-				    <td><a href = "View_GroupSchedule.jsp">Robert</a></td>
-				    <td>Baratheon</td>
-				    <td>Male</a></td>
-				    <td>Faith of the Seven</td>
-				    <td>Deceased</td>
-				  </tr>
-				  <tr>
-				    <th scope="row">2</th>
-				    <td><div class="img-circle"></div></td>
-				    <td>Eddard</td>
-				    <td>Stark</td>
-				    <td>Male</td>
-				    <td>Old Gods of the Forest</td>
-				    <td>Deceased</td>
-				  </tr>
+				  <c:forEach var="s" items="${gSchedules}">
+				  	<tr>
+					    <td><a href = "View_GroupSchedule.jsp">${s.title}</a></td>
+					    <td>${s.content}</td>
+					    <td>${s.start_date}</td>
+					    <td>${s.finish_date}</td>
+				  	</tr>
+				  </c:forEach>
 				</tbody>
 			</table>
 		</div>    

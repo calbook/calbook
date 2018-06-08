@@ -1,25 +1,29 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
-<title>Insert title here</title>
-<link rel='stylesheet' href='../css/list.css' />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="keywords" content="footer, address, phone, icons" />
+<link href="http://fonts.googleapis.com/css?family=Cookie" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<title>Insert title here</title>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUsZlyBI_gQ8S_liz_WdZ6U2W2ooRwIoQ&libraries=places" async defer></script>
 <style type="text/css">
+@import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
+
 * {
     box-sizing: border-box;
 	border: 0;
-	font-family: sans-serif
+	font-family: sans-serif;
 }
 
 body {
@@ -32,388 +36,368 @@ html, body {
 	/* height: 100%; */
 }
 
-.profile {
+html{    
+  background:url(http://thekitemap.com/images/feedback-img.jpg) no-repeat;
+  background-size: cover;
+  height:100%;
+}
+
+#feedback-page{
+	text-align:center;
+}
+
+#form-main{
+	width:100%;
+	float:left;
+	padding-top:0px;
+}
+
+#form-div {
+	background-color:rgba(72,72,72,0.4);
+	padding-left:35px;
+	padding-right:35px;
+	padding-top:35px;
+	padding-bottom:50px;
+	width: 450px;
+	height:800px;
 	float: left;
-	width: 30%;
-	height: 100%;
+	left: 50%;
+	position: absolute;
+  margin-top:30px;
+	margin-left: -260px;
+  -moz-border-radius: 7px;
+  -webkit-border-radius: 7px;
 }
 
-.content {
-	float: right;
-	width: 70%;
-	height: 100%;
-}
-/* Clear floats after the columns */
-.row:after {
-	content: "";
-	display: table;
-	clear: both;
-}
-/* profile CSS */
-.container {
-	width: 90%;
-	margin: auto;
-	text-align: center;
-}
-
-.card {
-	/* height: 1000px; */
-	/* width: 500px; */
-	background-color: white;
-	border: 0px solid #eee;
-	text-align: center;
-	display: inline-block;
-	/* margin-top: 100px; */
-	box-shadow: -1px 1px 8px rgba(0, 0, 0, 0.53);
-	margin: 20px;
-	margin-top: 100px;
+.feedback-input {
+	color:#3c3c3c;
+	font-family: Helvetica, Arial, sans-serif;
+  font-weight:500;
+	font-size: 18px;
+	border-radius: 0;
+	line-height: 22px;
+	background-color: #fbfbfb;
+	padding: 13px 13px 13px 54px;
+	margin-bottom: 10px;
+	width:100%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+  border: 3px solid rgba(0,0,0,0);
 }
 
-img {
-	width: 100%;
-}
-
-.card h1 {
-	text-align: center;
-	margin-top: 10px;
-	margin-bottom: 15px;
-}
-
-.card span {
-	display: inline-block;
-	width: 20%;
-	color: #999;
-}
-
-.card p {
-	font-size: 15px
-}
-
-h1 i {
-	color: #D5D5D5;
-	padding-left: 15px;
-}
-
-h1 i:hover {
-	color: #aaaaaa;
-}
-
-.card input {
-	display: inline-block;
-	width: 70%;
-	border-bottom: 1px solid #000;
-	text-align: center;
-    font-weight: bold;
-    font-size: 2rem;
-	-webkit-margin-before: 0.67em;
-    /* -webkit-margin-after: 0.67em; */
-    -webkit-margin-start: 0px;
-    -webkit-margin-end: 0px;
-}
-
-.card input:focus {
+.feedback-input:focus{
+	background: #fff;
+	box-shadow: 0;
+	border: 3px solid #3498db;
+	color: #3498db;
 	outline: none;
+  padding: 13px 13px 13px 54px;
 }
 
-
-.card button {
-	display: block;
-	width: 87%;
-	padding: 10px;
-	color: white;
-	font-size: 19px;
-	margin: auto;
-	margin-bottom: 17px;
-	margin-top: 20px;
-	cursor: pointer;
-	transition: 0.3s;
+.focused{
+	color:#30aed6;
+	border:#30aed6 solid 3px;
 }
 
-.card button.half {
-	display: inline;
-	width: 30%;
+/* Icons ---------------------------------- */
+#name{
+	background-image: url(http://rexkirby.com/kirbyandson/images/name.svg);
+	background-size: 30px 30px;
+	background-position: 11px 8px;
+	background-repeat: no-repeat;
 }
 
-.card button.blue {
-	background-color: #3498DB;
-	opacity: 0.9;
+#name:focus{
+	background-image: url(http://rexkirby.com/kirbyandson/images/name.svg);
+	background-size: 30px 30px;
+	background-position: 8px 5px;
+  background-position: 11px 8px;
+	background-repeat: no-repeat;
+}
+
+#email{
+	background-image: url(http://rexkirby.com/kirbyandson/images/email.svg);
+	background-size: 30px 30px;
+	background-position: 11px 8px;
+	background-repeat: no-repeat;
+}
+
+#email:focus{
+	background-image: url(http://rexkirby.com/kirbyandson/images/email.svg);
+	background-size: 30px 30px;
+  background-position: 11px 8px;
+	background-repeat: no-repeat;
+}
+
+#comment{
+	background-image: url(http://rexkirby.com/kirbyandson/images/comment.svg);
+	background-size: 30px 30px;
+	background-position: 11px 8px;
+	background-repeat: no-repeat;
+}
+
+textarea {
+    width: 100%;
+    height: 150px;
+    line-height: 150%;
+    resize:vertical;
+}
+
+input:hover, textarea:hover,
+input:focus, textarea:focus {
+	background-color:white;
+}
+
+#button-blue{
+	font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+	float:left;
+	border: #fbfbfb solid 4px;
+	cursor:pointer;
+	background-color: #3498db;
+	color:white;
+	font-size:18px;
+/* 	padding-top:22px; */
+/* 	padding-bottom:22px; */
+	padding: 20%;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	transition: all 0.3s;
+ 	margin-top:-4px;
+    font-weight:700;
+    text-decoration: none;
+}
+
+#button-blue:hover{
+	background-color: rgba(0,0,0,0);
+	color: #0493bd;
+}
 	
+.submit:hover {
+	color: #3498db;
 }
 
-.card button.blue:hover {
-	opacity: 1;
+.submit {
+	margin: auto;
+}
+	
+.ease {
+	width: 0px;
+	height: 74px;
+	background-color: #fbfbfb;
+	-webkit-transition: .3s ease;
+	-moz-transition: .3s ease;
+	-o-transition: .3s ease;
+	-ms-transition: .3s ease;
+	transition: .3s ease;
 }
 
-.card button.red {
-	background-color: #E74C3C;
-	opacity: 0.9;
+.submit:hover .ease{
+  width:50%;
+  background-color:white;
 }
 
-.card button.red:hover {
-	opacity: 1;
-}
-
-.card button.yellow {
-	background-color: #F2CF66;
-	opacity: 0.9;
-}
-
-.card button.yellow:hover {
-	opacity: 1;
-}
-
-.card button.green {
-	background-color: #82BF56;
-	opacity: 0.9;
-}
-
-.card button.green:hover {
-	opacity: 1;
-}
-/* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
-@media screen and (max-width: 1190px) {
-	.pagination-newer {
-  		margin-right: 0;
-	}
-
-	.pagination-older {
-  		margin-left: 0;
+@media only screen and (max-width: 580px) {
+	#form-div{
+		left: 3%;
+		margin-right: 3%;
+		width: 88%;
+		margin-left: 0;
+		padding-left: 3%;
+		padding-right: 3%;
 	}
 }
+/* datepicker */
 
-/* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
-@media screen and (max-width: 900px) {
-   .new {
-    	width: 9%;
-    	padding: 0;
-    }
-    
-    .card {
-    	margin-top: 80px;
-    }
-}
-/* 모임_일정 css */
-html, body {
-	height: 100%;
-	width: 100%;
-	margin: 0;
-	padding: 0;
-	background-color: #BDC3C7;
-	font-family: 'Raleway';
+.datepicker{
+	width:25%;
 }
 
-.top {
-  background-color: #264356;
-  height: 200px;
-  margin:0;
-  padding:0;
-  box-shadow: 2px 2px 4px rgb(0, 0, 0, .25);
+/* 지도 css */
+/* Always set the map height explicitly to define the size of the div element that contains the map. */
+#map {
+  width: 100%;
+  height: 200px; 
 }
 
-.form {
-  height: 590px;
-  width: 400px;
+#srmMap{
+   width: 100%;
+   height: 250px; 
+}
+
+#srmEditMap{
+   width: 100%;
+   height: 200px; 
+}
+
+/* Optional: Makes the sample page fill the window. */
+.googleMapDiv{
+  float: left;
+  height: 50%;
+  width: 59%;
+  margin: 0;
+  margin-left: 1%;
+  padding: 0;
+}
+
+.controls {
+  margin-top: 10px;
+  border: 1px solid transparent;
+  border-radius: 2px 0 0 2px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  height: 32px;
+  outline: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+#pac-input, #srmEdit_pac-input {
   background-color: #fff;
-  margin: -110px auto;
-  border-radius: 10px;
-  color: #666;
-  padding: 0px 0px;
-  box-shadow: 2px 2px 4px rgb(0, 0, 0, .25);
-}
-
-.info {
-  padding: 10px;
-}
-
-h1, h2, p {
-  text-align: center;
-  padding: 0px;
-  margin: 5px 5px;
-}
-
-h2 {
-  font-family: 'Great Vibes', cursive;
-  font-weight: 100;
-}
-
-p.line {
-  margin: 0px auto 20px auto;
-  color: #999;
-}
-
-.form input {
+  font-family: Roboto;
   font-size: 15px;
-  color: #666;
-  padding: 6px;
-  margin: 25px auto 20px;
-  display: block;
-  width: 75%;  
-}
-
-input:focus {
-  outline: 0;
-}
-
-.button button {
-  display: inline-block;
-  width: 400px;
-}
-
-button.accept {
-  border-radius: 0px 0px 0px 10px;
-  border-right: solid 1px #cc919a;
-   color: #666;
-  background-color: #ffbdc7;
-  border: none;
-  font-family: 'Raleway';
-  font-size: 18px;
-  font-weight: 600;
-  padding: 15px 32px;
+  font-weight: 300;
+  margin-left: 12px;
+  padding: 0 11px 0 13px;
+  text-overflow: ellipsis;
   width: 200px;
-  margin: 20px auto 0px auto; 
-  float:left;
 }
 
-button.regret {
-  border-radius: 0px 0px 10px 0px;
-   color: #666;
-  background-color: #ffbdc7;
-  border: none;
-  font-family: 'Raleway';
-  font-size: 18px;
-  font-weight: 600;
-  padding: 15px 32px;
-  width: 200px;
-  margin: 20px auto 0px auto; 
-  float:left;
+#pac-input:focus, #srmEdit_pac-input:focus {
+  border-color: #4d90fe;
 }
 
-button:hover {
-  background-color: #cc919a;
-  transition: .5s;
+
+.pac-container {
+  font-family: Roboto;
 }
 
-button:focus {
-  outline: 0;
+#type-selector {
+  color: #fff;
+  background-color: #4d90fe;
+  padding: 5px 11px 0px 11px;
 }
+
+#type-selector label {
+  font-family: Roboto;
+  font-size: 13px;
+  font-weight: 300;
+}
+#target {
+  width: 345px;
+}
+
 
 </style>
-<script>
-	$(function(){
-		$('.pagination-inner a').on('click', function() {
-			$(this).siblings().removeClass('pagination-active');
-			$(this).addClass('pagination-active');
-		})
-		
-		$('#modalBtn').click(function(){
-			$('#myModal').css({
-				"display":"block"
-			});
-			
-			$('.item__details').css({
-				"z-index":"0"
-			});
-		});
-		
-		$('.close').click(function(){
-			$('#myModal').css({
-				"display":"none"
-			});
-			
-			$('.item__details').css({
-				"z-index":"1"
-			});
-		});
-	});
-	
-/* 	// Get the modal
-	var modal = document.getElementById('myModal');
-
-	// Get the button that opens the modal
-	var btn = document.getElementById("myBtn");
-
-	// Get the <span> element that closes the modal
-	var span = document.getElementsByClassName("close")[0];
-
-	// When the user clicks the button, open the modal 
-	btn.onclick = function() {
-	    modal.style.display = "block";
-	}
-
-	// When the user clicks on <span> (x), close the modal
-	span.onclick = function() {
-	    modal.style.display = "none";
-	}
-
-	// When the user clicks anywhere outside of the modal, close it
-	window.onclick = function(event) {
-	    if (event.target == modal) {
-	        modal.style.display = "none";
-	    }
-	} */
-</script>
 </head>
-
 <body>
-	<div>
-		<jsp:include page="../default/navbar.jsp" />
+<div>
+   <jsp:include page="../default/navbar.jsp" />
+</div>
+	<br><br>
+	<div id="form-main">
+	  <div id="form-div">
+	    <form class="form" id="form1">
+	      <h1 style="text-align: center; color: #FFFFFF;">TITLE</h1>
+	      <p>StartDate: <span> </span>	EndDate: <span> </span></p>
+	      <p class="text">
+	        <span>Content:  </span>
+	      </p>
+	      <div id="map"></div>
+          <input id="pac-input" name="location" class="controls" type="text" placeholder="Search Box">
+          <br><br>
+	      <table class="submit">
+              <col style="width:35%;">
+              <col style="width:30%;">
+              <col style="width:35%;">
+              <tr>
+                 <td><a href="#" id="button-blue">UPDATE</a></td>
+                 <td></td>
+                 <td><a href="group_schedule.jsp" id="button-blue">CANCEL</a></td>
+              </tr>
+           </table>
+            <div class="ease"></div>
+	    </form>
+	  </div>
 	</div>
-	<div class="row">
-		<div class="profile">
-			<div class="container">
-				<div class="card">
-					<img src="https://www.w3schools.com/w3images/team2.jpg" alt="prof">
-					<h1>John Doe<a><i class="fa fa-camera"></i></a></h1>
-					<span>CEO &amp; Founder, Example</span>
-					<p>Harvard University</p>
-					
-					<span>닉네임</span> <input type="text">
-					<span>전화번호</span> <input type="text">
-					<span>비밀번호</span> <input type="text">
-					<span>비밀번호 확인</span> <input type="text">
-					
-					<button class="blue">친구 신청</button>
-					<button class="red">친구 삭제</button>
-					<button class="yellow">프로필 수정</button>
-					<button class="half green">확인</button>
-					<button class="half yellow">취소</button>
-				</div>
-			</div>
-		</div>
-		
-		<!-- 모임 뷰, 수정   -->
-		
+<div style="position:absolute; left:0px; right:0px; bottom:0px; height:50px;">
+   <jsp:include page="../default/footer.jsp" />
+</div> 
+<script type="text/javascript">
 
-		<div class="container-fluid">
-			<div id="container" class="col-md-8">
-				<br><br><br><br><br>
-				<div class="top">
-				</div>
-				<div class="form">
-					<div class ="info">
-						<h1>RSVP</h1>
-						<h2>for the wedding of</h2>
-						<h1>Allison & Daniel</h1>
-						  <p class= "line">________________________________________</p>
-						  <h2>The Details</h2>
-						  <p>Saturday, June 18, 2016</p>
-						  <p>5:00 PM</p>
-						  <br>
-						  <h2>Ceremony & Reception</h2>
-						  <p>Chapel of Our Saviour</p>
-						  <p>8 4th St, Colorado Springs, CO 80906</p>
-						  <p class= "line">________________________________________</p>
-						<input type="text" placeholder="Name">
-						<input type="number" placeholder="# of Guests">
-					</div>
-				  <button class ="accept">UPDATE</button>
-				  <button class ="regret">DELETE</button>
-				</div>
-			</div>		
-		</div>
-	</div>
-	<div>
-		<jsp:include page="../default/footer.jsp" />
-	</div>
+function initAutocomplete() {
+    var map = new google.maps.Map(document.getElementById('map'), {
+       center : {
+          lat : 37.565609,
+          lng : 126.977421
+       },
+       zoom : 14,
+       mapTypeId : 'roadmap'
+    });
+
+    // Create the search box and link it to the UI element.
+    var input = document.getElementById('pac-input');
+    var searchBox = new google.maps.places.SearchBox(input);
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+    // Bias the SearchBox results towards current map's viewport.
+    map.addListener('bounds_changed', function() {
+       searchBox.setBounds(map.getBounds());
+    });
+
+    var markers = [];
+    // Listen for the event fired when the user selects a prediction and retrieve
+    // more details for that place.
+    searchBox.addListener('places_changed', function() {
+       var places = searchBox.getPlaces();
+       if (places.length == 0) {
+          return;
+       }
+
+       // Clear out the old markers.
+       markers.forEach(function(marker) {
+          marker.setMap(null);
+       });
+       markers = [];
+
+       // For each place, get the icon, name and location.
+       var bounds = new google.maps.LatLngBounds();
+       places.forEach(function(place) {
+         alert(place.place_id);
+          if (!place.geometry) {
+             console.log("Returned place contains no geometry");
+             return;
+          }
+          var icon = {
+             url : place.icon,
+             size : new google.maps.Size(71, 71),
+             origin : new google.maps.Point(0, 0),
+             anchor : new google.maps.Point(17, 34),
+             scaledSize : new google.maps.Size(25, 25)
+          };
+
+          // Create a marker for each place.
+          markers.push(new google.maps.Marker({
+             map : map,
+             icon : icon,
+             title : place.name,
+             position : place.geometry.location
+          }));
+
+          if (place.geometry.viewport) {
+             // Only geocodes have viewport.
+             bounds.union(place.geometry.viewport);
+          } else {
+             bounds.extend(place.geometry.location);
+          }
+       });
+       map.fitBounds(bounds);
+    });
+
+ 
+ }
+
+ google.maps.event.addDomListener(window, 'load', initAutocomplete);
+</script>
 </body>
 </html>

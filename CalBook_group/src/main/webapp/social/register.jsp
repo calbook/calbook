@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -35,13 +35,6 @@
 			$("#sdate").datepicker( "option", "maxDate", selectedDate );
 		});
 	});
-	
-	
-	
-	
-	
-	
-	
 </script>
 <style type="text/css">
 @import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
@@ -85,6 +78,7 @@ html{
 	padding-top:35px;
 	padding-bottom:50px;
 	width: 450px;
+	height:800px;
 	float: left;
 	left: 50%;
 	position: absolute;
@@ -182,7 +176,7 @@ input:focus, textarea:focus {
 	cursor:pointer;
 	background-color: #3498db;
 	color:white;
-	font-size:20px;
+	font-size:18px;
 /* 	padding-top:22px; */
 /* 	padding-bottom:22px; */
 	padding: 20%;
@@ -239,7 +233,7 @@ input:focus, textarea:focus {
 	width:25%;
 }
 
-/* ¡ˆµµ css */
+/* ÏßÄÎèÑ css */
 /* Always set the map height explicitly to define the size of the div element that contains the map. */
 #map {
   width: 100%;
@@ -314,8 +308,6 @@ input:focus, textarea:focus {
 
 
 </style>
-
-
 </head>
 <body>
 <div>
@@ -325,16 +317,18 @@ input:focus, textarea:focus {
 	<div id="form-main">
 	  <div id="form-div">
 	    <form class="form" id="form1">
-	      <h1 style="text-align: center; color: #FFFFFF;">∏¿”¿« ¿œ¡§ √ﬂ∞°</h1>
+	      <h1 style="text-align: center; color: #FFFFFF;">Î™®ÏûÑÏùò ÏùºÏ†ï Ï∂îÍ∞Ä</h1>
 	      <p class="name">
 	        <input name="title" type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" placeholder="title" id="title" />
 	      </p>
-	      <p>StartDate: <input type="text" id="sdate" class="datepicker">	EndDate: <input type="text" id="edate" class="datepicker"></p>
+	      <p>StartDate: <input type="text" id="sdate" name="start_date" class="datepicker">	EndDate: <input type="text" name="finish_date" id="edate" class="datepicker"></p>
+		  <p>SEQ: </p>
+		  <input type="hidden" name="g_num" value="">
 	      <p class="text">
 	        <textarea name="content" class="validate[required,length[6,300]] feedback-input" id="content" placeholder="content"></textarea>
 	      </p>
 	      <div id="map"></div>
-          <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+          <input id="pac-input" name="location" class="controls" type="text" placeholder="Search Box">
           <br><br>
 	      <table class="submit">
               <col style="width:35%;">
@@ -350,12 +344,9 @@ input:focus, textarea:focus {
 	    </form>
 	  </div>
 	</div>
-
-
-<div style="position:absolute; left:0px; right:0px; bottom:0px; height:100px;">
+<div style="position:absolute; left:0px; right:0px; bottom:0px; height:50px;">
    <jsp:include page="../default/footer.jsp" />
 </div> 
-
 <script type="text/javascript">
 
 function initAutocomplete() {
@@ -432,7 +423,5 @@ function initAutocomplete() {
 
  google.maps.event.addDomListener(window, 'load', initAutocomplete);
 </script>
-
-
 </body>
 </html>

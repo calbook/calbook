@@ -3,5 +3,9 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
     
 <mapper namespace="com.calbook.web.dao.SchedulesDAO">
-
+	
+	<select id="getGroupSchedules" resultType="com.calbook.web.vo.Schedules">
+		SELECT SEQ, M_EMAIL, TITLE, CONTENT, IMPORTANT, TO_CHAR(START_DATE, 'YYYY/MM/DD') AS START_DATE, TO_CHAR(FINISH_DATE, 'YYYY/MM/DD') AS FINISH_DATE, LOCATION, G_NUM FROM SCHEDULES WHERE G_NUM=#{g_num} AND FINISH_DATE>SYSDATE
+	</select>
+	
 </mapper>
