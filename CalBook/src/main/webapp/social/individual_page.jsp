@@ -52,7 +52,7 @@ html, body {
 }
 
 .card {
-	/* height: 1000px; */
+	height: 1000px;
 	/* width: 500px; */
 	background-color: white;
 	border: 0px solid #eee;
@@ -64,13 +64,13 @@ html, body {
 	margin-top: 100px;
 }
 
-img {
+.profile_img {
 	width: 100%;
 }
 
 .card h1 {
 	text-align: center;
-	margin-top: 10px;
+	margin-top: 30px;
 	margin-bottom: 15px;
 }
 
@@ -93,11 +93,14 @@ h1 i:hover {
 	color: #aaaaaa;
 }
 
+.info_modi {
+	display: none;
+}
+
 .card input {
 	display: inline-block;
 	width: 70%;
 	border-bottom: 1px solid #000;
-	text-align: center;
     font-weight: bold;
     font-size: 2rem;
 	-webkit-margin-before: 0.67em;
@@ -167,6 +170,10 @@ h1 i:hover {
 }
 
 /* search CSS */
+form {
+	display: inline;
+}
+
 .search-box {
 	width: 70%;
 	/* position: relative; */
@@ -185,6 +192,11 @@ h1 i:hover {
 	cursor: pointer;
 }
 
+.search-box button {
+	background-color: transparent;
+}
+
+
 .search {
 	height: 50px;
 	width: 75%;
@@ -194,7 +206,7 @@ h1 i:hover {
 	transition: 0.3s;
 	border: 2px solid #ddd;
 	background: none;
-	color: #fff;
+	color: #BDBDBD;
 	font-size: 18px;
 }
 
@@ -206,7 +218,6 @@ h1 i:hover {
 }
 
 .new {
-
   height: 50px;
   padding: 5px 15px;
   border-radius: 50px;
@@ -219,12 +230,12 @@ h1 i:hover {
   cursor: pointer;  
 }
 
-.new a {
+.new button {
 	color: #ddd;
 	text-decoration: none;
 }
 
-.new i, .new a i {
+.new i, .new button i {
 	padding: 0;
 }
 
@@ -299,37 +310,6 @@ h1 i:hover {
   margin-left: 50px;
 }
 
-/* modal */
-/* The Modal (background) */
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-
-/* Modal Content */
-.modal-content {
-    position: relative;
-    background-color: #fefefe;
-    margin: auto;
-    padding: 0;
-    border: 1px solid #888;
-    width: 50%;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-    -webkit-animation-name: animatetop;
-    -webkit-animation-duration: 0.4s;
-    animation-name: animatetop;
-    animation-duration: 0.4s
-}
-
 /* Add Animation */
 @-webkit-keyframes animatetop {
     from {top:-300px; opacity:0} 
@@ -385,6 +365,37 @@ h1 i:hover {
     color: white;
 }
 
+
+/* image upload */
+.filebox {display:inline-block; margin-right: 10px;}
+
+
+.filebox label {
+  display: inline-block;
+  padding: .5em .75em;
+  color: #999;
+  font-size: inherit;
+  line-height: normal;
+  vertical-align: middle;
+  background-color: #fdfdfd;
+  cursor: pointer;
+  border: 1px solid #ebebeb;
+  border-bottom-color: #e2e2e2;
+  border-radius: .25em;
+}
+
+.filebox input[type="file"] {  /* 파일 필드 숨기기 */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip:rect(0,0,0,0);
+  border: 0;
+}
+
+
 /* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 1190px) {
 	.pagination-newer {
@@ -411,57 +422,58 @@ h1 i:hover {
 
 <script>
 	$(function(){
+		
+		$("#imageUpload").change(function(event) {
+			$('#imagePreview').fadeIn('fast').attr('src', URL.createObjectURL(event.target.files[0]));
+		});
+		
+		
 		$('.pagination-inner a').on('click', function() {
 			$(this).siblings().removeClass('pagination-active');
 			$(this).addClass('pagination-active');
 		})
 		
-		$('#modalBtn').click(function(){
-			$('#myModal').css({
+		$('#profile_modi').click(function(){
+			$('.info_modi').css({
 				"display":"block"
-			});
-			
-			$('.item__details').css({
-				"z-index":"0"
 			});
 		});
 		
-		$('.close').click(function(){
-			$('#myModal').css({
-				"display":"none"
-			});
-			
-			$('.item__details').css({
-				"z-index":"1"
-			});
+		$('#info_modi').submit(function(event){
+			var nick = $('#nick').val();
+			var phone = $('#phone').val();
+			var pwd = $('#password').val();
+			var pwd_check = $('#password_check').val();
+			var open = $("#open").is(":checked");
+			var file = $("#imageUpload").val();
+			if(file == null){
+				file = $("#profile_img").val();
+			}
+			alert(file);
+			if(pwd == pwd_check){
+				$.ajax({
+					url: "updateMembers.do",
+					type: "POST",
+					data: {"nick":nick, "phone":phone, "pwd":pwd, "open":open, "fileName":file},
+					error: function(jqXHR){
+						alert("jqXHR.status: " + jqXHR.status);
+						alert("jqXHR.statusText(): " + jqXHR.statusText());
+					},
+					dataType: "text",
+					success: function(resData){
+						alert(resData);
+					}
+				});
+			}else{
+				alert("비밀번호가 틀렸습니다.");
+				event.preventDefault();
+			}
 		});
+		
+		$('#check').click(function(){
+		});
+		
 	});
-	
-/* 	// Get the modal
-	var modal = document.getElementById('myModal');
-
-	// Get the button that opens the modal
-	var btn = document.getElementById("myBtn");
-
-	// Get the <span> element that closes the modal
-	var span = document.getElementsByClassName("close")[0];
-
-	// When the user clicks the button, open the modal 
-	btn.onclick = function() {
-	    modal.style.display = "block";
-	}
-
-	// When the user clicks on <span> (x), close the modal
-	span.onclick = function() {
-	    modal.style.display = "none";
-	}
-
-	// When the user clicks anywhere outside of the modal, close it
-	window.onclick = function(event) {
-	    if (event.target == modal) {
-	        modal.style.display = "none";
-	    }
-	} */
 </script>
 </head>
 
@@ -474,122 +486,141 @@ h1 i:hover {
 		<div class="profile">
 			<div class="container">
 				<div class="card">
-					<img src="https://www.w3schools.com/w3images/team2.jpg" alt="prof">
-					<h1>John Doe<a><i class="fa fa-camera"></i></a></h1>
-					<span>CEO &amp; Founder, Example</span>
-					<p>Harvard University</p>
+					<c:if test="${member.profile == null}">
+						<img id="imagePreview" class="profile_img" src="../images/background/profile.jpg" alt="prof">
+					</c:if>
+					<c:if test="${member.profile != null}">
+						<img id="imagePreview" class="profile_img" src="upload/${member.profile}" alt="prof">
+					</c:if>
+					<c:if test="${member.email == cEmail}">
+						<h1>${member.nick}<a id="profile_modi"><i class="fa fa-pencil"></i></a></h1>
+					</c:if>
+					<c:if test="${member.email != cEmail}">
+						<h1>${member.nick}</h1>
+					</c:if>
+					<c:if test="${member.open == 1}">
+						<p>${member.email}</p>
+						<p>${member.phone}</p>					
+					</c:if>
 					
-					<span>닉네임</span> <input type="text">
-					<span>전화번호</span> <input type="text">
-					<span>비밀번호</span> <input type="text">
-					<span>비밀번호 확인</span> <input type="text">
 					
-					<button class="blue">친구 신청</button>
-					<button class="red">친구 삭제</button>
-					<button class="yellow">프로필 수정</button>
-					<button class="half green">확인</button>
-					<button class="half yellow">취소</button>
+					<form enctype="multipart/form-data" id="info_modi" class="info_modi" action="#" method="get">
+						<span>닉네임</span> <input id="nick" name="nick" type="text" value="${member.nick}" required>
+						<span>전화번호</span> <input id="phone" name="phone" type="text" value="${member.phone}" required>
+						<span>비밀번호</span> <input id="password" name="pwd" type="text" placeholder="password" required>
+						<span>비밀번호 확인</span> <input id="password_check" type="text" placeholder="password check" required>
+						<span>공개유무</span><input id="open" type="checkbox">
+						<input type="hidden" id="profile_img" value="${member.profile}">
+						<div class="filebox">
+						  <label for="imageUpload"><i class="fa fa-camera"></i>업로드</label> 
+						  <input type="file" name="file" id="imageUpload">
+						</div>
+						<button id="check" class="half green">확인</button>
+						<button id="cancel" class="half yellow">취소</button>
+					</form>
+					
+<!-- 					<button class="blue">친구 신청</button> -->
+<!-- 					<button class="red">친구 삭제</button> -->
+<!-- 					<button class="yellow">프로필 수정</button> -->
 				</div>
 			</div>
 		</div>
 		<div class="content">
 			<div>
 				<div class="search-box">
-					<input class="search" placeholder="Search" />
-					<button class="new">
-						<span><i class="fa fa-search"></i></span>
-					</button>
-					<button id="modalBtn" class="new">
-						<span><i class="fa fa-plus"></i></span>
-					</button>
+					<form action="individual_page.do" method="get">
+						<input name="cEmail" type="hidden" value="${cEmail}">
+						<input name="query" class="search" value="${query}" placeholder="Search" autocomplete="off"/>
+						<button type="submit" class="new"><i class="fa fa-search"></i></button>
+					</form>
+					<c:if test="${email == cEmail}">
+						<a id="modalBtn" href="diary_add.do?cEmail=${cEmail}&pg=${pg}&query=${urlquery}">
+							<button class="new"><i class="fa fa-plus"></i></button>
+						</a>					
+					</c:if>
 				</div>
 			</div>
 			
-			
-			<!-- The Modal -->
-			<div id="myModal" class="modal">
-			
-			<!-- Modal content -->
-			<div class="modal-content">
-				<div class="modal-header">
-					<span class="close">&times;</span>
-					<h2>추억 남기기 </h2>
-					<p>오늘 있었던 일을 기록해보세요ʕ·ᴥ·ʔ</p>
-				</div>
-				<div class="modal-body">
-					<span class="modal-body-title">제목</span>
-					<input class="modal-body-title-content1" type="text">
-					<span class="modal-body-title">내용</span>
-					<input class="modal-body-title-content2" type="text">
-				</div>
-				<div class="modal-footer">
-				    <h3>Modal Footer</h3>
-				</div>
-			</div>
-		</div>
 			
 
 			<section class="section">
 			<div class="grid">
-				<div class="item item--large" style="background-image: url('../images/sample6.jpg');">
-					<div class="item__details">이미 등록한 취미이거나 존재하지 않는 취미입니다.😢</div>
-				</div>
-				<%-- <jsp:useBean id="random" class="java.util.Random" scope="application" />
-				<c:set var="rand" value="${random.nextInt(9)+1}" scope="request"></c:set>
-				<c:choose>
-					<c:when test="${1 <= rand && rand < 4}"> --%>
-						<div class="item" style="background-image: url('../images/sample1.jpg');">
-							<div class="item__details">
-								<a href="#"></a>
-							</div>
-						</div>
-						<div class="item" style="background-image: url('../images/sample2.png');">
-							<div class="item__details">
-								<a href="#"></a>
-							</div>
-						</div>
-						<div class="item item--medium" style="background-image: url('../images/sample3.gif');">
-							<div class="item__details">
-								<a href="#"></a>
-							</div>
-						</div>
-						<div class="item"  style="background-image: url('../images/sample4.png');">
-							<div class="item__details">
-								<a href="#"></a>
-							</div>
-						</div>
-						<div class="item item--large" style="background-image: url('../images/sample7.png');">
-							<div class="item__details">이미 등록한 취미이거나 존재하지 않는 취미입니다.😢</div>
-						</div>
-					<%-- </c:when>
-
-					<c:when test="${4 <= rand && rand < 7}"> --%>
-						<div class="item item--medium" style="background-image: url('../images/sample5.png');">
-							<div class="item__details">
-								<a href="#"></a>
-							</div>
-						</div>
-					<%-- </c:when>
-
-					<c:when test="${7 <= rand && rand < 10}"> --%>
-					<%-- </c:when>
-				</c:choose> --%>
+				<c:if test="${empty cList}">
+					<div class="item item--large" style="background-image: url('../images/sample6.jpg');">
+						<div class="item__details">일치하거나 등록한 글이 없습니다.😢</div>
+					</div>
+				</c:if>
+				<c:if test="${!empty cList}">
+					<jsp:useBean id="random" class="java.util.Random" scope="application" />
+					<c:forEach items="${cList}" var="item">
+						<c:set var="rand" value="${random.nextInt(9)+1}" scope="request"></c:set>
+						<c:choose>
+							<c:when test="${1 <= rand && rand <= 4}">
+								<c:if test="${item.url == null}">
+									<div class="item item--large" style="background-image: url('../images/sample7.png');">
+										<div class="item__details"><a href="diary_detail.do?seq=${item.seq}">${item.title}</a></div>
+									</div>
+								</c:if>
+								<c:if test="${item.url != null}">
+									<div class="item item--large" style="background-image: url(upload/${item.url});">
+										<div class="item__details"><a href="diary_detail.do?seq=${item.seq}">${item.title}</a></div>
+									</div>
+								</c:if>
+							</c:when>
+		
+							<c:when test="${4 < rand && rand <= 8}">
+								<c:if test="${item.url == null}">
+									<div class="item item--medium" style="background-image: url('../images/sample5.png');">
+										<div class="item__details"><a href="diary_detail.do?seq=${item.seq}">${item.title}</a></div>
+									</div>
+								</c:if>
+								<c:if test="${item.url != null}">
+									<div class="item item--medium" style="background-image: url(upload/${item.url});">
+										<div class="item__details"><a href="diary_detail.do?seq=${item.seq}">${item.title}</a></div>
+									</div>
+								</c:if>
+							</c:when>
+		
+							<c:when test="${8 < rand && rand <= 10}">
+								<c:if test="${item.url == null}">
+									<div class="item" style="background-image: url('../images/sample1.jpg');">
+										<div class="item__details"><a href="diary_detail.do?seq=${item.seq}">${item.title}</a></div>
+									</div>
+								</c:if>
+								<c:if test="${item.url != null}">
+									<div class="item" style="background-image: url(upload/${item.url});">
+										<div class="item__details"><a href="diary_detail.do?seq=${item.seq}">${item.title}</a></div>
+									</div>
+								</c:if>
+							</c:when>
+						</c:choose>
+					</c:forEach>
+				</c:if>
 			</div>
-			</section>
+		</section>
 
 		</div>
 
 		<div class="pagination-container">
 			<div class="pagination">
-				<a class="pagination-newer" href="#">PREV</a>
+				<c:if test="${sPage != 1}">
+					<a class="pagination-newer" href="individual_page.do?cEmail=${cEmail}&query=${urlquery}&pg=${sPage-5}">PREV</a>
+				</c:if>
 				<span class="pagination-inner">
-					<a class="pagination-active">1</a>
-					<a href="#">2</a>
-					<a href="#">3</a>
-					<a href="#">4</a>
-					<a href="#">5</a>
+					<c:forEach begin="0" end="4" var="i">
+						<c:if test="${i+sPage <= fPage}">
+							<c:if test="${ipg == i+sPage}">
+								<a href="#" class="pagination-active">${i+sPage}</a>
+							</c:if>
+							<c:if test="${ipg != i+sPage}">
+								<a href="individual_page.do?cEmail=${cEmail}&query=${urlquery}&pg=${i+sPage}">${i+sPage}</a>					
+							</c:if>
+						</c:if>
+					</c:forEach>
 				</span>
-				<a class="pagination-older" href="#">NEXT</a>
+				<c:if test="${sPage+5 <= fPage}">
+					<a class="pagination-older" href="individual_page.do?cEmail=${cEmail}&query=${urlquery}&pg=${sPage+5}">NEXT</a>
+				</c:if>
 			</div>
 		</div>
 		

@@ -7,17 +7,19 @@ public class Community {
 	private String cdate;
 	private String writer;
 	private int hit;
+	private String url;
 	
 	public Community() {
-		this(0, null, null, null, null, 0);
+		this(0, null, null, null, null, 0, null);
 	}
-	public Community(int seq, String title, String content, String cdate, String writer, int hit) {
+	public Community(int seq, String title, String content, String cdate, String writer, int hit, String url) {
 		this.seq = seq;
 		this.title = title;
 		this.content = content;
 		this.cdate = cdate;
 		this.writer = writer;
 		this.hit = hit;
+		this.url = url;
 	}
 	
 	
@@ -57,6 +59,13 @@ public class Community {
 	public void setHit(int hit) {
 		this.hit = hit;
 	}
+	public String getUrl() {
+		return url;
+	}
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	
 	
 	
 }

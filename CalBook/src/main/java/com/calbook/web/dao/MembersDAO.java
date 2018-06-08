@@ -13,6 +13,7 @@ public interface MembersDAO {
 	// 개인정보 불러오기(이메일)
 	public Members getMembersEmail(String email);
 	
-	
+	// 개인정보 수정하기
+	public int updateMembers(Members m);
 	
 }

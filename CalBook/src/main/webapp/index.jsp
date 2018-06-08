@@ -54,6 +54,7 @@
           			</c:if>
           			<c:if test="${!empty email}">
           				<a href="logout.do" id="logout" class="btn btn-lg btn-success smoothScroll wow fadeInUp" data-wow-delay="1.0s">Logout!</a>
+          				<a href="joinus/selectMenu.do" id="logout" class="btn btn-lg btn-success smoothScroll wow fadeInUp" data-wow-delay="1.0s">Menu!</a>
           			</c:if>
 				</div>
 			</div>
