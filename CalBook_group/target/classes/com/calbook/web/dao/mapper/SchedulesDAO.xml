@@ -8,4 +8,16 @@
 		SELECT SEQ, M_EMAIL, TITLE, CONTENT, IMPORTANT, TO_CHAR(START_DATE, 'YYYY/MM/DD') AS START_DATE, TO_CHAR(FINISH_DATE, 'YYYY/MM/DD') AS FINISH_DATE, LOCATION, G_NUM FROM SCHEDULES WHERE G_NUM=#{g_num} AND FINISH_DATE>SYSDATE
 	</select>
 	
+	<insert id="addGroupSchedules">
+		INSERT INTO SCHEDULES VALUES(NVL((SELECT MAX(SEQ)+1 FROM SCHEDULES),1),#{m_email},#{title},#{content},#{important},#{start_date},#{finish_date},#{location},#{g_num})
+	</insert>
+	
+	<select id="getGroupSchedule" resultType="com.calbook.web.vo.Schedules">
+		SELECT SEQ, M_EMAIL, TITLE, CONTENT, IMPORTANT, TO_CHAR(START_DATE, 'YYYY/MM/DD') AS START_DATE, TO_CHAR(FINISH_DATE, 'YYYY/MM/DD') AS FINISH_DATE, LOCATION, G_NUM FROM SCHEDULES WHERE SEQ=#{seq}
+	</select>
+	
+	<update id="updateGroupSchedule">
+		UPDATE SCHEDULES SET TITLE=#{title}, CONTENT=#{content}, IMPORTANT=#{important}, START_DATE=#{start_date}, FINISH_DATE=#{finish_date}, LOCATION=#{location} WHERE SEQ=#{seq}
+	</update>
+	
 </mapper>

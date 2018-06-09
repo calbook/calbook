@@ -378,7 +378,7 @@ h3{
 	<div class="container-fluid">
 		<div id="container" class="col-md-8">
 			 <div class="buttons">
-			 	<a href="register.jsp"><button class="table-hover"><i class="fa fa-plus"></i></button></a>
+			 	<a href="register.do?g_num=${group.num}"><button class="table-hover"><i class="fa fa-plus"></i></button></a>
 			 </div> 
 			<table class="table table-hover" id="oi">
 				<thead>
@@ -392,7 +392,7 @@ h3{
 				<tbody>
 				  <c:forEach var="s" items="${gSchedules}">
 				  	<tr>
-					    <td><a href = "View_GroupSchedule.jsp">${s.title}</a></td>
+					    <td><a href = "view_GroupSchedule.do?seq=${s.seq}&g_num=${group.num}">${s.title}</a></td>
 					    <td>${s.content}</td>
 					    <td>${s.start_date}</td>
 					    <td>${s.finish_date}</td>

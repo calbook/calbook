@@ -25,7 +25,6 @@ public class Schedules {
 		this.location = location;
 		this.g_num = g_num;
 	}
-	
 	public int getSeq() {
 		return seq;
 	}
@@ -80,6 +79,8 @@ public class Schedules {
 	public void setG_num(int g_num) {
 		this.g_num = g_num;
 	}
+	
+	
 	
 	
 }

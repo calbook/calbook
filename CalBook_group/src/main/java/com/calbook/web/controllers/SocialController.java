@@ -18,9 +18,11 @@ import com.calbook.web.dao.FriendsDAO;
 import com.calbook.web.dao.Group_MembersDAO;
 import com.calbook.web.dao.GroupsDAO;
 import com.calbook.web.dao.MembersDAO;
+import com.calbook.web.dao.SchedulesDAO;
 import com.calbook.web.vo.Friends;
 import com.calbook.web.vo.Groups;
 import com.calbook.web.vo.Members;
+import com.calbook.web.vo.Schedules;
 import com.calbook.web.vo.TmpMember;
 import com.google.gson.Gson;
 
@@ -836,6 +838,132 @@ public class SocialController {
 		}
 	}
 	
+	@RequestMapping(value={"group_schedule.do"}, method=RequestMethod.GET)
+	   public String group_schedule(String g_num, Model model) {
+	      int ig_num = Integer.parseInt(g_num);
+	      
+	      GroupsDAO gdao = ss.getMapper(GroupsDAO.class);
+	      Groups group = gdao.getGroup(ig_num);
+	      
+	      SchedulesDAO sdao = ss.getMapper(SchedulesDAO.class);
+	      List<Schedules> gSchedules = sdao.getGroupSchedules(ig_num);
+	      
+	      model.addAttribute("group", group);
+	      model.addAttribute("gSchedules", gSchedules);
+	      
+	      return "group_schedule.jsp";
+	   }
+	
+	
+	@RequestMapping(value={"register.do"}, method=RequestMethod.GET)
+	public String register(String g_num, Model model) {
+	      int ig_num = Integer.parseInt(g_num);
+	      System.out.println("ig_num="+ig_num);
+	      GroupsDAO gdao = ss.getMapper(GroupsDAO.class);
+	      Groups group = gdao.getGroup(ig_num);
+	      model.addAttribute("group", group);
+	      return "register.jsp";
+	}
+	     
+	
+	@RequestMapping(value={"registerProc.do"}, method=RequestMethod.POST)
+	public String registerProc(String title, String start_date, String finish_date, String content, String location, String g_num, String important, HttpServletRequest request){
+		HttpSession session = request.getSession();
+		String email = (String) session.getAttribute("email");
+		int ig_num = Integer.parseInt(g_num);
+		int iImportant = Integer.parseInt(important);
+		
+		Schedules s = new Schedules();
+		s.setTitle(title);
+		s.setContent(content);
+		s.setStart_date(start_date);
+		s.setFinish_date(finish_date);
+		s.setLocation(location);
+		s.setG_num(ig_num);
+		s.setM_email(email);
+		s.setImportant(iImportant);
+		
+		System.out.println("location: "+location);
+		System.out.println("title: "+title);
+		System.out.println("conetent: "+content);
+		System.out.println("start_date: "+start_date);
+		System.out.println("finish_date: "+finish_date);
+		System.out.println("email: "+email);
+		
+		SchedulesDAO sdao = ss.getMapper(SchedulesDAO.class);
+		int af = sdao.addGroupSchedules(s);
+		
+		
+		if(af ==1){
+			System.out.println("그룹 일정 등록 성공");
+			return "redirect:group_schedule.do?g_num="+g_num;
+		}else{
+			System.out.println("그룹 일정 등록 실패");
+			return "register.do?g_num="+g_num;
+		}
+	   }
+		
+	@RequestMapping(value={"view_GroupSchedule.do"}, method=RequestMethod.GET)
+	   public String view_GroupSchedule(String g_num, Model model, String seq) {
+	      int ig_num = Integer.parseInt(g_num);
+	      int iseq = Integer.parseInt(seq); 
+	      
+	      GroupsDAO gdao = ss.getMapper(GroupsDAO.class);
+	      Groups group = gdao.getGroup(ig_num);
+	      
+	      SchedulesDAO sdao = ss.getMapper(SchedulesDAO.class);
+	      Schedules schedule = sdao.getGroupSchedule(iseq);
+	      
+	      model.addAttribute("group", group);
+	      model.addAttribute("schedule", schedule);
+	      
+	      return "view_GroupSchedule.jsp";
+	   }
+	
+	@RequestMapping(value={"edit_GroupSchedule.do"}, method=RequestMethod.GET)
+	public String edit_GroupSchedule(String g_num, String seq, Model model) {
+	      int ig_num = Integer.parseInt(g_num);
+	      System.out.println("ig_num="+ig_num);
+	      int iseq = Integer.parseInt(seq);
+	      
+	      GroupsDAO gdao = ss.getMapper(GroupsDAO.class);
+	      Groups group = gdao.getGroup(ig_num);
+	      
+	      SchedulesDAO sdao = ss.getMapper(SchedulesDAO.class);
+	      Schedules schedule = sdao.getGroupSchedule(iseq);
+	      
+	      model.addAttribute("group", group);
+	      model.addAttribute("schedule", schedule);
+	      
+	      return "edit_GroupSchedule.jsp";
+	}
+	
+	@RequestMapping(value={"groupSchedule_editProc.do"}, method=RequestMethod.POST)
+	public String groupSchedule_editProc(String title, String start_date, String finish_date, String content, String location, String important, String seq, String g_num) {
+	      
+		SchedulesDAO sdao = ss.getMapper(SchedulesDAO.class);
+		  
+		int iImportant = Integer.parseInt(important);
+		int iSeq = Integer.parseInt(seq);	
+		Schedules s = new Schedules();
+		s.setSeq(iSeq);
+		s.setTitle(title);
+		s.setContent(content);
+		s.setStart_date(start_date);
+		s.setFinish_date(finish_date);
+		s.setLocation(location);
+		s.setImportant(iImportant);
+	      
+		int af = sdao.updateGroupSchedule(s);
+	    
+		if(af == 1){
+			System.out.println("수정성공");
+			return "redirect:view_GroupSchedule.do?g_num="+g_num+"&seq="+iSeq;
+		}else{
+			System.out.println("수정 실패");
+			return "redirect:view_GroupSchedule.do?g_num="+g_num+"&seq="+iSeq;
+		}
+	}
 	
 
 	

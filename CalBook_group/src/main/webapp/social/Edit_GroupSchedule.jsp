@@ -1,9 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="keywords" content="footer, address, phone, icons" />
@@ -23,13 +24,13 @@
 			minDate: new Date(2012, 1 - 1, 1) 
 		}); */
 		
-		$('#sdate').datepicker();
+		$('#sdate').datepicker({ dateFormat: 'yy/mm/dd' });
 		$('#sdate').datepicker("option", "minDate", 0);
 		$('#sdate').datepicker("option", "onClose", function ( selectedDate ){
 			$("#edate").datepicker( "option", "minDate", selectedDate );
 		});
 		 
-		$('#edate').datepicker();
+		$('#edate').datepicker({ dateFormat: 'yy/mm/dd' });
 		$('#edate').datepicker("option", "minDate", $("#sdate").val());
 		$('#edate').datepicker("option", "onClose", function ( selectedDate ){
 			$("#sdate").datepicker( "option", "maxDate", selectedDate );
@@ -232,7 +233,7 @@ input:focus, textarea:focus {
 	width:25%;
 }
 
-/* Áöµµ css */
+/* ì§€ë„ css */
 /* Always set the map height explicitly to define the size of the div element that contains the map. */
 #map {
   width: 100%;
@@ -315,16 +316,39 @@ input:focus, textarea:focus {
 	<br><br>
 	<div id="form-main">
 	  <div id="form-div">
-	    <form class="form" id="form1">
-	      <h1 style="text-align: center; color: #FFFFFF;">¸ğÀÓÀÇ ÀÏÁ¤ Ãß°¡</h1>
+	    <form class="form" action="groupSchedule_editProc.do" method="post" id="form1">
+	      <h1 style="text-align: center; color: #FFFFFF;">ëª¨ì„ì˜ ì¼ì • ìˆ˜ì •</h1>
 	      <p class="name">
-	        <input name="title" type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" placeholder="title" id="title" />
+	        <input name="title" type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" value="${schedule.title}" id="title" />
 	      </p>
-	      <p>StartDate: <input type="text" id="sdate" name="start_date" class="datepicker" placeholder="">	EndDate: <input type="text" name="finish_date" id="edate" class="datepicker" placeholder=""></p>
-		  <p>SEQ: </p>
-		  <input type="hidden" name="g_num" value="">
+	      <p>StartDate: <input type="text" value="${schedule.start_date}" id="sdate" name="start_date" class="datepicker" />	EndDate: <input type="text" name="finish_date" value="${schedule.finish_date}" id="edate" class="datepicker" /></p>
+		   <p>ì¤‘ìš”ë„: 
+		   	<c:if test="${schedule.important == 1}">
+		      <select name="important">
+		      	<option value="3">ìƒ</option>
+		      	<option value="2">ì¤‘</option>
+		      	<option value="1" selected="selected">í•˜</option>
+		      </select>
+		   	</c:if>
+		   	<c:if test="${schedule.important == 2}">
+		      <select name="important">
+		      	<option value="3">ìƒ</option>
+		      	<option value="2" selected="selected">ì¤‘</option>
+		      	<option value="1">í•˜</option>
+		      </select>
+		   	</c:if>
+		   	<c:if test="${schedule.important == 3}">
+		      <select name="important">
+		      	<option value="3" selected="selected">ìƒ</option>
+		      	<option value="2">ì¤‘</option>
+		      	<option value="1">í•˜</option>
+		      </select>
+		   	</c:if>
+	      </p>
+		  <input type="hidden" name="g_num" value="${group.num}">
+		  <input type="hidden" name="seq" value="${schedule.seq}">
 	      <p class="text">
-	        <textarea name="content" class="validate[required,length[6,300]] feedback-input" id="content" placeholder="content"></textarea>
+	        <textarea name="content" class="validate[required,length[6,300]] feedback-input" id="content">${schedule.content}</textarea>
 	      </p>
 	      <div id="map"></div>
           <input id="pac-input" name="location" class="controls" type="text" placeholder="Search Box">
@@ -334,9 +358,9 @@ input:focus, textarea:focus {
               <col style="width:30%;">
               <col style="width:35%;">
               <tr>
-                 <td><a href="#" id="button-blue">SUBMIT</a></td>
+                 <td><button type="submit" id="button-blue">SUBMIT</button></td>
                  <td></td>
-                 <td><a href="group_schedule.jsp" id="button-blue">CANCEL</a></td>
+                 <td><a href="group_schedule.do" id="button-blue">CANCEL</a></td>
               </tr>
            </table>
             <div class="ease"></div>

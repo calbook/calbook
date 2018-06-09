@@ -3,7 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="keywords" content="footer, address, phone, icons" />
@@ -298,22 +298,25 @@ input:focus, textarea:focus {
 	<div id="form-main">
 	  <div id="form-div">
 	    <form class="form" id="form1">
-	      <h1 style="text-align: center; color: #FFFFFF;">TITLE</h1>
-	      <p>StartDate: <span> </span>	EndDate: <span> </span></p>
+	      <h1 style="text-align: center; color: #FFFFFF;">${schedule.title}</h1>
+	      <p>StartDate:  <span>${schedule.start_date} </span> EndDate: <span> ${schedule.finish_date} </span></p>
+	      <p>
+	        <span>중요도:${schedule.important}  </span>
+	      </p>
 	      <p class="text">
-	        <span>Content:  </span>
+	        <span>Content:${schedule.content}  </span>
 	      </p>
 	      <div id="map"></div>
-          <input id="pac-input" name="location" class="controls" type="text" placeholder="Search Box">
+	      <input id="pac-input" name="location" class="controls" type="text" placeholder="Search Box">
           <br><br>
 	      <table class="submit">
               <col style="width:35%;">
               <col style="width:30%;">
               <col style="width:35%;">
               <tr>
-                 <td><a href="#" id="button-blue">UPDATE</a></td>
+                 <td><a href="edit_GroupSchedule.do?g_num=${group.num}&seq=${schedule.seq}" id="button-blue">UPDATE</a></td>
                  <td></td>
-                 <td><a href="group_schedule.jsp" id="button-blue">CANCEL</a></td>
+                 <td><a href="group_schedule.do?g_num=${group.num}" id="button-blue">PREV</a></td>
               </tr>
            </table>
             <div class="ease"></div>
@@ -341,9 +344,9 @@ function initAutocomplete() {
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
     // Bias the SearchBox results towards current map's viewport.
-    map.addListener('bounds_changed', function() {
+   map.addListener('bounds_changed', function() {
        searchBox.setBounds(map.getBounds());
-    });
+    }); 
 
     var markers = [];
     // Listen for the event fired when the user selects a prediction and retrieve

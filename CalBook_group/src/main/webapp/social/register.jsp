@@ -23,13 +23,13 @@
 			minDate: new Date(2012, 1 - 1, 1) 
 		}); */
 		
-		$('#sdate').datepicker();
+		$('#sdate').datepicker({ dateFormat: 'yy/mm/dd' });
 		$('#sdate').datepicker("option", "minDate", 0);
 		$('#sdate').datepicker("option", "onClose", function ( selectedDate ){
 			$("#edate").datepicker( "option", "minDate", selectedDate );
 		});
 		 
-		$('#edate').datepicker();
+		$('#edate').datepicker({ dateFormat: 'yy/mm/dd' });
 		$('#edate').datepicker("option", "minDate", $("#sdate").val());
 		$('#edate').datepicker("option", "onClose", function ( selectedDate ){
 			$("#sdate").datepicker( "option", "maxDate", selectedDate );
@@ -316,17 +316,24 @@ input:focus, textarea:focus {
 	<br><br>
 	<div id="form-main">
 	  <div id="form-div">
-	    <form class="form" id="form1">
+	    <form class="form" action="registerProc.do" method="post" id="form1">
 	      <h1 style="text-align: center; color: #FFFFFF;">모임의 일정 추가</h1>
 	      <p class="name">
 	        <input name="title" type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" placeholder="title" id="title" />
 	      </p>
 	      <p>StartDate: <input type="text" id="sdate" name="start_date" class="datepicker">	EndDate: <input type="text" name="finish_date" id="edate" class="datepicker"></p>
-		  <p>SEQ: </p>
-		  <input type="hidden" name="g_num" value="">
+		  <input type="hidden" name="g_num" value="${group.num}">
+	      <p>중요도: 
+		      <select name="important">
+		      	<option value="3">상</option>
+		      	<option value="2">중</option>
+		      	<option value="1">하</option>
+		      </select>
+	      </p>
 	      <p class="text">
 	        <textarea name="content" class="validate[required,length[6,300]] feedback-input" id="content" placeholder="content"></textarea>
 	      </p>
+	      
 	      <div id="map"></div>
           <input id="pac-input" name="location" class="controls" type="text" placeholder="Search Box">
           <br><br>
@@ -335,9 +342,9 @@ input:focus, textarea:focus {
               <col style="width:30%;">
               <col style="width:35%;">
               <tr>
-                 <td><a href="#" id="button-blue">SUBMIT</a></td>
+                 <td><button type="submit" id="button-blue">SUBMIT</button></td>
                  <td></td>
-                 <td><a href="group_schedule.jsp" id="button-blue">CANCEL</a></td>
+                 <td><a href="group_schedule.do?g_num=${group.num}" id="button-blue">CANCEL</a></td>
               </tr>
            </table>
             <div class="ease"></div>

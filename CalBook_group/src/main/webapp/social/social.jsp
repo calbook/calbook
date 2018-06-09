@@ -913,10 +913,12 @@ figure.snip1157 button:HOVER {
 										<input type="hidden" name="g_num" value="${g.num}">
 										<c:if test="${g.owner != email }">
 											<button class="faBtn btnSignOutGroup" type="button"><i class="fa fa-sign-out"></i></button>
+											<a href="group_schedule.do?g_num=${g.num}"><button class="faBtn" type="button"><i class="fa fa-home"></i></button></a>
 										</c:if>	                      	
 										<c:if test="${g.owner == email}">
 											<button class="faBtn btnRemoveGroup" type="button"><i class="fa fa-sign-out"></i></button>
 											<a href="editGroups.do?g_num=${g.num}"><button class="faBtn" type="button"><i class="fa fa-edit"></i></button></a>
+                                 			<a href="group_schedule.do?g_num=${g.num}"><button class="faBtn" type="button"><i class="fa fa-home"></i></button></a>
 										</c:if>
 									</div>
 								</div>
