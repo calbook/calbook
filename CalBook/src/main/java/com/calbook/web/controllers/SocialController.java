@@ -66,7 +66,7 @@ public class SocialController {
 		model.addAttribute("member", m);
 		model.addAttribute("cEmail", cEmail);
 		model.addAttribute("cList", cList);
-		model.addAttribute("ipg", ipg);
+		model.addAttribute("pg", ipg);
 		model.addAttribute("query", urlquery);
 		model.addAttribute("sPage", sPage);
 		model.addAttribute("fPage", fPage);
@@ -76,7 +76,7 @@ public class SocialController {
 	
 	@RequestMapping(value={"updateMembers.do"}, method=RequestMethod.POST)
 	@ResponseBody
-	public String updateMembers(String nick, String phone, String pwd, String open, String file, HttpServletRequest request) {
+	public String updateMembers(HttpServletRequest request) {
 		MembersDAO mdao = ss.getMapper(MembersDAO.class);
 		HttpSession session = request.getSession();
 		String email = (String) session.getAttribute("email");
@@ -84,18 +84,26 @@ public class SocialController {
 		String realPath = request.getServletContext().getRealPath(path);
 		System.out.println("path: " + path);
 		System.out.println("realPath: " + realPath);
-		String fileName = file;
 		
 		MultipartRequest mulReq = null;
-		
-		/*try {
+		try {
 			mulReq = new MultipartRequest(request, realPath, 10*1024*1024, "UTF-8", new DefaultFileRenamePolicy());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		String fileName = mulReq.getFilesystemName("file");*/
+		String nick = mulReq.getParameter("nick");
+		String phone = mulReq.getParameter("phone");
+		String pwd = mulReq.getParameter("pwd");
+		String open = mulReq.getParameter("open");
+		int i_open = 0;
+		if(open != null) {
+			i_open = 1;
+		}
+		String fileName = mulReq.getFilesystemName("file");
+		System.out.println("nick: " + nick);
+		System.out.println("open: " + open);
 		System.out.println("fileName: " + fileName);
 		
 		Members m = new Members();
@@ -103,29 +111,41 @@ public class SocialController {
 		m.setNick(nick);
 		m.setPhone(phone);
 		m.setPwd(pwd);
-		m.setOpen(Integer.parseInt(open));
+		m.setOpen(i_open);
+		m.setProfile(fileName);
 		
 		int af = mdao.updateMembers(m);
 		if(af == 1) {
-			return "true";
+			return "success";
 		}else {
-			return "false";
+			return "fail";
 		}
 	}
 	
 	
 	@RequestMapping(value={"diary_detail.do"}, method=RequestMethod.GET)
-	public String diary_detil(String seq, Model model) {
+	public String diary_detil(String pg, String query, String seq, Model model) {
 		CommunityDAO cdao = ss.getMapper(CommunityDAO.class);
+		MembersDAO mdao = ss.getMapper(MembersDAO.class);
+		String urlquery = ChangeURL.getURLFormat(query);
+		String cEmail = null;
 		int iseq = Integer.parseInt(seq);
 		
 		try {
 			cdao.updateHit(iseq);
 			Community c = cdao.getCommunity(iseq);
+			cEmail = c.getWriter();
 			model.addAttribute("com", c);
 		}catch (Exception e) {
 			System.out.println("다이어리 상세내용 불러오기 실패");
 		}
+		
+		Members m = mdao.getMembersEmail(cEmail);
+		model.addAttribute("member", m);
+		model.addAttribute("pg", pg);
+		model.addAttribute("urlquery", urlquery);
+		model.addAttribute("cEmail", cEmail);
+		
 		return "diary_detail.jsp";
 	}
 	
@@ -133,13 +153,17 @@ public class SocialController {
 	@RequestMapping(value={"diary_modi.do"}, method=RequestMethod.GET)
 	public String diary_modi(String pg, String query, String seq, Model model) {
 		CommunityDAO cdao = ss.getMapper(CommunityDAO.class);
+		MembersDAO mdao = ss.getMapper(MembersDAO.class);
 		String urlquery = ChangeURL.getURLFormat(query);
 		Community c = cdao.getCommunity(Integer.parseInt(seq));
+		Members m = mdao.getMembersEmail(c.getWriter());
 		
 		model.addAttribute("pg", pg);
 		model.addAttribute("query", query);
 		model.addAttribute("urlquery", urlquery);
 		model.addAttribute("com", c);
+		model.addAttribute("member", m);
+		
 		return "diary_modi.jsp";
 	}
 	
@@ -188,11 +212,17 @@ public class SocialController {
 	
 	
 	@RequestMapping(value={"diary_add.do"}, method=RequestMethod.GET)
-	public String diary_add(String pg, String query, Model model) {
+	public String diary_add(String pg, String query, HttpServletRequest request, Model model) {
+		MembersDAO mdao = ss.getMapper(MembersDAO.class);
+		HttpSession session = request.getSession();
+		String email = (String) session.getAttribute("email");
+		Members m = mdao.getMembersEmail(email);
 		String urlquery = ChangeURL.getURLFormat(query);
+		
 		model.addAttribute("pg", pg);
 		model.addAttribute("query", query);
 		model.addAttribute("urlquery", urlquery);
+		model.addAttribute("member", m);
 		
 		return "diary_add.jsp";
 	}

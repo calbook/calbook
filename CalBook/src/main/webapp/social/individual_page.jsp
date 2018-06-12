@@ -53,7 +53,7 @@ html, body {
 
 .card {
 	height: 1000px;
-	/* width: 500px; */
+	width: 85%;
 	background-color: white;
 	border: 0px solid #eee;
 	text-align: center;
@@ -72,6 +72,7 @@ html, body {
 	text-align: center;
 	margin-top: 30px;
 	margin-bottom: 15px;
+	
 }
 
 .card span {
@@ -81,6 +82,7 @@ html, body {
 }
 
 .card p {
+	font-family: sans-serif;
 	font-size: 15px
 }
 
@@ -97,7 +99,7 @@ h1 i:hover {
 	display: none;
 }
 
-.card input {
+.card input[type="text"], .card input[type="checkbox"], .card input[type="password"] {
 	display: inline-block;
 	width: 70%;
 	border-bottom: 1px solid #000;
@@ -114,7 +116,7 @@ h1 i:hover {
 }
 
 
-.card button {
+.card input[type="button"] {
 	display: block;
 	width: 87%;
 	padding: 10px;
@@ -127,45 +129,45 @@ h1 i:hover {
 	transition: 0.3s;
 }
 
-.card button.half {
+.card input[type="button"].half {
 	display: inline;
 	width: 30%;
 }
 
-.card button.blue {
+.card input[type="button"].blue {
 	background-color: #3498DB;
 	opacity: 0.9;
 	
 }
 
-.card button.blue:hover {
+.card input[type="button"].blue:hover {
 	opacity: 1;
 }
 
-.card button.red {
+.card input[type="button"].red {
 	background-color: #E74C3C;
 	opacity: 0.9;
 }
 
-.card button.red:hover {
+.card input[type="button"].red:hover {
 	opacity: 1;
 }
 
-.card button.yellow {
+.card input[type="button"].yellow {
 	background-color: #F2CF66;
 	opacity: 0.9;
 }
 
-.card button.yellow:hover {
+.card input[type="button"].yellow:hover {
 	opacity: 1;
 }
 
-.card button.green {
+.card input[type="button"].green {
 	background-color: #82BF56;
 	opacity: 0.9;
 }
 
-.card button.green:hover {
+.card input[type="button"].green:hover {
 	opacity: 1;
 }
 
@@ -372,6 +374,7 @@ form {
 
 .filebox label {
   display: inline-block;
+  margin-top: 10px;
   padding: .5em .75em;
   color: #999;
   font-size: inherit;
@@ -423,8 +426,21 @@ form {
 <script>
 	$(function(){
 		
-		$("#imageUpload").change(function(event) {
+		$("#profileImg").change(function(event) {
 			$('#imagePreview').fadeIn('fast').attr('src', URL.createObjectURL(event.target.files[0]));
+		});
+		
+		
+		$('#profile_modi').click(function(){
+			$('.info_modi').css({
+				"display":"block"
+			});
+		});
+		
+		$('#cancel').click(function(){
+			$('.info_modi').css({
+				"display":"none"
+			});
 		});
 		
 		
@@ -433,47 +449,35 @@ form {
 			$(this).addClass('pagination-active');
 		})
 		
-		$('#profile_modi').click(function(){
-			$('.info_modi').css({
-				"display":"block"
-			});
-		});
-		
-		$('#info_modi').submit(function(event){
-			var nick = $('#nick').val();
-			var phone = $('#phone').val();
-			var pwd = $('#password').val();
-			var pwd_check = $('#password_check').val();
-			var open = $("#open").is(":checked");
-			var file = $("#imageUpload").val();
-			if(file == null){
-				file = $("#profile_img").val();
-			}
-			alert(file);
-			if(pwd == pwd_check){
-				$.ajax({
-					url: "updateMembers.do",
-					type: "POST",
-					data: {"nick":nick, "phone":phone, "pwd":pwd, "open":open, "fileName":file},
-					error: function(jqXHR){
-						alert("jqXHR.status: " + jqXHR.status);
-						alert("jqXHR.statusText(): " + jqXHR.statusText());
-					},
-					dataType: "text",
-					success: function(resData){
-						alert(resData);
-					}
-				});
-			}else{
-				alert("비밀번호가 틀렸습니다.");
-				event.preventDefault();
-			}
-		});
-		
-		$('#check').click(function(){
-		});
-		
 	});
+	
+	function modiProfile(){
+		var formData = new FormData($('#info_modi')[0]);
+		$.ajax({
+            type : 'post',
+            url : 'updateMembers.do',
+            data : formData,
+            processData : false,
+            contentType : false,
+            dataType: "text",
+            error: function(jqXHR){
+				alert("jqXHR.status: " + jqXHR.status);
+				alert("jqXHR.statusText(): " + jqXHR.statusText());
+			},
+            success : function(resData) {
+            	if(resData == "success"){
+            		alert("정보 수정 성공");
+            		$('.info_modi').css({
+        				"display":"none"
+        			});
+            		$('#h1Nick').text($('#nick').val());
+            		$('#pPhone').text($('#phone').val());            		
+            	}else{
+            		alert("정보 수정 실패");
+            	}
+            }
+        });		
+	}
 </script>
 </head>
 
@@ -493,30 +497,43 @@ form {
 						<img id="imagePreview" class="profile_img" src="upload/${member.profile}" alt="prof">
 					</c:if>
 					<c:if test="${member.email == cEmail}">
-						<h1>${member.nick}<a id="profile_modi"><i class="fa fa-pencil"></i></a></h1>
+						<h1 id="h1Nick">${member.nick}</h1><a id="profile_modi"><i class="fa fa-pencil"></i></a>
 					</c:if>
 					<c:if test="${member.email != cEmail}">
-						<h1>${member.nick}</h1>
+						<h1 id="h1Nick">${member.nick}</h1>
 					</c:if>
-					<c:if test="${member.open == 1}">
+					<c:if test="${member.email == cEmail}">
 						<p>${member.email}</p>
-						<p>${member.phone}</p>					
+						<p id="pPhone">${member.phone}</p>
+					</c:if>
+					<c:if test="${member.email != cEmail}">
+						<c:if test="${member.open == 1}">
+							<p>${member.email}</p>
+							<p id="pPhone">${member.phone}</p>				
+						</c:if>						
 					</c:if>
 					
 					
-					<form enctype="multipart/form-data" id="info_modi" class="info_modi" action="#" method="get">
+					<form enctype="multipart/form-data" id="info_modi" class="info_modi" action="updateMembers.do" method="get">
 						<span>닉네임</span> <input id="nick" name="nick" type="text" value="${member.nick}" required>
 						<span>전화번호</span> <input id="phone" name="phone" type="text" value="${member.phone}" required>
-						<span>비밀번호</span> <input id="password" name="pwd" type="text" placeholder="password" required>
-						<span>비밀번호 확인</span> <input id="password_check" type="text" placeholder="password check" required>
-						<span>공개유무</span><input id="open" type="checkbox">
+						<span>비밀번호</span> <input id="password" name="pwd" type="password" placeholder="password" value="${member.pwd}" required>
+						<span>비밀번호 확인</span> <input id="password_check" type="password" placeholder="password check" required>
+						<c:if test="${member.open == 1}">
+							<span>공개유무</span><input id="open" name="open" type="checkbox" checked>						
+						</c:if>
+						<c:if test="${member.open == 0}">
+							<span>공개유무</span><input id="open" name="open" type="checkbox">
+						</c:if>
 						<input type="hidden" id="profile_img" value="${member.profile}">
 						<div class="filebox">
-						  <label for="imageUpload"><i class="fa fa-camera"></i>업로드</label> 
-						  <input type="file" name="file" id="imageUpload">
+						  <label for="profileImg"><i class="fa fa-camera"></i>업로드</label> 
+						  <input type="file" name="file" id="profileImg">
 						</div>
-						<button id="check" class="half green">확인</button>
-						<button id="cancel" class="half yellow">취소</button>
+						<div>
+							<input type="button" value="전송" id="modiSubmit" class="half green" onclick="modiProfile();">
+							<input type="button" value="취소" id="cancel" value="취소" class="half yellow">						
+						</div>
 					</form>
 					
 <!-- 					<button class="blue">친구 신청</button> -->
@@ -558,12 +575,12 @@ form {
 							<c:when test="${1 <= rand && rand <= 4}">
 								<c:if test="${item.url == null}">
 									<div class="item item--large" style="background-image: url('../images/sample7.png');">
-										<div class="item__details"><a href="diary_detail.do?seq=${item.seq}">${item.title}</a></div>
+										<div class="item__details"><a href="diary_detail.do?pg=${pg}&query=${urlquery}&seq=${item.seq}&cEmail=${cEmail}">${item.title}</a></div>
 									</div>
 								</c:if>
 								<c:if test="${item.url != null}">
 									<div class="item item--large" style="background-image: url(upload/${item.url});">
-										<div class="item__details"><a href="diary_detail.do?seq=${item.seq}">${item.title}</a></div>
+										<div class="item__details"><a href="diary_detail.do?pg=${pg}&query=${urlquery}&seq=${item.seq}&cEmail=${cEmail}">${item.title}</a></div>
 									</div>
 								</c:if>
 							</c:when>
@@ -571,12 +588,12 @@ form {
 							<c:when test="${4 < rand && rand <= 8}">
 								<c:if test="${item.url == null}">
 									<div class="item item--medium" style="background-image: url('../images/sample5.png');">
-										<div class="item__details"><a href="diary_detail.do?seq=${item.seq}">${item.title}</a></div>
+										<div class="item__details"><a href="diary_detail.do?pg=${pg}&query=${urlquery}&seq=${item.seq}&cEmail=${cEmail}">${item.title}</a></div>
 									</div>
 								</c:if>
 								<c:if test="${item.url != null}">
 									<div class="item item--medium" style="background-image: url(upload/${item.url});">
-										<div class="item__details"><a href="diary_detail.do?seq=${item.seq}">${item.title}</a></div>
+										<div class="item__details"><a href="diary_detail.do?pg=${pg}&query=${urlquery}&seq=${item.seq}&cEmail=${cEmail}">${item.title}</a></div>
 									</div>
 								</c:if>
 							</c:when>
@@ -584,12 +601,12 @@ form {
 							<c:when test="${8 < rand && rand <= 10}">
 								<c:if test="${item.url == null}">
 									<div class="item" style="background-image: url('../images/sample1.jpg');">
-										<div class="item__details"><a href="diary_detail.do?seq=${item.seq}">${item.title}</a></div>
+										<div class="item__details"><a href="diary_detail.do?pg=${pg}&query=${urlquery}&seq=${item.seq}&cEmail=${cEmail}">${item.title}</a></div>
 									</div>
 								</c:if>
 								<c:if test="${item.url != null}">
 									<div class="item" style="background-image: url(upload/${item.url});">
-										<div class="item__details"><a href="diary_detail.do?seq=${item.seq}">${item.title}</a></div>
+										<div class="item__details"><a href="diary_detail.do?pg=${pg}&query=${urlquery}&seq=${item.seq}&cEmail=${cEmail}">${item.title}</a></div>
 									</div>
 								</c:if>
 							</c:when>
@@ -609,10 +626,10 @@ form {
 				<span class="pagination-inner">
 					<c:forEach begin="0" end="4" var="i">
 						<c:if test="${i+sPage <= fPage}">
-							<c:if test="${ipg == i+sPage}">
+							<c:if test="${pg == i+sPage}">
 								<a href="#" class="pagination-active">${i+sPage}</a>
 							</c:if>
-							<c:if test="${ipg != i+sPage}">
+							<c:if test="${pg != i+sPage}">
 								<a href="individual_page.do?cEmail=${cEmail}&query=${urlquery}&pg=${i+sPage}">${i+sPage}</a>					
 							</c:if>
 						</c:if>

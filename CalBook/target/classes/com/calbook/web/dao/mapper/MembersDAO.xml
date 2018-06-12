@@ -21,7 +21,7 @@
 	
 	<!-- 개인정보 수정하기 -->
 	<update id="updateMembers">
-		UPDATE MEMBERS SET NICK=#{nick}, PHONE=#{phone}, PWD=#{pwd}, PROFILE=#{profile}, OPEN=#{open} WHERE EMAIL=#{email}
+		UPDATE MEMBERS SET NICK=#{nick}, PHONE=#{phone}, PWD=#{pwd}, PROFILE=#{profile, jdbcType=VARCHAR}, OPEN=#{open} WHERE EMAIL=#{email}
 	</update>
 
 

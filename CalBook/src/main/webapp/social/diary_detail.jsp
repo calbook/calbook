@@ -62,7 +62,7 @@ html, body {
 
 .card {
 	height: 1000px;
-	/* width: 500px; */
+	width: 85%; 
 	background-color: white;
 	border: 0px solid #eee;
 	text-align: center;
@@ -81,6 +81,7 @@ img {
 	text-align: center;
 	margin-top: 30px;
 	margin-bottom: 15px;
+	
 }
 
 .card span {
@@ -90,6 +91,7 @@ img {
 }
 
 .card p {
+	font-family: sans-serif;
 	font-size: 15px
 }
 
@@ -102,12 +104,16 @@ h1 i:hover {
 	color: #aaaaaa;
 }
 
-.card input {
+.info_modi {
+	display: none;
+}
+
+.card input[type="text"], .card input[type="checkbox"], .card input[type="password"] {
 	display: inline-block;
 	width: 70%;
 	border-bottom: 1px solid #000;
     font-weight: bold;
-    font-size: 1.8rem;
+    font-size: 2rem;
 	-webkit-margin-before: 0.67em;
     /* -webkit-margin-after: 0.67em; */
     -webkit-margin-start: 0px;
@@ -119,7 +125,7 @@ h1 i:hover {
 }
 
 
-.card button {
+.card input[type="button"] {
 	display: block;
 	width: 87%;
 	padding: 10px;
@@ -132,47 +138,79 @@ h1 i:hover {
 	transition: 0.3s;
 }
 
-.card button.half {
+.card input[type="button"].half {
 	display: inline;
 	width: 30%;
 }
 
-.card button.blue {
+.card input[type="button"].blue {
 	background-color: #3498DB;
 	opacity: 0.9;
 	
 }
 
-.card button.blue:hover {
+.card input[type="button"].blue:hover {
 	opacity: 1;
 }
 
-.card button.red {
+.card input[type="button"].red {
 	background-color: #E74C3C;
 	opacity: 0.9;
 }
 
-.card button.red:hover {
+.card input[type="button"].red:hover {
 	opacity: 1;
 }
 
-.card button.yellow {
+.card input[type="button"].yellow {
 	background-color: #F2CF66;
 	opacity: 0.9;
 }
 
-.card button.yellow:hover {
+.card input[type="button"].yellow:hover {
 	opacity: 1;
 }
 
-.card button.green {
+.card input[type="button"].green {
 	background-color: #82BF56;
 	opacity: 0.9;
 }
 
-.card button.green:hover {
+.card input[type="button"].green:hover {
 	opacity: 1;
 }
+
+/* image upload */
+.filebox {display:inline-block; margin-right: 10px;}
+
+
+.filebox label {
+  display: inline-block;
+  margin-top: 10px;
+  padding: .5em .75em;
+  color: #999;
+  font-size: inherit;
+  line-height: normal;
+  vertical-align: middle;
+  background-color: #fdfdfd;
+  cursor: pointer;
+  border: 1px solid #ebebeb;
+  border-bottom-color: #e2e2e2;
+  border-radius: .25em;
+}
+
+.filebox input[type="file"] {  /* 파일 필드 숨기기 */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip:rect(0,0,0,0);
+  border: 0;
+}
+
+
 
 
 /* detail CSS  */
@@ -223,7 +261,6 @@ h4 {
 }
 
 p {
-	/* font-family: Georgia, serif; */
 	font-family: 'Jeju Gothic', sans-serif;
 	margin-top: 0;
 	margin-bottom: 27px;
@@ -315,6 +352,56 @@ button {
 }
 </style>
 
+<script>
+	$(function(){
+		
+		$("#profileImg").change(function(event) {
+			$('#imagePreview').fadeIn('fast').attr('src', URL.createObjectURL(event.target.files[0]));
+		});
+		
+		
+		$('#profile_modi').click(function(){
+			$('.info_modi').css({
+				"display":"block"
+			});
+		});
+		
+		$('#cancel').click(function(){
+			$('.info_modi').css({
+				"display":"none"
+			});
+		});		
+	});
+	
+	function modiProfile(){
+		var formData = new FormData($('#info_modi')[0]);
+		$.ajax({
+            type : 'post',
+            url : 'updateMembers.do',
+            data : formData,
+            processData : false,
+            contentType : false,
+            dataType: "text",
+            error: function(jqXHR){
+				alert("jqXHR.status: " + jqXHR.status);
+				alert("jqXHR.statusText(): " + jqXHR.statusText());
+			},
+            success : function(resData) {
+            	if(resData == "success"){
+            		alert("정보 수정 성공");
+            		$('.info_modi').css({
+        				"display":"none"
+        			});
+            		$('#h1Nick').text($('#nick').val());
+            		$('#pPhone').text($('#phone').val());            		
+            	}else{
+            		alert("정보 수정 실패");
+            	}
+            }
+        });		
+	}
+</script>
+
 </head>
 
 <body>
@@ -326,21 +413,55 @@ button {
 		<div class="profile">
 			<div class="container">
 				<div class="card">
-					<img src="https://www.w3schools.com/w3images/team2.jpg" alt="prof">
-					<h1>John Doe<a><i class="fa fa-camera"></i></a></h1>
-					<span>CEO &amp; Founder, Example</span>
-					<p>Harvard University</p>
+					<c:if test="${member.profile == null}">
+						<img id="imagePreview" class="profile_img" src="../images/background/profile.jpg" alt="prof">
+					</c:if>
+					<c:if test="${member.profile != null}">
+						<img id="imagePreview" class="profile_img" src="upload/${member.profile}" alt="prof">
+					</c:if>
+					<c:if test="${member.email == cEmail}">
+						<h1 id="h1Nick">${member.nick}</h1><a id="profile_modi"><i class="fa fa-pencil"></i></a>
+					</c:if>
+					<c:if test="${member.email != cEmail}">
+						<h1 id="h1Nick">${member.nick}</h1>
+					</c:if>
+					<c:if test="${member.email == cEmail}">
+						<p>${member.email}</p>
+						<p id="pPhone">${member.phone}</p>
+					</c:if>
+					<c:if test="${member.email != cEmail}">
+						<c:if test="${member.open == 1}">
+							<p>${member.email}</p>
+							<p id="pPhone">${member.phone}</p>				
+						</c:if>						
+					</c:if>
 					
-					<span>닉네임</span> <input type="text">
-					<span>전화번호</span> <input type="text">
-					<span>비밀번호</span> <input type="text">
-					<span>비밀번호 확인</span> <input type="text">
 					
-					<button class="blue">친구 신청</button>
-					<button class="red">친구 삭제</button>
-					<button class="yellow">프로필 수정</button>
-					<button class="half green">확인</button>
-					<button class="half yellow">취소</button>
+					<form enctype="multipart/form-data" id="info_modi" class="info_modi" action="updateMembers.do" method="get">
+						<span>닉네임</span> <input id="nick" name="nick" type="text" value="${member.nick}" required>
+						<span>전화번호</span> <input id="phone" name="phone" type="text" value="${member.phone}" required>
+						<span>비밀번호</span> <input id="password" name="pwd" type="password" placeholder="password" value="${member.pwd}" required>
+						<span>비밀번호 확인</span> <input id="password_check" type="password" placeholder="password check" required>
+						<c:if test="${member.open == 1}">
+							<span>공개유무</span><input id="open" name="open" type="checkbox" checked>						
+						</c:if>
+						<c:if test="${member.open == 0}">
+							<span>공개유무</span><input id="open" name="open" type="checkbox">
+						</c:if>
+						<input type="hidden" id="profile_img" value="${member.profile}">
+						<div class="filebox">
+						  <label for="profileImg"><i class="fa fa-camera"></i>업로드</label> 
+						  <input type="file" name="file" id="profileImg">
+						</div>
+						<div>
+							<input type="button" value="전송" id="modiSubmit" class="half green" onclick="modiProfile();">
+							<input type="button" value="취소" id="cancel" value="취소" class="half yellow">						
+						</div>
+					</form>
+					
+<!-- 					<button class="blue">친구 신청</button> -->
+<!-- 					<button class="red">친구 삭제</button> -->
+<!-- 					<button class="yellow">프로필 수정</button> -->
 				</div>
 			</div>
 		</div>
