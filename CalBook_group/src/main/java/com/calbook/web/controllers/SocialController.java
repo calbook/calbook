@@ -965,7 +965,23 @@ public class SocialController {
 		}
 	}
 	
-
+	@RequestMapping(value={"deleteGroupScheduleProc.do"}, method=RequestMethod.GET)
+	public String deleteGroupScheduleProc(String seq, String g_num) {
+	      
+		SchedulesDAO sdao = ss.getMapper(SchedulesDAO.class);
+		  
+		int iSeq = Integer.parseInt(seq);	
+		
+		int af = sdao.deleteGroupSchedule(iSeq);
+	    
+		if(af == 1){
+			System.out.println("모임일정 삭제 성공");
+			return "redirect:group_schedule.do?g_num="+g_num;
+		}else{
+			System.out.println("모임일정 삭제 실패");
+			return "redirect:view_GroupSchedule.do?g_num="+g_num+"&seq="+iSeq;
+		}
+	}
 	
 		
 	

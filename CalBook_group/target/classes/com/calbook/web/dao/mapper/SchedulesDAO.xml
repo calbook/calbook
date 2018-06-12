@@ -20,4 +20,8 @@
 		UPDATE SCHEDULES SET TITLE=#{title}, CONTENT=#{content}, IMPORTANT=#{important}, START_DATE=#{start_date}, FINISH_DATE=#{finish_date}, LOCATION=#{location} WHERE SEQ=#{seq}
 	</update>
 	
+	<delete id="deleteGroupSchedule">
+		DELETE SCHEDULES WHERE SEQ=#{seq}
+	</delete>
+	
 </mapper>

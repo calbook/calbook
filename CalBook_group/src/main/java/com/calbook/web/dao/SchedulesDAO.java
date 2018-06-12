@@ -17,4 +17,7 @@ public interface SchedulesDAO {
 	
 	//모임 일정 수정
 	public int updateGroupSchedule(Schedules s);
+	
+	//모임 일정 삭제
+	public int deleteGroupSchedule(int seq);
 }

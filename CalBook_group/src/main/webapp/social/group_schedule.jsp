@@ -364,8 +364,8 @@ h3{
 		<div class="profile">
 			<div class="container">
 				<div class="card">
-					<img class="profileimg" src="https://www.w3schools.com/w3images/team2.jpg" alt="prof">
-					<h1>${group.name}<a><i class="fa fa-camera"></i></a></h1>
+					<img class="profileimg" src="../images/groupImg1.jpg" alt="prof">
+					<h1>${group.name}</h1>
 					<p>${group.content}</p>
 					<p>Owner: ${group.owner}</p>
 				</div>
@@ -377,9 +377,11 @@ h3{
 	<br><br><br><br><br>
 	<div class="container-fluid">
 		<div id="container" class="col-md-8">
-			 <div class="buttons">
-			 	<a href="register.do?g_num=${group.num}"><button class="table-hover"><i class="fa fa-plus"></i></button></a>
-			 </div> 
+			<c:if test="${group.owner == email}">
+				<div class="buttons">
+					<a href="register.do?g_num=${group.num}"><button class="table-hover"><i class="fa fa-plus"></i></button></a>
+				</div> 
+			</c:if>
 			<table class="table table-hover" id="oi">
 				<thead>
 					<tr>

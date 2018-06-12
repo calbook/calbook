@@ -86,6 +86,7 @@ html{
 	margin-left: -260px;
   -moz-border-radius: 7px;
   -webkit-border-radius: 7px;
+  	color:white;
 }
 
 .feedback-input {
@@ -321,7 +322,8 @@ input:focus, textarea:focus {
 	      <p class="name">
 	        <input name="title" type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" value="${schedule.title}" id="title" />
 	      </p>
-	      <p>StartDate: <input type="text" value="${schedule.start_date}" id="sdate" name="start_date" class="datepicker" />	EndDate: <input type="text" name="finish_date" value="${schedule.finish_date}" id="edate" class="datepicker" /></p>
+	      <p>시작일: <input type="text" value="${schedule.start_date}" id="sdate" name="start_date" class="datepicker" /></p>
+	      	<p>종료일: <input type="text" name="finish_date" value="${schedule.finish_date}" id="edate" class="datepicker" /></p>
 		   <p>중요도: 
 		   	<c:if test="${schedule.important == 1}">
 		      <select name="important">
@@ -351,7 +353,7 @@ input:focus, textarea:focus {
 	        <textarea name="content" class="validate[required,length[6,300]] feedback-input" id="content">${schedule.content}</textarea>
 	      </p>
 	      <div id="map"></div>
-          <input id="pac-input" name="location" class="controls" type="text" placeholder="Search Box">
+          <input id="pac-input" name="location" class="controls" type="text" placeholder="Search Box" >
           <br><br>
 	      <table class="submit">
               <col style="width:35%;">
@@ -367,7 +369,7 @@ input:focus, textarea:focus {
 	    </form>
 	  </div>
 	</div>
-<div style="position:absolute; left:0px; right:0px; bottom:0px; height:50px;">
+<div style="position:absolute;left:0px; right:0px; bottom:0px; height:50px; margin-top:100px;">
    <jsp:include page="../default/footer.jsp" />
 </div> 
 

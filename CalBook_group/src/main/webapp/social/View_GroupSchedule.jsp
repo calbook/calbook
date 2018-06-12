@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -67,6 +68,7 @@ html{
 	margin-left: -260px;
   -moz-border-radius: 7px;
   -webkit-border-radius: 7px;
+  	color: white;
 }
 
 .feedback-input {
@@ -150,29 +152,53 @@ input:focus, textarea:focus {
 	background-color:white;
 }
 
-#button-blue{
+.btnListDiv{
+	width: 100%;
+	
+}
+
+.btnListDiv div{
+	 margin-left: 23%; 
+
+}
+
+.btnList{
+	width: 30%;
+	border: #fbfbfb solid 4px;
+	cursor:pointer;
+	background-color: #3498db;
+	color:white;
+	font-weight:700;
+	text-decoration: none;
+	padding: 5%;
+}
+
+.btnList:hover{
+	background-color: rgba(0,0,0,0);
+	color: #0493bd;
+}
+
+/* .button-blue{
 	font-family: 'Montserrat', Arial, Helvetica, sans-serif;
-	float:left;
+	float:left; 
 	border: #fbfbfb solid 4px;
 	cursor:pointer;
 	background-color: #3498db;
 	color:white;
 	font-size:18px;
-/* 	padding-top:22px; */
-/* 	padding-bottom:22px; */
-	padding: 20%;
+	padding-top:22px; 
+	padding-bottom:22px; 
+	padding: 15%;
 	-webkit-transition: all 0.3s;
 	-moz-transition: all 0.3s;
 	transition: all 0.3s;
  	margin-top:-4px;
     font-weight:700;
     text-decoration: none;
+    width: 33.33%;
+    height: 5%;
 }
-
-#button-blue:hover{
-	background-color: rgba(0,0,0,0);
-	color: #0493bd;
-}
+ */
 	
 .submit:hover {
 	color: #3498db;
@@ -287,6 +313,10 @@ input:focus, textarea:focus {
   width: 345px;
 }
 
+.listbtn{
+	color: white;
+	font-size: 25px;
+}
 
 </style>
 </head>
@@ -297,28 +327,47 @@ input:focus, textarea:focus {
 	<br><br>
 	<div id="form-main">
 	  <div id="form-div">
+	  	<a class="listbtn" href="group_schedule.do?g_num=${group.num}" ><i class="fa fa-arrow-left"></i></a>
 	    <form class="form" id="form1">
 	      <h1 style="text-align: center; color: #FFFFFF;">${schedule.title}</h1>
-	      <p>StartDate:  <span>${schedule.start_date} </span> EndDate: <span> ${schedule.finish_date} </span></p>
+	      <p>시작일 :  <span>${schedule.start_date} </span></p>
+	      <p>종료일 : <span> ${schedule.finish_date} </span></p>
 	      <p>
-	        <span>중요도:${schedule.important}  </span>
+	      	<c:if test="${schedule.important==3}">
+		        <span>중요도 : 상 </span>
+	      	</c:if>
+	      	<c:if test="${schedule.important==2}">
+		        <span>중요도 : 중 </span>
+	      	</c:if>
+	      	<c:if test="${schedule.important==1}">
+		        <span>중요도 : 하 </span>
+	      	</c:if>
 	      </p>
 	      <p class="text">
-	        <span>Content:${schedule.content}  </span>
+	        <span>내용 : ${schedule.content}  </span>
 	      </p>
 	      <div id="map"></div>
-	      <input id="pac-input" name="location" class="controls" type="text" placeholder="Search Box">
+	     <!--  <input id="pac-input" name="location" class="controls" type="text" placeholder="Search Box"> -->
           <br><br>
-	      <table class="submit">
-              <col style="width:35%;">
-              <col style="width:30%;">
-              <col style="width:35%;">
+	      <%-- <table class="submit">
+              <col style="width:33.33%;">
+              <col style="width:33.33%;">
+              <col style="width:33.33%;">
               <tr>
-                 <td><a href="edit_GroupSchedule.do?g_num=${group.num}&seq=${schedule.seq}" id="button-blue">UPDATE</a></td>
-                 <td></td>
-                 <td><a href="group_schedule.do?g_num=${group.num}" id="button-blue">PREV</a></td>
+                 <td class="button-blue"><a href="group_schedule.do?g_num=${group.num}" >LIST</a></td>
+                 <td class="button-blue"><a href="edit_GroupSchedule.do?g_num=${group.num}&seq=${schedule.seq}">UPDATE</a></td>
+                 <td class="button-blue"><a href="deleteGroupSchedule.do?g_num=${group.num}&seq=${schedule.seq}">DELETE</a></td>
               </tr>
-           </table>
+           </table> --%>
+           <div class="btnListDiv">
+           	<div>
+	           <c:if test="${group.owner == email}">
+		           
+		           <a class="btnList" href="edit_GroupSchedule.do?g_num=${group.num}&seq=${schedule.seq}">UPDATE</a>
+		           <a class="btnList" href="deleteGroupScheduleProc.do?g_num=${group.num}&seq=${schedule.seq}">DELETE</a>
+	           </c:if>
+           	</div>
+           </div>
             <div class="ease"></div>
 	    </form>
 	  </div>
@@ -337,7 +386,7 @@ function initAutocomplete() {
        zoom : 14,
        mapTypeId : 'roadmap'
     });
-
+/* 
     // Create the search box and link it to the UI element.
     var input = document.getElementById('pac-input');
     var searchBox = new google.maps.places.SearchBox(input);
@@ -395,7 +444,7 @@ function initAutocomplete() {
           }
        });
        map.fitBounds(bounds);
-    });
+    }); */
 
  
  }
