@@ -13,4 +13,10 @@ public interface SchedulesDAO {
 	public List<Schedules> getSchedulesMonth(String m_email, String start_date, String end_date);
 	
 	public int delSchedule(String seq);
+	
+	public int addSchedule(Schedules s);
+	
+	public Schedules getSchedule(String seq);
+	
+	public int updateSchedule(Schedules s);
 }

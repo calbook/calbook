@@ -5,7 +5,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
-
+<!-- googlemap -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUsZlyBI_gQ8S_liz_WdZ6U2W2ooRwIoQ&libraries=places" async defer></script>
 <!-- css -->
 <link rel='stylesheet' href='../css/fullcalendar/fullcalendar.css' />
 <link rel="stylesheet" href="../css/background.css">
@@ -164,8 +165,9 @@
 	margin-top: 3%;
 }
 
-.sCon{
+.sCon {
 	text-align: left;
+	height: 80%;
 }
 
 .tabs .content section {
@@ -279,7 +281,7 @@
            transform: translateX(0%); 
  }  */
 .tabs input[name="tab-control"]:nth-of-type(4):checked ~ .content>section:nth-child(4)
-{
+	{
 	display: block;
 }
 
@@ -377,22 +379,22 @@ to {
 }
 
 .smbtnDiv {
-   margin: 10px 10px 10px 10px;
+	margin: 10px 10px 10px 10px;
 }
 
-@media ( max-width: 1100px ) {
-  	.modal-content {
+@media ( max-width : 1100px ) {
+	.modal-content {
 		width: 75%;
 	}
 }
 
-.smbtnDiv{
+.smbtnDiv {
 	width: 100%;
 	float: right;
 }
 
 /* The Close Button */
-.save, .close ,.sRowModalEdit_close {
+.save, .close, .sRowModalEdit_close {
 	margin: 0px 10px 10px 20px;
 	color: white;
 	font-size: 20px;
@@ -400,15 +402,17 @@ to {
 	float: right;
 	width: 10%;
 	/* margin-right: 10%; */
-/* 	margin-bottom: 50px; */
+	/* 	margin-bottom: 50px; */
 }
-.save:hover, .save:focus, .close:hover, .close:focus, .sRowModalEdit_close:hover, .sRowModalEdit_close:focus {
+
+.save:hover, .save:focus, .close:hover, .close:focus,
+	.sRowModalEdit_close:hover, .sRowModalEdit_close:focus {
 	color: gray;
 	text-decoration: none;
 	cursor: pointer;
 }
 
-.sRowModal_close{
+.sRowModal_close {
 	color: white;
 	font-size: 20px;
 	font-weight: bold;
@@ -423,8 +427,7 @@ to {
 	cursor: pointer;
 }
 
-
-.edit{
+.edit {
 	color: white;
 	font-size: 20px;
 	font-weight: bold;
@@ -448,8 +451,8 @@ to {
 	width: 100%;
 }
 
-.spanDE{
-	padding : 6px;
+.spanDE {
+	padding: 6px;
 }
 
 .startD, .endD {
@@ -461,13 +464,12 @@ to {
 }
 
 .importantSpan {
-   margin: 0 0 0 10px;
+	margin: 0 0 0 10px;
 }
 
-
-.modal-body{
- 	overflow: hidden; 
-/* 	overflow:visible; */
+.modal-body {
+	overflow: hidden;
+	/* 	overflow:visible; */
 }
 
 .add {
@@ -489,28 +491,26 @@ to {
 	background-color: #ffc966;
 	color: white;
 } */
-
-.modalR div:hover{
-  background-color: red;
+.modalR div:hover {
+	background-color: red;
 }
 
 .modalR {
-/* 	margin: 0 3px 0 3px; */
+	/* 	margin: 0 3px 0 3px; */
 	background-color: #ffb6c1;
-/* 	color: #ffb6c1; */
+	/* 	color: #ffb6c1; */
 }
 
-
 .modalO {
-/* 	margin: 0 3px 0 3px; */
+	/* 	margin: 0 3px 0 3px; */
 	background-color: #ffc966;;
-/* 	color: #ffc966; */
+	/* 	color: #ffc966; */
 }
 
 .modalG {
-/* 	margin: 0 3px 0 3px; */
+	/* 	margin: 0 3px 0 3px; */
 	background-color: #add8e6;
-/* 	color: #add8e6; */
+	/* 	color: #add8e6; */
 }
 
 /* 추가css */
@@ -541,7 +541,6 @@ to {
 	margin: 0 0;
 	width: 115px;
 }
-
 
 .scheduleList {
 	margin: 0 0em 0 0em;
@@ -699,82 +698,88 @@ to {
 	border: 2px solid #666666;
 }
 
+.all, .first, .second, .third{
+	height: 100%;
+}
 
+.allDiv, .firstDiv, .secondDiv, .thirdDiv{
+	height: 100%;
+	overflow: auto;
+}
 
 /* 지도 css */
 /* Always set the map height explicitly to define the size of the div element that contains the map. */
 #map {
-  width: 100%;
-  height: 200px; 
+	width: 100%;
+	height: 200px;
 }
 
-#srmMap{
+#srmMap {
 	width: 100%;
-	height: 250px; 
+	height: 250px;
 }
 
-#srmEditMap{
+#srmEditMap {
 	width: 100%;
-	height: 200px; 
+	height: 200px;
 }
 
 /* Optional: Makes the sample page fill the window. */
-.googleMapDiv{
-  display: inline;
-  /* float: left; */
-  height: 50%;
-  width: 59%;
-  margin: 0;
-  margin-left: 1%;
-  padding: 0;
+.googleMapDiv {
+	display: inline;
+	/* float: left; */
+	height: 50%;
+	width: 59%;
+	margin: 0;
+	margin-left: 1%;
+	padding: 0;
 }
 
 .controls {
-  margin-top: 10px;
-  border: 1px solid transparent;
-  border-radius: 2px 0 0 2px;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  height: 32px;
-  outline: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+	margin-top: 10px;
+	border: 1px solid transparent;
+	border-radius: 2px 0 0 2px;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	height: 32px;
+	outline: none;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 #pac-input, #srmEdit_pac-input {
-  background-color: #fff;
-  font-family: Roboto;
-  font-size: 15px;
-  font-weight: 300;
-  margin-left: 12px;
-  padding: 0 11px 0 13px;
-  text-overflow: ellipsis;
-  width: 200px;
+	background-color: #fff;
+	font-family: Roboto;
+	font-size: 15px;
+	font-weight: 300;
+	margin-left: 12px;
+	padding: 0 11px 0 13px;
+	text-overflow: ellipsis;
+	width: 200px;
 }
 
 #pac-input:focus, #srmEdit_pac-input:focus {
-  border-color: #4d90fe;
+	border-color: #4d90fe;
 }
 
-
 .pac-container {
-  font-family: Roboto;
+	font-family: Roboto;
 }
 
 #type-selector {
-  color: #fff;
-  background-color: #4d90fe;
-  padding: 5px 11px 0px 11px;
+	color: #fff;
+	background-color: #4d90fe;
+	padding: 5px 11px 0px 11px;
 }
 
 #type-selector label {
-  font-family: Roboto;
-  font-size: 13px;
-  font-weight: 300;
-}
-#target {
-  width: 345px;
+	font-family: Roboto;
+	font-size: 13px;
+	font-weight: 300;
 }
 
+#target {
+	width: 345px;
+}
 </style>
 </head>
 <body>
@@ -816,22 +821,20 @@ to {
 <!-- 				  <div class="slider"><div class="indicator"></div></div> -->
 					<div class="content sCon">
 						<section class="all">
-							<h2>전체</h2>
-<!-- 							<div id="sdrow" class="todo" style="background-color: #add8e6"> -->
-<!-- 								<div class="todo_date">5일</div> -->
-<!-- 								<div class="todo_content">어린이날</div> -->
-<!--                                 <div class="todo-btn"><i class="fa fa-minus minus-btn"></i></div> -->
-<!-- 							</div>  -->
-							
+							<div class="allDiv">
+							</div>
 						</section>
 						<section class="first">
-							 
+							<div class="firstDiv">
+							</div>
 						</section>
 						<section class="second">
-							
+							<div class="secondDiv">
+							</div>
 						</section>
 						<section class="third">
-							
+							<div class="thirdDiv">
+							</div>
 						</section>
 					</div>
 				</div>
@@ -1137,18 +1140,18 @@ to {
 			<div class="modal-content">
 				<div class="modal-body">
 					 <div class = "add">일정추가</div>
-				    <form>
+				    <form id="scsaveForm">
 				    	<div class="smcontentsDiv">
-				       	<input class = "border borderTitle" type = "text" name = "title" size = "50" placeholder="제목을 입력해주세요">
-				       	<span class="spanDS">시작 날짜 : </span><input class = "border borderDate startD" type = "text" name = "sdate" size = "20" disabled>
-				       	<span class="spanDE">끝 날짜 : </span><input class = "border borderDate endD" type = "text" name = "edate" size = "20" disabled>
-				       	<span class="importantSpan">중요도 : </span>
-				       	<select class="importantSelect" placeholder="중요도">
-				              <option value="3" class="modalR">상</option>
-				              <option value="2" class="modalO" selected>중</option>
-				              <option value="1" class="modalG">하</option>
-				        </select>
-						<textarea class = "border borderContent" rows="20" cols="50" placeholder = "내용을 입력해주세요."></textarea>
+					       	<input class = "border borderTitle smtitle" type = "text" name = "title" size = "50" placeholder="제목을 입력해주세요" required>
+					       	<span class="spanDS">시작 날짜 : </span><input class = "border borderDate startD" type = "text" name = "sdate" size = "20" disabled>
+					       	<span class="spanDE">끝 날짜 : </span><input class = "border borderDate endD" type = "text" name = "edate" size = "20" disabled>
+					       	<span class="importantSpan">중요도 : </span>
+					       	<select class="importantSelect" name = "important" placeholder="중요도">
+					              <option value="3" class="modalR">상</option>
+					              <option value="2" class="modalO" selected>중</option>
+					              <option value="1" class="modalG">하</option>
+					        </select>
+							<textarea class = "border borderContent smcontent" name="content" rows="20" cols="50" placeholder = "내용을 입력해주세요." required></textarea>
 				    	</div>
 				    </form>
 					<div class="googleMapDiv">
@@ -1157,7 +1160,7 @@ to {
 				    </div>
 				    <div class="smbtnDiv">
 					    <span class = "close">CLOSE</span>
-					    <a href = "#"><span class = "save">SAVE</span></a>
+					    <span class = "save">SAVE</span>
 				    </div>
 				</div>
 			</div>
@@ -1194,16 +1197,16 @@ to {
 		<!-- schedule row Modal -->
 		<div id="sRowModal" class="modal">
 			<div class="modal-content">
-				<div class="modal-body">
+				<div class="modal-body srm-body">
 					 <div class = "add">상세 일정</div>
 				     <br><br>
 				    	<div class="smcontentsDiv">
-				       	<p>어린이날</p>
-				       	<p>2018-05-05</p>
-				       	<span class="importantSpan">중요도 : </span>
-				        <span style="color:skyblue;">하</span>
-				        <br> <br>
-				        <p>5월은 푸르구나 우리들은 자란다</p>
+				       	<p class="sRowtitle"></p>
+				       	<p><span>시작날짜: </span><span class="sRowSdate"></span></p>
+				       	<p><span>끝날짜: </span><span class="sRowEdate"></span></p>
+				       	<span>중요도 : </span>
+				        <span class="sRowimportant"></span>
+				        <p class="sRowcontent"></p>
 				    	</div>
 				    	<div class="googleMapDiv">
 					    	<div id="srmMap"></div>
@@ -1221,31 +1224,30 @@ to {
 		<!-- schedule row Modal edit -->
 		<div id="sRowModalEdit" class="modal">
 			<div class="modal-content">
-				<div class="modal-body">
+				<div class="modal-body srm-body">
 					 <div class = "add">일정 수정</div>
-				     <br><br>
-				    <form>
+				    <form id="srmsaveForm">
 				    	<div class="smcontentsDiv">
-				       	<input class = "border borderTitle" type = "text" name = "title" size = "50" placeholder="제목을 입력해주세요"><br><br>
-				       	<input class = "border borderDate" type = "text" name = "date" size = "20" placeholder="날짜를 입력해주세요"><br><br>
-				       	<span class="importantSpan">중요도 : </span>
-				       	<select class="importantSelect" placeholder="중요도">
-				              <option value="3" class="modalR">상</option>
-				              <option value="2" class="modalO">중</option>
-				              <option value="1" class="modalG">하</option>
-				        </select>
-				        <br> <br>
-						<textarea class = "border borderContent" rows="20" cols="50" placeholder = "내용을 입력해주세요."></textarea><br><br><br>
+					    	<input class = "border borderTitle srmtitle" type = "text" name = "srmtitle" size = "50" placeholder="제목을 입력해주세요" required>
+					       	<span class="spanDS">시작 날짜 : </span><input class = "border borderDate startD" type = "text" name = "sdate" size = "20" disabled>
+					        <span class="spanDE">끝 날짜 : </span><input class = "border borderDate endD" type = "text" name = "edate" size = "20" disabled>
+					       	<span class="importantSpan">중요도 : </span>
+					       	<select class="importantSelect" name = "srmimportant" placeholder="중요도">
+					              <option value="3" class="modalR">상</option>
+					              <option value="2" class="modalO">중</option>
+					              <option value="1" class="modalG">하</option>
+					        </select>
+							<textarea class = "border borderContent srmcontent" name="srmcontent" rows="20" cols="50" placeholder = "내용을 입력해주세요."></textarea>
 				    	</div>
-				    	<div class="googleMapDiv">
-					    	<div id="srmEditMap"></div>
-					    	<input id="srmEdit_pac-input" class="controls" type="text" placeholder="Search Box">
-				    	</div>
-				    	<div class="smbtnDiv">
-					       <span class = "sRowModalEdit_close">CLOSE</span>
-					       <a href = "#"><span id="editSave" class = "edit">SAVE</span></a>
-				    	</div>
-				    </form>
+					</form>
+			    	<div class="googleMapDiv">
+				    	<div id="srmEditMap"></div>
+				    	<input id="srmEdit_pac-input" class="controls" type="text" placeholder="Search Box">
+			    	</div>
+			    	<div class="smbtnDiv">
+				       <span class = "sRowModalEdit_close">CLOSE</span>
+				       <span id="editSave" class = "save">SAVE</span>
+			    	</div>
 				</div>
 			</div>
 		</div>
@@ -1255,7 +1257,5 @@ to {
 <jsp:include page="../default/footer.jsp" />
 <input id="myEmail" type="hidden" value="${email}">
 
-<!-- googlemap -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUsZlyBI_gQ8S_liz_WdZ6U2W2ooRwIoQ&libraries=places" async defer></script>
 </body>
 </html>

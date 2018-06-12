@@ -19,6 +19,8 @@ import com.calbook.web.dao.SchedulesDAO;
 import com.calbook.web.vo.CalSchedules;
 import com.calbook.web.vo.Schedules;
 import com.google.gson.Gson;
+import com.oreilly.servlet.MultipartRequest;
+import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
 @Controller
 @RequestMapping("/scheduleBook/*")
@@ -49,7 +51,7 @@ public class ScheduleBookController {
 		
 		Gson gson = new Gson();
 		String slistJson = gson.toJson(slist);
-		System.out.println(slistJson);
+//		System.out.println(slistJson);
 		return slistJson;
 	}
 	
@@ -64,12 +66,15 @@ public class ScheduleBookController {
 		SchedulesDAO sdao = ss.getMapper(SchedulesDAO.class);
 		List<Schedules> slist = sdao.getSchedulesMonth(session.getAttribute("email").toString(), startDate, endDate);
 		
-		System.out.println();
+//		System.out.println();
 		
+		for(Schedules s : slist) {
+			System.out.println(s.toString());
+		}
 		
 		Gson gson = new Gson();
 		String slistJson = gson.toJson(slist);
-		System.out.println(slistJson);
+//		System.out.println(slistJson);
 		return slistJson;
 	}
 	
@@ -104,20 +109,20 @@ public class ScheduleBookController {
 //			System.out.println(cs.toString());
 		}
 		
-//		for(CalSchedules c : clist) {
-//			System.out.println(c.toString());
-//		}
+		for(CalSchedules c : clist) {
+			System.out.println(c.toString());
+		}
 		
 		Gson gson = new Gson();
 		String clistJson = gson.toJson(clist);
-		System.out.println(clistJson);
+//		System.out.println(clistJson);
 		return clistJson;
 	}
 	
-	@RequestMapping(value= {"delSchdule.do"}, method=RequestMethod.GET, produces = "text/json; charset=UTF-8")
+	@RequestMapping(value= {"delSchedule.do"}, method=RequestMethod.GET, produces = "text/json; charset=UTF-8")
 	@ResponseBody
-	public String delSchdule(HttpServletRequest request, String seq) {
-		System.out.println("delSchdule");
+	public String delSchedule(HttpServletRequest request, String seq) {
+		System.out.println("delSchedule");
 		
 		SchedulesDAO sdao = ss.getMapper(SchedulesDAO.class);
 		Integer af = sdao.delSchedule(seq);
@@ -125,4 +130,84 @@ public class ScheduleBookController {
 		return af.toString();
 	}
 	
+	@RequestMapping(value= {"addSchedule.do"}, method=RequestMethod.POST, produces = "text/json; charset=UTF-8")
+	@ResponseBody
+	public String addSchedule(HttpServletRequest request) {
+		System.out.println("addSchedule");
+		
+		String title = request.getParameter("title");
+		String importantS = request.getParameter("important");
+		String content = request.getParameter("content");
+		String start_date = request.getParameter("startDate");
+		String end_date = request.getParameter("endDate");
+		
+		int important = Integer.parseInt(importantS);
+//		System.out.println(start_date);
+//		System.out.println(end_date);
+		
+		HttpSession session = request.getSession();
+		String m_email = session.getAttribute("email").toString();
+		SchedulesDAO sdao = ss.getMapper(SchedulesDAO.class);
+//		System.out.println(content);
+		
+		Schedules s = new Schedules();
+		s.setM_email(m_email);
+		s.setTitle(title);
+		s.setImportant(important);
+		s.setContent(content);
+		s.setStart_date(start_date);
+		s.setFinish_date(end_date);
+		s.setLocation(null);
+		
+		Integer af = sdao.addSchedule(s);
+		
+		return af.toString();
+	}
+	
+	@RequestMapping(value= {"getSchedule.do"}, method=RequestMethod.GET, produces = "text/json; charset=UTF-8")
+	@ResponseBody
+	public String getSchedule(String seq) {
+		System.out.println("getSchedule");
+//		System.out.println(seq);
+		
+		SchedulesDAO sdao = ss.getMapper(SchedulesDAO.class);
+		Schedules s = sdao.getSchedule(seq);
+		
+//		System.out.println(s.toString());
+		
+		Gson gson = new Gson();
+		String sJson = gson.toJson(s);
+//		System.out.println(sJson);
+		return sJson;
+	}
+	
+	@RequestMapping(value= {"updateSchedule.do"}, method=RequestMethod.POST, produces = "text/json; charset=UTF-8")
+	@ResponseBody
+	public String updateSchedule(HttpServletRequest request) {
+		System.out.println("updateSchedule");
+		
+		String title = request.getParameter("srmtitle");
+		String importantS = request.getParameter("srmimportant");
+		String content = request.getParameter("srmcontent");
+		String location = request.getParameter("location");
+		String seqS = request.getParameter("seq");
+		
+		int important = Integer.parseInt(importantS);
+		int seq = Integer.parseInt(seqS);
+		
+		SchedulesDAO sdao = ss.getMapper(SchedulesDAO.class);
+		
+		Schedules s = new Schedules();
+		s.setSeq(seq);
+		s.setTitle(title);
+		s.setImportant(important);
+		s.setContent(content);
+		s.setLocation(null);
+		
+//		System.out.println(s.toString());
+		
+		Integer af = sdao.updateSchedule(s);
+		
+		return af.toString();
+	}
 }

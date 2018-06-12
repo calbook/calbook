@@ -5,19 +5,31 @@
 <mapper namespace="com.calbook.web.dao.SchedulesDAO">
 	<!-- 일정 가져오기 -->
 	<select id="getSchedulesCal" resultType="com.calbook.web.vo.Schedules">
-		SELECT * FROM SCHEDULES WHERE M_EMAIL = #{param1} AND (START_DATE BETWEEN #{param2} AND #{param3} OR FINISH_DATE BETWEEN #{param2} AND #{param3})
+		SELECT * FROM SCHEDULES WHERE (M_EMAIL = #{param1} OR G_NUM = (SELECT G_NUM FROM GROUP_MEMBERS WHERE M_EMAIL = #{param1} AND STATUS_ACCEPT = 2)) AND (START_DATE BETWEEN #{param2} AND #{param3} OR FINISH_DATE BETWEEN #{param2} AND #{param3})
 	</select>
 	
 	<select id="getSchedulesDates" resultType="com.calbook.web.vo.Schedules">
-		SELECT * FROM SCHEDULES WHERE M_EMAIL = #{param1} AND (START_DATE >= #{param2} AND FINISH_DATE <![CDATA[<=]]> #{param3}) OR (START_DATE <![CDATA[<=]]> #{param2} AND FINISH_DATE >= #{param3}) ORDER BY START_DATE, FINISH_DATE
+		SELECT * FROM SCHEDULES WHERE (M_EMAIL = #{param1} OR G_NUM = (SELECT G_NUM FROM GROUP_MEMBERS WHERE M_EMAIL = #{param1} AND STATUS_ACCEPT = 2)) AND (START_DATE >= #{param2} AND FINISH_DATE <![CDATA[<=]]> #{param3}) OR (START_DATE <![CDATA[<=]]> #{param2} AND FINISH_DATE >= #{param3}) ORDER BY START_DATE, FINISH_DATE
 	</select>
 
 	<select id="getSchedulesMonth" resultType="com.calbook.web.vo.Schedules">
-		SELECT * FROM SCHEDULES WHERE M_EMAIL = #{param1} AND (START_DATE BETWEEN #{param2} AND (SELECT TO_DATE(#{param3}) - 1 FROM DUAL) AND FINISH_DATE BETWEEN (SELECT TO_DATE(#{param2}) + 1 FROM DUAL) AND #{param3}) ORDER BY START_DATE, FINISH_DATE
+		SELECT * FROM SCHEDULES WHERE (M_EMAIL = #{param1} OR G_NUM = (SELECT G_NUM FROM GROUP_MEMBERS WHERE M_EMAIL = #{param1} AND STATUS_ACCEPT = 2)) AND (START_DATE BETWEEN #{param2} AND (SELECT TO_DATE(#{param3}) - 1 FROM DUAL) AND FINISH_DATE BETWEEN (SELECT TO_DATE(#{param2}) + 1 FROM DUAL) AND #{param3}) ORDER BY START_DATE, FINISH_DATE
 	</select>
 	
 	<delete id="delSchedule">
 		DELETE SCHEDULES WHERE SEQ = #{seq}
 	</delete>
+	
+	<insert id="addSchedule">
+		INSERT INTO SCHEDULES VALUES((SELECT MAX(SEQ)+1 FROM SCHEDULES),#{m_email},#{title},#{content},#{important},#{start_date},#{finish_date},#{location, jdbcType=VARCHAR},null)
+	</insert>
+	
+	<select id="getSchedule" resultType="com.calbook.web.vo.Schedules">
+		SELECT * FROM SCHEDULES WHERE SEQ = #{seq}
+	</select>
+	
+	<update id="updateSchedule">
+		UPDATE SCHEDULES SET TITLE = #{title}, CONTENT = #{content}, IMPORTANT = #{important}, LOCATION = #{location, jdbcType=VARCHAR} WHERE SEQ = #{seq}
+	</update>
 	
 </mapper>

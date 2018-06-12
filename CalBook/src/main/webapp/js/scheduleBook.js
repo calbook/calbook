@@ -165,9 +165,9 @@ $(function(){
 	           getSchedulesDates(startD, endD);
 	         },
 	       eventClick: function(a, b, c) {
-	       		startD = a.start.format().replace(/-/gi,"/");
-	           var d = $.fullCalendar.formatDate(a.start, "dddd, YYYY/MM/DD");
-	           var f = $.fullCalendar.formatDate(a.end, "dddd, YYYY/MM/DD");
+//	       		startD = a.start.format().replace(/-/gi,"/");
+//	           var d = $.fullCalendar.formatDate(a.start, "dddd, YYYY/MM/DD");
+//	           var f = $.fullCalendar.formatDate(a.end, "dddd, YYYY/MM/DD");
 //	           var g = '<h5 style="margin:0;padding:0;">' + a.title + "</h5>";
 //	           var h = '<p style="margin:0;padding:2px;"><b>Start:</b> ' + d + "<br />" + (f && '<p style="margin:0;padding:2px;"><b>End:</b> ' + f + "</p>" || "") + (a.description && '<p style="margin:0;padding:2px;"><b>What:</b> ' + a.description + "</p>" || "") + (a.location && '<p style="margin:0;padding:2px;"><b>Where:</b> ' + a.location + "</p>" || "");
 //	           e.set({
@@ -193,9 +193,9 @@ $(function(){
 	        	   var date = startD.substr(8,2)+"일";
 	        	   $("#sDate").text(date);
 	           }*/
-	           $(".plusicon").css("opacity","1");
-	           $("#newSchedule").prop("disabled", false);
-	           $("#newSchedule").css("cursor", "pointer");
+//	           $(".plusicon").css("opacity","1");
+//	           $("#newSchedule").prop("disabled", false);
+//	           $("#newSchedule").css("cursor", "pointer");
 	       },
 	       dayClick: function(date) {
 //	    	   var moment = $('#fullcalendar').fullCalendar('getDate');
@@ -243,6 +243,7 @@ $(function(){
 	    }
 	});
 	
+	/*오늘날짜*/
 	$('.fc-today-button').click(function() {
 		var date = $("#fullcalendar").fullCalendar("getDate");
 		selectedM = date.format('YYYY/MM/DD');
@@ -283,6 +284,7 @@ $(function(){
 		getSchedulesDates(today, todayP1);
 	});
 	
+	/*이전달*/
 	$('.fc-prev-button').click(function() {
 		var date = $("#fullcalendar").fullCalendar("getDate");
 		selectedM = date.format('YYYY/MM/DD');
@@ -323,6 +325,7 @@ $(function(){
 		getSchedulesMonth(firstD, lastD);
 	});
 	
+	/*다음달*/
 	$('.fc-next-button').click(function() {
 		var date = $("#fullcalendar").fullCalendar("getDate");
 		selectedM = date.format('YYYY/MM/DD');
@@ -362,7 +365,7 @@ $(function(){
 		getSchedulesMonth(firstD, lastD);
 	});
 	
-	
+	/*월별버튼*/
 	$("#monthB").click(function(){
 		$(".plusicon").css("opacity","0");
 		$("#newSchedule").prop("disabled", true);
@@ -388,6 +391,7 @@ $(function(){
 		getSchedulesMonth(firstD, lastD);
 	});
 	
+	/*일별버튼*/
 	$("#dayB").click(function(){
 		$(".plusicon").css("opacity","1");
 		$("#newSchedule").prop("disabled", false);
@@ -469,12 +473,68 @@ $(function(){
 	//일정 클릭
 	//row.onclick = function(){
 	$(document).on("click",".todo_content", function(){
-		alert($(this).text());
+		var seq = $(this).parent().find(".todo_seq").val();
+		
 		srModal.style.display = "block";
 		$("#datepicker").css("cssText","z-index:0 !important;");
 		$(".fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active").css({
 			"z-index":"0"
 		})
+		
+		$.ajax({		
+			url: "getSchedule.do",
+			type:"GET",					
+				data:{"seq":seq},
+			error: function(jqXHR){
+				alert(jqXHR.status);
+				alert(jqXHR.statusText)
+			},					
+			dataType: "json",						
+			success: function(resData){
+				for(var key in resData){
+					if(key=="start_date"){
+						start = resData[key];
+						start = start.substr(0,10).replace(/-/gi,"/");
+						$(".sRowSdate").text(start);
+//						alert(start);
+					}else if(key=="finish_date"){
+						end = resData[key];
+						end = end.substr(0,10);
+						endm1 = new Date(end);
+						var n = endm1.getDate()-1;
+						endm1.setDate(n);
+						var tempT = endm1.getHours()+9;
+						endm1.setHours(tempT);
+						endm1 = endm1.toISOString().slice(0,10).replace(/-/gi,"/");
+						$(".sRowEdate").text(endm1);
+//						alert(end);
+					}else if(key=="title"){
+						title = resData[key];
+						$(".sRowtitle").text(title).css({"font-weight": "bold", "font-size": "20px"});
+					}else if(key=="g_num"){
+						if(resData[key]!=0){
+							$(".edit").hide();
+						}else{
+							$(".edit").show();
+						}
+					}else if(key=="important"){
+						if(resData[key]==1){
+							$(".sRowimportant").text("하").css("color","#add8e6");
+						}else if(resData[key]==2){
+							$(".sRowimportant").text("중").css("color","#ffc966");
+						}else{
+							$(".sRowimportant").text("상").css("color","#ffb6c1");
+						}
+					}else if(key == "content"){
+						$(".sRowcontent").text(resData[key]);
+					}
+				}
+				$(".todo_modal_seq").remove();
+				var text = '<input type="hidden" class="todo_modal_seq" value="'+seq+'">';
+				$(".srm-body").append(text);
+			}
+		});
+		
 	});
 	
 	//일정 삭제
@@ -483,7 +543,7 @@ $(function(){
 		var seq = $(this).parent().parent().find(".todo_seq").val();
 		
 		$.ajax({		
-			url: "delSchdule.do",
+			url: "delSchedule.do",
 			type:"GET",					
 				data:{"seq":seq},
 			error: function(jqXHR){
@@ -534,16 +594,24 @@ $(function(){
 	var sRowClose = document.getElementsByClassName("sRowModal_close")[0];
 	var sRowEditClose = document.getElementsByClassName("sRowModalEdit_close")[0];
 	
+	//save modal's contents
+	var scheduleSave = document.getElementsByClassName("save")[0];
+	var editSave = document.getElementById("editSave");
+	
 	//When the user clicks the button, open the modal 
 	
 	//일정 등록 모달
 	nsbtn.onclick = function() {
+		$(".smtitle").val('');
+		$(".smcontent").val('');
+		$(".modalO").attr("selected","selected");
+		
 		sModal.style.display = "block";
 		$("#datepicker").css("cssText","z-index:0 !important;");
 		$(".fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active").css({
 			"z-index":"0"
 		})
-	
+		
 		$(".startD").attr("value",startD);
 		var date = new Date(endD);
 		var tempT = date.getDate()-1;
@@ -562,9 +630,110 @@ $(function(){
 		})
 	}
 	
+	/*일정 저장*/
+	scheduleSave.onclick = function(){
+		var title = $(".smtitle").val();
+		var content = $(".smcontent").val();
+		
+		if(title == ""){
+			alert("제목이 비었습니다.");
+			$(".smtitle").focus();
+		}else if(content == ""){
+			alert("내용이 비었습니다.");
+			$(".smcontent").focus();
+		}else{
+			var params = $("#scsaveForm").serialize();
+			
+	//		alert(params);
+			
+			$.ajax({				
+				url: "addSchedule.do",
+				type:"POST",			
+	//			data:params,
+				data:params+"&startDate="+startD+"&endDate="+endD,
+				error: function(jqXHR){
+					alert(jqXHR.status);
+					alert(jqXHR.statusText)
+				},					
+				dataType: "text",
+				success: function(resData){
+					if(resData == '1'){
+						alert("등록성공");
+						
+						getSchedulesDates(startD, endD);
+						
+						sModal.style.display = "none";
+						$("#datepicker").css({
+							"z-index":"9"
+						});
+						$(".fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active").css({
+							"z-index":"4"
+						})
+						
+						$("#fullcalendar").fullCalendar('refetchEvents');
+					}else{
+						alert("등록실패");
+					}
+					
+				}
+			});
+		
+		}
+	}
 	
-	
-	
+	/*일정 수정 저장*/
+	editSave.onclick = function(){
+		var title = $(".srmtitle").val();
+		var content = $(".srmcontent").val();
+		
+		if(title == ""){
+			alert("제목이 비었습니다.");
+			$(".srmtitle").focus();
+		}else if(content == ""){
+			alert("내용이 비었습니다.");
+			$(".srmcontent").focus();
+		}else{
+			
+			var params = $("#srmsaveForm").serialize();
+			var seq = $(".todo_modal_seq").val();
+			
+			$.ajax({				
+				url: "updateSchedule.do",
+				type:"POST",
+	//			data:params,
+				data:params+"&seq="+seq,
+				error: function(jqXHR){
+					alert(jqXHR.status);
+					alert(jqXHR.statusText);
+				},					
+				dataType: "text",
+				success: function(resData){
+					if(resData == '1'){
+						alert("수정 성공");
+						
+						if($("#newSchedule").prop("disabled")==true){
+							getSchedulesDates(firstD, lastD);
+						}else{
+							getSchedulesDates(startD, endD);
+						}
+						
+						srModalEdit.style.display = "none";
+						$("#datepicker").css({
+							"z-index":"9"
+						});
+						$(".fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active").css({
+							"z-index":"4"
+						})
+						
+						$("#fullcalendar").fullCalendar('refetchEvents');
+					}else{
+						alert("수정 실패");
+					}
+					
+				}
+			});
+		}
+	}
 	
 	
 	//When the user clicks on <span> (x), close the modal
@@ -600,7 +769,7 @@ $(function(){
 	
 	
 	sRowEditClose.onclick = function() {
-		srModal.style.display = "none";
+		srModalEdit.style.display = "none";
 		$("#datepicker").css({
 			"z-index":"9"
 		});
@@ -755,12 +924,34 @@ $(function(){
 	});
 
 
+	/*수정 클릭*/
 	$("#edit").click(function() {
+		var seq = $(".todo_modal_seq").val();
+		var title = $(".sRowtitle").text();
+		var sdate = $(".sRowSdate").text();
+		var edate = $(".sRowEdate").text();
+		var important = $(".sRowimportant").text();
+		var content = $(".sRowcontent").text();
+
 		srModal.style.display = "none";
 		srModalEdit.style.display = "block";
+
+//		alert(seq+" "+title+" "+sdate+" "+edate+" "+important+" "+content);
+		
+		$(".borderTitle").val(title);
+		$(".startD").val(sdate);
+		$(".endD").val(edate);
+		if(important=="상"){
+			$(".modalR").attr("selected", "selected");
+		}else if(important=="중"){
+			$(".modalO").attr("selected", "selected");
+		}else{
+			$(".modalG").attr("selected", "selected");
+		}
+		$(".borderContent").text(content);
+		
 	});
 
-	
 	
 });
 
@@ -837,7 +1028,7 @@ function getSchedulesDates(startDate, endDate){
 /*전체 탭 출력*/
 function printSchedule(resData){
      /* 칸 비우기*/
-	$(".all").empty();
+	$(".allDiv").empty();
 	
 	 /* 일정 출력 */
 	for(var i in resData){
@@ -909,7 +1100,7 @@ function printSchedule(resData){
 		$div1.append($div3);
 		$div1.append($div4);
 		
-		$(".all").append($div1);
+		$(".allDiv").append($div1);
 	}
 //		$(".all").append('<div id="sdrow" class="todo" style="background-color: #add8e6"><div class="todo_date">5일</div><div class="todo_content">어린이날</div><div class="todo-btn"><i class="fa fa-minus minus-btn"></i></div></div>');
 }
@@ -917,9 +1108,9 @@ function printSchedule(resData){
 /*나머지 탭 출력*/
 function printScheduleTab(resData){
     /* 칸 비우기*/
-	$(".first").empty();
-	$(".second").empty();
-	$(".third").empty();
+	$(".firstDiv").empty();
+	$(".secondDiv").empty();
+	$(".thirdDiv").empty();
 	
 	 /* 일정 출력 */
 	for(var i in resData){
@@ -989,11 +1180,11 @@ function printScheduleTab(resData){
 		$div1.append($div4);
 		
 		if(rgb2hex($div1.css("background-color"))=="#ffb6c1"){
-			$(".first").append($div1);
+			$(".firstDiv").append($div1);
 		}else if(rgb2hex($div1.css("background-color"))=="#ffc966"){
-			$(".second").append($div1);
+			$(".secondDiv").append($div1);
 		}else if(rgb2hex($div1.css("background-color"))=="#add8e6"){
-			$(".third").append($div1);
+			$(".thirdDiv").append($div1);
 		}
 	}
 }
