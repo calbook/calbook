@@ -1157,6 +1157,10 @@ to {
 					<div class="googleMapDiv">
 						<div id="map"></div>
 					    <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+					    <div id="infowindow-content">
+					    	<span id="place-name"  class="title"></span><br>
+					    	<span id="place-address"></span>
+					    </div>
 				    </div>
 				    <div class="smbtnDiv">
 					    <span class = "close">CLOSE</span>
@@ -1210,6 +1214,10 @@ to {
 				    	</div>
 				    	<div class="googleMapDiv">
 					    	<div id="srmMap"></div>
+					    	<div id="srm-infowindow-content">
+						    	<span id="srm-place-name"  class="title"></span><br>
+						    	<span id="srm-place-address"></span>
+						    </div>
 				    	</div>
 				    	<div class="smbtnDiv">
 				    		<br>
@@ -1243,6 +1251,10 @@ to {
 			    	<div class="googleMapDiv">
 				    	<div id="srmEditMap"></div>
 				    	<input id="srmEdit_pac-input" class="controls" type="text" placeholder="Search Box">
+			    		<div id="srmEdit-infowindow-content">
+						    	<span id="srmEdit-place-name"  class="title"></span><br>
+						    	<span id="srmEdit-place-address"></span>
+						</div>
 			    	</div>
 			    	<div class="smbtnDiv">
 				       <span class = "sRowModalEdit_close">CLOSE</span>

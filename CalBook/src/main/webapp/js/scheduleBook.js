@@ -1208,222 +1208,174 @@ function rgb2hex(rgb) {
 
 ////////////////////////지도////////////////////////
 
-
 /* 일정 등록 모달 지도 */
- 
-	function initAutocomplete() {
-		var map = new google.maps.Map(document.getElementById('map'), {
-			center : {
-				lat : 37.565609,
-				lng : 126.977421
-			},
-			zoom : 14,
-			mapTypeId : 'roadmap'
+	 
+function initAutocomplete() {
+
+	var map = new google.maps.Map(document.getElementById('map'), {
+		center: {lat: 37.566229 , lng: 126.978016},
+		zoom: 13
+	});
+
+	var input = document.getElementById('pac-input');
+
+	var autocomplete = new google.maps.places.Autocomplete(input);
+	autocomplete.bindTo('bounds', map);
+
+	map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+	var infowindow = new google.maps.InfoWindow();
+	var marker = new google.maps.Marker({
+		map: map
+	});
+
+	marker.addListener('click', function() {
+		infowindow.open(map, marker);
+	});
+
+	autocomplete.addListener('place_changed', function() {
+		infowindow.close();
+		var place = autocomplete.getPlace();
+		if (!place.geometry) {
+			return;
+		}
+
+		if (place.geometry.viewport) {
+			map.fitBounds(place.geometry.viewport);
+		} else {
+			map.setCenter(place.geometry.location);
+			map.setZoom(17);
+		}
+
+		// Set the position of the marker using the place ID and location.
+		marker.setPlace({
+			placeId: place.place_id,
+			location: place.geometry.location
 		});
+		marker.setVisible(true);
 
-		// Create the search box and link it to the UI element.
-		var input = document.getElementById('pac-input');
-		var searchBox = new google.maps.places.SearchBox(input);
-		map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+		document.getElementById('place-name').textContent = place.name;
+		document.getElementById('place-address').textContent = place.formatted_address;
+		infowindow.setContent(document.getElementById('infowindow-content'));
+		infowindow.open(map, marker);
 
-		// Bias the SearchBox results towards current map's viewport.
-		map.addListener('bounds_changed', function() {
-			searchBox.setBounds(map.getBounds());
-		});
+	});
+}
 
-		var markers = [];
-		// Listen for the event fired when the user selects a prediction and retrieve
-		// more details for that place.
-		searchBox.addListener('places_changed', function() {
-			var places = searchBox.getPlaces();
+google.maps.event.addDomListener(window, 'load', initAutocomplete);
 
-			if (places.length == 0) {
-				return;
-			}
+/* 상세일정 모달 지도 */
+function initsrmMap() {
 
-			// Clear out the old markers.
-			markers.forEach(function(marker) {
-				marker.setMap(null);
-			});
-			markers = [];
+	var request = {
+			placeId: 'ChIJPXacoeqifDURZFdnLXIyirI'
+	};
 
-			// For each place, get the icon, name and location.
-			var bounds = new google.maps.LatLngBounds();
-			places.forEach(function(place) {
-				if (!place.geometry) {
-					console.log("Returned place contains no geometry");
-					return;
-				}
-				var icon = {
-					url : place.icon,
-					size : new google.maps.Size(71, 71),
-					origin : new google.maps.Point(0, 0),
-					anchor : new google.maps.Point(17, 34),
-					scaledSize : new google.maps.Size(25, 25)
-				};
+	var infowindow = new google.maps.InfoWindow();
 
-				// Create a marker for each place.
-				markers.push(new google.maps.Marker({
-					map : map,
-					icon : icon,
-					title : place.name,
-					position : place.geometry.location
-				}));
+	var srmMap = new google.maps.Map(document.getElementById('srmMap'), {
+		zoom: 17
+	});
 
-				if (place.geometry.viewport) {
-					// Only geocodes have viewport.
-					bounds.union(place.geometry.viewport);
-				} else {
-					bounds.extend(place.geometry.location);
-				}
-			});
-			map.fitBounds(bounds);
-		});
+	var marker = new google.maps.Marker({
+		map: srmMap,
+	});
 
-		for(var i=0; i<markers.length; i++){
-		google.maps.event.addListener(markers, 'click', function() {
-			alert("마커!");
-			/* var zoom = mapObj.getZoom();
-			mapObj.setZoom(16);
-			mapObj.setCenter(markers.getPosition());
-			var infoWin = new google.maps.InfoWindow({
-				content : infoWindowContent3
-			});
-			infoWin.open(mapObj, marker);
-			
-			window.setTimeout(function() {
-				infoWin.close(); 
-				mapObj.setZoom(zoom);
-			}, 3000);
-			
-			if (marker3.getAnimation() !== null) { 
-				marker3.setAnimation(null);
-			} else {
-				marker3.setAnimation(google.maps.Animation.BOUNCE);
-			} */
-		});
+
+	function callback(place, status) {
+		if (status == google.maps.places.PlacesServiceStatus.OK) {
+			marker.setPosition(place.geometry.location);
+			srmMap.setCenter(marker.getPosition());
+			marker.setMap(srmMap);
+
+			document.getElementById('srm-place-name').textContent = place.name;
+			document.getElementById('srm-place-address').textContent = place.formatted_address;
+			infowindow.setContent(document.getElementById('srm-infowindow-content'));
+			infowindow.open(srmMap, marker);
 		}
 	}
 
-	google.maps.event.addDomListener(window, 'load', initAutocomplete);
+	service = new google.maps.places.PlacesService(srmMap);
+	service.getDetails(request, callback);
 
-	/* 상세일정 모달 지도 */
-	function initsrmMap() {
+	marker.addListener('click', function() {
+		infowindow.open(srmMap, marker);
+	});      
 
-		var srmMap = new google.maps.Map(document.getElementById('srmMap'), {
-			center : {
-				lat : 37.565609,
-				lng : 126.977421
-			},
-			zoom : 14,
-			mapTypeId : 'roadmap'
-		});
+}
 
-		var marker = new google.maps.Marker({
-			position : {
-				lat : 37.565609,
-				lng : 126.977421
-			},
-			title : '서울시청'
-		});
+google.maps.event.addDomListener(window, 'load', initsrmMap);
 
-		marker.setMap(srmMap);
+/* 일정 수정 모달 지도 */
+function initsrmEditMap() {
 
-		var infoWin = new google.maps.InfoWindow({
-			content : '위도: 37.565609 , 경도: 126.977421'
-		});
+	var request = {
+			placeId: 'ChIJPXacoeqifDURZFdnLXIyirI'
+	};
 
-		infoWin.open(srmMap, marker);
+	var srmEditmap = new google.maps.Map(document.getElementById('srmEditMap'), {
+		zoom: 17
+	});
+
+	var input = document.getElementById('srmEdit_pac-input');
+
+	var autocomplete = new google.maps.places.Autocomplete(input);
+	autocomplete.bindTo('bounds', srmEditmap);
+
+	srmEditmap.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+	var infowindow = new google.maps.InfoWindow();
+
+	var marker = new google.maps.Marker({
+		map: srmEditmap
+	});
+
+	function callback(place, status) {
+		if (status == google.maps.places.PlacesServiceStatus.OK) {
+			marker.setPosition(place.geometry.location);
+			srmEditmap.setCenter(marker.getPosition());
+			marker.setMap(srmEditmap);
+
+			document.getElementById('srmEdit-place-name').textContent = place.name;
+			document.getElementById('srmEdit-place-address').textContent = place.formatted_address;
+			infowindow.setContent(document.getElementById('srmEdit-infowindow-content'));
+			infowindow.open(srmEditmap, marker);
+		}
 	}
 
-	google.maps.event.addDomListener(window, 'load', initsrmMap);
+	marker.addListener('click', function() {
+		infowindow.open(srmEditmap, marker);
+	});
 
-	/* 일정 수정 모달 지도 */
-	function initsrmEditMap() {
-		var srmEditMap = new google.maps.Map(document
-				.getElementById('srmEditMap'), {
-			center : {
-				lat : 37.565609,
-				lng : 126.977421
-			},
-			zoom : 14,
-			mapTypeId : 'roadmap'
+	autocomplete.addListener('place_changed', function() {
+		infowindow.close();
+		var place = autocomplete.getPlace();
+		if (!place.geometry) {
+			return;
+		}
+
+		if (place.geometry.viewport) {
+			srmEditmap.fitBounds(place.geometry.viewport);
+		} else {
+			srmEditmap.setCenter(place.geometry.location);
+			srmEditmap.setZoom(13);
+		}
+
+		// Set the position of the marker using the place ID and location.
+		marker.setPlace({
+			placeId: place.place_id,
+			location: place.geometry.location
 		});
+		marker.setVisible(true);
 
-		var marker = new google.maps.Marker({
-			position : {
-				lat : 37.565609,
-				lng : 126.977421
-			},
-			title : '서울시청'
-		});
+		document.getElementById('srmEdit-place-name').textContent = place.name;
+		document.getElementById('srmEdit-place-address').textContent = place.formatted_address;
+		infowindow.setContent(document.getElementById('srmEdit-infowindow-content'));
+		infowindow.open(srmEditmap, marker);
+	});
 
-		marker.setMap(srmEditMap);
+	service = new google.maps.places.PlacesService(srmEditmap);
+	service.getDetails(request, callback);
+}
 
-		var infoWin = new google.maps.InfoWindow({
-			content : '위도: 37.565609 , 경도: 126.977421'
-		});
-
-		infoWin.open(srmEditMap, marker);
-
-		// Create the search box and link it to the UI element.
-		var input = document.getElementById('srmEdit_pac-input');
-		var searchBox = new google.maps.places.SearchBox(input);
-		srmEditMap.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-		// Bias the SearchBox results towards current map's viewport.
-		map.addListener('bounds_changed', function() {
-			searchBox.setBounds(map.getBounds());
-		});
-
-		var markers = [];
-		// Listen for the event fired when the user selects a prediction and retrieve
-		// more details for that place.
-		searchBox.addListener('places_changed', function() {
-			var places = searchBox.getPlaces();
-
-			if (places.length == 0) {
-				return;
-			}
-
-			// Clear out the old markers.
-			markers.forEach(function(marker) {
-				marker.setMap(null);
-			});
-			markers = [];
-
-			// For each place, get the icon, name and location.
-			var bounds = new google.maps.LatLngBounds();
-			places.forEach(function(place) {
-				if (!place.geometry) {
-					console.log("Returned place contains no geometry");
-					return;
-				}
-				var icon = {
-					url : place.icon,
-					size : new google.maps.Size(71, 71),
-					origin : new google.maps.Point(0, 0),
-					anchor : new google.maps.Point(17, 34),
-					scaledSize : new google.maps.Size(25, 25)
-				};
-
-				// Create a marker for each place.
-				markers.push(new google.maps.Marker({
-					map : srmEditMap,
-					icon : icon,
-					title : place.name,
-					position : place.geometry.location
-				}));
-
-				if (place.geometry.viewport) {
-					// Only geocodes have viewport.
-					bounds.union(place.geometry.viewport);
-				} else {
-					bounds.extend(place.geometry.location);
-				}
-			});
-			srmEditMap.fitBounds(bounds);
-		});
-	}
-
-	google.maps.event.addDomListener(window, 'load', initsrmEditMap);
+google.maps.event.addDomListener(window, 'load', initsrmEditMap);
