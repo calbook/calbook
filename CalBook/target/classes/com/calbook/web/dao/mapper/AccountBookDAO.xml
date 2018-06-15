@@ -3,5 +3,51 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
     
 <mapper namespace="com.calbook.web.dao.AccountBookDAO">
-
+   
+   <!-- <resultMap id="SumAccountBook" type="java.util.Map">
+      <result javaType="java.lang.Integer" column="SUM" property="sum"/>
+      <result javaType="java.lang.Integer" column="KIND" property="kind"/>
+   </resultMap> -->
+   <!-- SELECT SAB.* FROM (SELECT SUM(AMOUNT) SUM, KIND FROM ACCOUNTBOOK GROUP BY KIND, M_EMAIL HAVING M_EMAIL=#{email} ORDER BY KIND) SAB -->
+   
+   <select id="getDailySumAccountBook" resultType="com.calbook.web.vo.SumAccountBook">
+      SELECT SUM(AMOUNT) SUM, KIND FROM ACCOUNTBOOK WHERE TO_CHAR(ADATE, 'YYYY/MM/DD')=#{param2} GROUP BY KIND, M_EMAIL HAVING M_EMAIL=#{param1} ORDER BY KIND
+   </select>
+   
+   <select id="getMonthlySumAccountBook" resultType="com.calbook.web.vo.SumAccountBook">
+      SELECT SUM(AMOUNT) SUM, KIND FROM ACCOUNTBOOK WHERE TO_CHAR(ADATE, 'YYYY/MM')=#{param2} GROUP BY KIND, M_EMAIL HAVING M_EMAIL=#{param1} ORDER BY KIND
+   </select>
+   
+   <select id="getPeriodSumAccountBook" resultType="com.calbook.web.vo.SumAccountBook">
+      SELECT SUM(AMOUNT) SUM, KIND FROM ACCOUNTBOOK WHERE ADATE BETWEEN #{param2} AND #{param3} GROUP BY KIND, M_EMAIL HAVING M_EMAIL=#{param1} ORDER BY KIND
+   </select>
+   
+   <select id="getDailyAccountBook" resultType="com.calbook.web.vo.AccountBook">
+      SELECT * FROM ACCOUNTBOOK WHERE TO_CHAR(ADATE, 'YYYY/MM/DD')=#{param2} AND M_EMAIL=#{param1} ORDER BY ADATE
+   </select>
+   
+   <select id="getMonthlyAccountBook" resultType="com.calbook.web.vo.AccountBook">
+      SELECT * FROM ACCOUNTBOOK WHERE TO_CHAR(ADATE, 'YYYY/MM')=#{param2} AND M_EMAIL=#{param1} ORDER BY ADATE
+   </select>
+   
+   <select id="getPeriodAccountBook" resultType="com.calbook.web.vo.AccountBook">
+      SELECT * FROM ACCOUNTBOOK WHERE ADATE BETWEEN #{param2} AND #{param3} AND M_EMAIL=#{param1} ORDER BY ADATE
+   </select>
+   
+   <insert id="saveAccountBook">
+      INSERT INTO ACCOUNTBOOK VALUES(NVL((SELECT MAX(NUM) FROM ACCOUNTBOOK)+1,1), #{m_email}, #{adate}, #{kind}, #{sub_kind}, #{amount}, #{content, jdbcType=VARCHAR})
+   </insert>
+   
+   <delete id="rmAccountBook">
+      DELETE ACCOUNTBOOK WHERE NUM=#{num}
+   </delete>
+   
+   <update id="modiAccountBook">
+      UPDATE ACCOUNTBOOK SET CONTENT=#{param2},AMOUNT=#{param3} WHERE NUM=#{param1}
+   </update>
+   
+   <select id="getModalSumAccountBook" resultType="com.calbook.web.vo.SumAccountBook">
+      SELECT SUM(AMOUNT) SUM, SUB_KIND KIND FROM ACCOUNTBOOK WHERE M_EMAIL=#{param1} AND KIND='지출' AND TO_CHAR(ADATE, 'YYYY/MM')=#{param2} GROUP BY SUB_KIND
+   </select>
+   
 </mapper>

@@ -1,7 +1,5 @@
 
 $(function(){
-	
-	var clickedDate;	// 클릭 날짜
 	var now = new Date();
 	var today = moment().format('YYYY/MM/DD');
 	var firstD = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -21,6 +19,24 @@ $(function(){
 	endD.setHours(tempT);
 	endD = endD.toISOString().slice(0,10).replace(/-/gi,"/");
 	
+	// accountBook
+	var calendarType = "daily";   // daily&monthly
+	var clickedDate = today;
+	var modalDate;   // 가계부 모달 날짜
+	   
+	// Get the element that SumAccountBook data
+	var income = $("#income");
+	var expense = $("#expense");
+	var sum = $("#sum");
+	   
+	// Get the element that AccountBook title, ex) (clickedDate: 2018/05/31)
+	var accountTitle = $(".accountTitle");
+	accountTitle.html('가계부(선택된 날짜: <span>'+today+'</span>)');
+	   
+	// Get Data SumAccountBook&AccountBook
+	getDaily(today);
+	   
+	   
 //	var plusstartD = startD.add(1, 'days').format('YYYY/MM/DD');
 //	var subendD = endD.add(1, 'days').format('YYYY/MM/DD');
 //	alert(startD+", "+endD);
@@ -163,6 +179,12 @@ $(function(){
 	           
 //	           alert(startD +", "+endD);
 	           getSchedulesDates(startD, endD);
+	           
+	           
+	        // if not one day -> get data of period SumAccountBook&AccountBook
+	             if(startD != subendD){
+	                getPeriod(startD, subendD);               
+	             }
 	         },
 	       eventClick: function(a, b, c) {
 //	       		startD = a.start.format().replace(/-/gi,"/");
@@ -206,6 +228,8 @@ $(function(){
 	    	   /* 클릭한 날짜 잡아오기 */
 //	    	   alert('Clicked on: ' + date.format());
 	    	   clickedDate = date.format().replace(/-/gi,"/");
+	    	   calendarType = "daily";
+	           getDaily(clickedDate);
 //	    	   alert(clickedDate.substr(0,4));
 //	    	   alert(clickedDate.substr(5,2));
 //	    	   alert(clickedDate.substr(8,2));
@@ -282,6 +306,11 @@ $(function(){
 		$("#newSchedule").css("cursor", "pointer");
 		
 		getSchedulesDates(today, todayP1);
+		
+		
+		clickedDate = today;
+	    calendarType = "daily";
+	    getDaily(clickedDate);
 	});
 	
 	/*이전달*/
@@ -323,6 +352,15 @@ $(function(){
 		
 		
 		getSchedulesMonth(firstD, lastD);
+		
+		
+		clickedDate = $("#fullcalendar").fullCalendar('getDate').format().replace(/-/gi,"/").substr(0,10);
+//	    alert(clickedDate);
+	    if(calendarType == "daily"){
+	    	getDaily(clickedDate);
+	    }else{
+	    	getMonthly(clickedDate);
+	    }
 	});
 	
 	/*다음달*/
@@ -363,6 +401,14 @@ $(function(){
 		$("#newSchedule").css("cursor", "default");
 		
 		getSchedulesMonth(firstD, lastD);
+		
+		
+		clickedDate = $("#fullcalendar").fullCalendar('getDate').format().replace(/-/gi,"/").substr(0,10);
+	    if(calendarType == "daily"){
+	       getDaily(clickedDate);
+	    }else{
+	       getMonthly(clickedDate);
+	    }
 	});
 	
 	/*월별버튼*/
@@ -389,6 +435,16 @@ $(function(){
 		lastD = lastD.toISOString().slice(0,10).replace(/-/gi,"/")
 		
 		getSchedulesMonth(firstD, lastD);
+		
+		
+		
+		calendarType = "monthly";
+	    //if(clickedDate == null || clickedDate == "" || clickedDate == "null"){
+	    if(clickedDate == today){
+	       getMonthly(today);
+	    }else{
+	       getMonthly(clickedDate);
+	    }
 	});
 	
 	/*일별버튼*/
@@ -462,6 +518,15 @@ $(function(){
          }
 		
 		getSchedulesDates(startD, endD);
+		
+		
+		calendarType = "daily";
+	    //if(clickedDate == null || clickedDate == "" || clickedDate == "null"){
+	    if(clickedDate == today){
+	       getDaily(today);
+	    }else{
+	       getDaily(clickedDate);
+	    }
 	});
 	
 	
@@ -474,6 +539,7 @@ $(function(){
 	//row.onclick = function(){
 	$(document).on("click",".todo_content", function(){
 		var seq = $(this).parent().find(".todo_seq").val();
+		var placeID = null;
 		
 		srModal.style.display = "block";
 		$("#datepicker").css("cssText","z-index:0 !important;");
@@ -492,6 +558,7 @@ $(function(){
 			dataType: "json",						
 			success: function(resData){
 				for(var key in resData){
+//					alert(key);
 					if(key=="start_date"){
 						start = resData[key];
 						start = start.substr(0,10).replace(/-/gi,"/");
@@ -527,11 +594,27 @@ $(function(){
 						}
 					}else if(key == "content"){
 						$(".sRowcontent").text(resData[key]);
+					}else if(key == "location"){
+//						alert("장소!");
+//						alert(resData[key]);
+						$(".srmplaceID").val(resData[key]);
+//						initsrmMap(resData[key]);
+						placeID = resData[key];
 					}
 				}
 				$(".todo_modal_seq").remove();
 				var text = '<input type="hidden" class="todo_modal_seq" value="'+seq+'">';
 				$(".srm-body").append(text);
+				
+//				alert($("#srm-infowindow-content"));
+//				if($("#srm-infowindow-content")){
+//					alert("존재함");
+//				}else{
+//					alert("존재안함");
+//				}
+				
+				
+				changePlace(placeID);
 			}
 		});
 		
@@ -623,17 +706,30 @@ $(function(){
 	}
 	
 	srbtn.onclick = function() {
-		aModal.style.display = "block";
-		$("#datepicker").css("cssText","z-index:0 !important;");
-		$(".fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active").css({
-			"z-index":"0"
-		})
+		 modalDate = clickedDate.substr(0,7);
+	      var year = Number(modalDate.substr(0,4));
+	       var month = Number(modalDate.substr(5,2));       
+	       if(month < 10){
+	          modalDate = String(year) + "/0" + String(month);          
+	       }else{
+	          modalDate = String(year) + "/0" + String(month);
+	       }
+	       
+	      aModal.style.display = "block";
+	      $("#datepicker").css("cssText","z-index:0 !important;");
+	      $(".fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active").css({
+	         "z-index":"0"
+	      })
+	      $("#accountM-date").text(modalDate);
+	      getModalSumAccountBook(modalDate);
 	}
 	
 	/*일정 저장*/
 	scheduleSave.onclick = function(){
 		var title = $(".smtitle").val();
 		var content = $(".smcontent").val();
+		var place = $("#placeID").val();
+//		alert($("#placeID").val());
 		
 		if(title == ""){
 			alert("제목이 비었습니다.");
@@ -641,6 +737,8 @@ $(function(){
 		}else if(content == ""){
 			alert("내용이 비었습니다.");
 			$(".smcontent").focus();
+//		}else if(place == ""){
+//			alert("장소를 선택해주세요.");
 		}else{
 			var params = $("#scsaveForm").serialize();
 			
@@ -650,7 +748,7 @@ $(function(){
 				url: "addSchedule.do",
 				type:"POST",			
 	//			data:params,
-				data:params+"&startDate="+startD+"&endDate="+endD,
+				data:params+"&startDate="+startD+"&endDate="+endD+"&place="+place,
 				error: function(jqXHR){
 					alert(jqXHR.status);
 					alert(jqXHR.statusText)
@@ -685,7 +783,8 @@ $(function(){
 	editSave.onclick = function(){
 		var title = $(".srmtitle").val();
 		var content = $(".srmcontent").val();
-		
+		var place = $("#srmEditplaceID").val();
+
 		if(title == ""){
 			alert("제목이 비었습니다.");
 			$(".srmtitle").focus();
@@ -701,7 +800,7 @@ $(function(){
 				url: "updateSchedule.do",
 				type:"POST",
 	//			data:params,
-				data:params+"&seq="+seq,
+				data:params+"&seq="+seq+"&place="+place,
 				error: function(jqXHR){
 					alert(jqXHR.status);
 					alert(jqXHR.statusText);
@@ -825,102 +924,44 @@ $(function(){
 		}
 	}
 	
-	var currentMonth = new Date().getMonth();
-	var currentYear = new Date().getFullYear();
-	var clickedDays = 0;
-	var bookingSteps = 0;
-	var lastClickedDay;
-	var startDate = "";
-	var endDate = "";
-	var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
-	var monthShortNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-	var bookedDates = [];
-	var selectedDates = [];
-	
-	Date.prototype.addDays = function(days) {
-		var dat = new Date(this.valueOf())
-		dat.setDate(dat.getDate() + days);
-		return dat;
-	}
-	function clearCalender() {
-		clickedDays = 0;
-		$(".month div").removeClass("clicked");
-		$("#startdate").html("");
-		$("#enddate").html("");
-
-		startDate = "";
-		endDate = "";
-		selectedDates = [];
-		bookingSteps = 0;
-	}
-
-	function daysInMonth(month) {
-		return new Date(currentYear, month, 0).getDate();
-	}
-	function displayCalender() {
-		var days = daysInMonth(currentMonth + 1);
-
-		$("#accountM_calender-title p").html(monthNames[currentMonth].toUpperCase());
-		$("#accountM_calender-content").html("");
-
-
-		//checkSelected();
-		//checkBookings();
-	}
-	function monthClick(e) {
-		clickedDays += 1;
-		if (clickedDays == 1) {
-			$(e).toggleClass("clicked");
-			startDateIndex = parseInt($(e).attr('id').split('-')[1]);
-			startDate = new Date(currentYear, currentMonth, startDateIndex);
-		}
-		if (clickedDays > 1) {
-			endDateIndex = parseInt($(e).attr('id').split('-')[1]);
-			endDate = new Date(currentYear, currentMonth, endDateIndex);
-		}
-		if (endDate > startDate) {
-			var clicked = $(".clicked");
-			$(clicked).not(clicked[0]).removeClass("clicked");
-			$(e).toggleClass("clicked");
-
-			dateArray = getDates(startDate, endDate);
-			dateArray = formatDates(dateArray)
-			selectedDates = dateArray;
-
-			for (var i = 0; i < dateArray.length; i++) {
-				$("#" + dateArray[i]).addClass("clicked");
-			}
-		}
-		$("#startdate").html(startDate.toString().split(' ').slice(0, 3).join(' '));
-		$("#enddate").html(endDate.toString().split(' ').slice(0, 3).join(' '));
-	}
-	function firstDayOffset(date) {
-		return new Date(currentYear, currentMonth, 1).getDay();
-	}
-
-
-	$(function() {
-		displayCalender(currentMonth)
-		$("#date").append(new Date);
-	});
 
 	$("#accountM_left").on("click", function() {
-		if (currentMonth > 0)
-			currentMonth -= 1;
-		else {
-			currentMonth = 11;
-			currentYear -= 1;
-		}
-		displayCalender();
+		var year = Number(modalDate.substr(0,4));
+	    var month = Number(modalDate.substr(5,2));
+	    if(month == 1){
+	       year -= 1;
+	       month = 12;
+	    }else{
+	       month -= 1;
+	    }
+	       
+	    if(month < 10){
+	       modalDate = String(year) + "/0" + String(month);          
+	    }else{
+	       modalDate = String(year) + "/0" + String(month);
+	    }
+	    $("#accountM-date").text(modalDate);
+	    getModalSumAccountBook(modalDate);
 	});
+	
+	
 	$("#accountM_right").on("click", function() {
-		if (currentMonth < 11)
-			currentMonth += 1;
-		else {
-			currentMonth = 0;
-			currentYear += 1;
-		}
-		displayCalender();
+		 var year = Number(modalDate.substr(0,4));
+	     var month = Number(modalDate.substr(5,2));
+	     if(month == 12){
+	        year += 1;
+	        month = 1;
+	     }else{
+	        month += 1;
+	     }
+	       
+	     if(month < 10){
+	        modalDate = String(year) + "/0" + String(month);          
+	     }else{
+	        modalDate = String(year) + "/0" + String(month);
+	     }
+	     $("#accountM-date").text(modalDate);
+	     getModalSumAccountBook(modalDate);
 	});
 
 
@@ -932,9 +973,7 @@ $(function(){
 		var edate = $(".sRowEdate").text();
 		var important = $(".sRowimportant").text();
 		var content = $(".sRowcontent").text();
-
-		srModal.style.display = "none";
-		srModalEdit.style.display = "block";
+		var place = $(".srmplaceID").val();
 
 //		alert(seq+" "+title+" "+sdate+" "+edate+" "+important+" "+content);
 		
@@ -949,10 +988,334 @@ $(function(){
 			$(".modalG").attr("selected", "selected");
 		}
 		$(".borderContent").text(content);
+		$(".srmEditplaceID").val(place);
 		
+		
+		
+		srModal.style.display = "none";
+		srModalEdit.style.display = "block";
+	});
+	
+	
+	
+	 ///////////////////////////////////////////////////////////////////////////////////
+	///////////////////////            가계부            ///////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////
+
+	// Get the element of save AccountBook button
+	var saveIncome = $("#saveIncome");
+	var saveExpense = $("#saveExpense");
+
+
+	// Get daily data of SumAccountBook&AccountBook
+	function getDaily(date){
+		accountTitle.html('가계부(선택된 날짜: <span>'+clickedDate+'</span>)');
+		$.ajax({
+			url: "getDailySumAccountBook.do",
+			type: "POST",
+			data: {"date":date},
+			error: function(jqXHR){
+				alert("jqXHR.status: " + jqXHR.status);
+				alert("jqXHR.statusText(): " + jqXHR.statusText());
+			},
+			dataType: "json",
+			success: function(resData){
+				income.text(resData.income);
+				expense.text(resData.expense);
+				sum.text(resData.sum);
+			}
+		});
+
+		$.ajax({
+			url: "getDailyAccountBook.do",
+			type: "POST",
+			data: {"date":date},
+			error: function(jqXHR){
+				alert("jqXHR.status: " + jqXHR.status);
+				alert("jqXHR.statusText(): " + jqXHR.statusText());
+			},
+			dataType: "json",
+			success: function(resData){
+				var accountTable = $(".accountTableDiv");
+				accountTable.empty();
+				var table = '<table class="accountTable"><col style="width:15%;"><col style="width:15%;"><col style="width:40%;"><col style="width:20%;"><col style="width:10%;"><tr class="accountTableTh"><th>수입/지출</th><th>종류</th><th>내용</th><th>금액</th><th></th></tr>';
+				for(var i = 0; i < resData.length; i++){
+					table += '<tr><td class="kind">' + resData[i].kind + '</td><td class="sub_kind"><span>' + resData[i].sub_kind + '</span></td><td class="content"><span>' + resData[i].content + '</span></td><td class="amount"><span>' + resData[i].amount + '</span></td><td><div style="text-align: center"><i id="rmAccountBook" class="fa fa-trash-o removebtn"></i><i id="modiAccountBook"class="fa fa-pencil modifybtn"></i><input type="hidden" value="' + resData[i].num + '"></div></td></tr>';               
+				}
+				table += '</table>';
+				accountTable.html(table);
+			}
+		});
+	}
+
+
+	// Get Monthly data of SumAccountBook&AccountBook
+	function getMonthly(date){
+		accountTitle.html('가계부(선택된 날짜: <span>'+clickedDate+'</span>)');
+		date = date.substr(0,7);
+		$.ajax({
+			url: "getMonthlySumAccountBook.do",
+			type: "POST",
+			data: {"date":date},
+			error: function(jqXHR){
+				alert("jqXHR.status: " + jqXHR.status);
+				alert("jqXHR.statusText(): " + jqXHR.statusText());
+			},
+			dataType: "json",
+			success: function(resData){
+				income.text(resData.income);
+				expense.text(resData.expense);
+				sum.text(resData.sum);
+			}
+		});
+
+		$.ajax({
+			url: "getMonthlyAccountBook.do",
+			type: "POST",
+			data: {"date":date},
+			error: function(jqXHR){
+				alert("jqXHR.status: " + jqXHR.status);
+				alert("jqXHR.statusText(): " + jqXHR.statusText());
+			},
+			dataType: "json",
+			success: function(resData){
+				var accountTable = $(".accountTableDiv");
+				accountTable.empty();
+				var table = '<table class="accountTable"><col style="width:15%;"><col style="width:15%;"><col style="width:40%;"><col style="width:20%;"><col style="width:10%;"><tr class="accountTableTh"><th>수입/지출</th><th>종류</th><th>내용</th><th>금액</th><th></th></tr>';
+				for(var i = 0; i < resData.length; i++){
+					table += '<tr><td class="kind">' + resData[i].kind + '</td><td class="sub_kind"><span>' + resData[i].sub_kind + '</span></td><td class="content"><span>' + resData[i].content + '</span></td><td class="amount"><span>' + resData[i].amount + '</span></td><td><div style="text-align: center"><i id="rmAccountBook" class="fa fa-trash-o removebtn"></i><i id="modiAccountBook" class="fa fa-pencil modifybtn"></i><input type="hidden" value="' + resData[i].num + '"></div></td></tr>';               
+				}
+				table += '</table>';
+				accountTable.html(table);
+			}
+		});
+	}
+
+
+	// Get period data of SumAccountBook&AccountBook
+	function getPeriod(startD, endD){
+		$.ajax({
+			url: "getPeriodSumAccountBook.do",
+			type: "POST",
+			data: {"startD":startD, "endD":endD},
+			error: function(jqXHR){
+				alert("jqXHR.status: " + jqXHR.status);
+				alert("jqXHR.statusText(): " + jqXHR.statusText());
+			},
+			dataType: "json",
+			success: function(resData){
+				income.text(resData.income);
+				expense.text(resData.expense);
+				sum.text(resData.sum);
+			}
+		});
+
+		$.ajax({
+			url: "getPeriodAccountBook.do",
+			type: "POST",
+			data: {"startD":startD, "endD":endD},
+			error: function(jqXHR){
+				alert("jqXHR.status: " + jqXHR.status);
+				alert("jqXHR.statusText(): " + jqXHR.statusText());
+			},
+			dataType: "json",
+			success: function(resData){
+				var accountTable = $(".accountTableDiv");
+				accountTable.empty();
+				var table = '<table class="accountTable"><col style="width:15%;"><col style="width:15%;"><col style="width:40%;"><col style="width:20%;"><col style="width:10%;"><tr class="accountTableTh"><th>수입/지출</th><th>종류</th><th>내용</th><th>금액</th><th></th></tr>';
+				for(var i = 0; i < resData.length; i++){
+					table += '<tr><td class="kind">' + resData[i].kind + '</td><td class="sub_kind"><span>' + resData[i].sub_kind + '</span></td><td class="content"><span>' + resData[i].content + '</span></td><td class="amount"><span>' + resData[i].amount + '</span></td><td><div style="text-align: center"><i id="rmAccountBook" class="fa fa-trash-o removebtn"></i><i id="modiAccountBook" class="fa fa-pencil modifybtn"></i><input type="hidden" value="' + resData[i].num + '"></div></td></tr>';               
+				}
+				table += '</table>';
+				accountTable.html(table);
+			}
+		});
+	}
+
+
+	// Get modal data of SumAccountBook
+	function getModalSumAccountBook(date){
+		$.ajax({
+			url: "getModalSumAccountBook.do",
+			type: "POST",
+			data: {"date":modalDate},
+			error: function(jqXHR){
+				alert("jqXHR.status: " + jqXHR.status);
+				alert("jqXHR.statusText(): " + jqXHR.statusText());
+			},
+			dataType: "json",
+			success: function(resData){
+				if(resData.length == 0){
+					alert("지출이 없습니다.");
+					Highcharts.chart('container', {
+						chart: {
+							plotBackgroundColor: null,
+							plotBorderWidth: null,
+							plotShadow: false,
+							type: 'pie'
+						},
+						title: {
+							text: date + ' 지출 그래프'
+						},
+						tooltip: {
+							pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+						},
+						series: [{
+							name: '비율',
+							colorByPoint: true,
+							data: resData
+						}]
+					});
+				}else{
+					Highcharts.chart('container', {
+						chart: {
+							plotBackgroundColor: null,
+							plotBorderWidth: null,
+							plotShadow: false,
+							type: 'pie'
+						},
+						title: {
+							text: date + ' 지출 그래프'
+						},
+						tooltip: {
+							pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+						},
+						series: [{
+							name: '비율',
+							colorByPoint: true,
+							data: resData
+						}]
+					});
+				}
+			}
+		});
+	}
+
+
+	// Save data of AccountBook
+	function saveAccountBook(kind, sub_kind, amount, content){
+		$.ajax({
+			url: "saveAccountBook.do",
+			type: "POST",
+			data: {"kind":kind, "sub_kind":sub_kind, "amount":amount, "content":content, "adate":clickedDate},
+			error: function(jqXHR){
+				alert("jqXHR.status: " + jqXHR.status);
+				alert("jqXHR.statusText(): " + jqXHR.statusText());
+			},
+			dataType: "text",
+			success: function(resData){
+				var result = $.trim(resData);
+				if(result == "1"){
+					if(calendarType == "daily"){
+						getDaily(clickedDate);
+					}else{
+						getMonthly(clickedDate);
+					}
+
+				}else{
+					alert("가계부 작성에 실패하였습니다.");
+				}
+			}
+		});
+	}
+
+
+	// click event - saveIncom button
+	saveIncome.click(function(){
+		saveAccountBook($.trim($("#IncomeKind").text()), $("#IncomeSub_Kind").val(), $("#IncomeAmount").val(), $("#IncomeContent").val());
+		$("#IncomeAmount").val("");
+		$("#IncomeContent").val("");
 	});
 
-	
+
+	// click event - saveExpense button
+	saveExpense.click(function(){
+		saveAccountBook($.trim($("#ExpenseKind").text()), $("#ExpenseSub_Kind").val(), $("#ExpenseAmount").val(), $("#ExpenseContent").val());
+		$("#ExpenseAmount").val("");
+		$("#ExpenseContent").val("");
+	});
+
+
+	var amount;
+	var content;
+
+
+	// click event - modi AccountBook button
+	// change, text element -> input element
+	$(document).on("click", "#modiAccountBook", function(){
+		amount = $(this).parent().parent().prev().children();
+		content = $(this).parent().parent().prev().prev().children();
+		amount.html('<input class="accountInput" type="text" value="' + amount.text() + '" style="width: 100%; text-align: center;">');
+		content.html('<input class="accountInput" type="text" value="' + content.text() + '" style="width: 100%; text-align: center;">');
+		$(this).attr({
+			"id":"modiCheckAccountBook"
+		});
+	});
+
+
+	// click event - modiCheck AccountBook button
+	// save data of AccountBook
+	$(document).on("click", "#modiCheckAccountBook", function(){
+		var num = $(this).next().val();
+		$(this).attr({
+			"id":"modiAccountBook"
+		});
+
+		$.ajax({
+			url: "modiAccountBook.do",
+			type: "POST",
+			data: {"num":num, "content":content.children().val(), "amount":amount.children().val()},
+			error: function(jqXHR){
+				alert("jqXHR.status: " + jqXHR.status);
+				alert("jqXHR.statusText(): " + jqXHR.statusText());
+			},
+			dataType: "text",
+			success: function(resData){
+				var result = $.trim(resData);
+				if(result == '1'){
+					if(calendarType == "daily"){
+						getDaily(clickedDate);
+					}else{
+						getMonthly(clickedDate);
+					}
+					amount.text(amount.children().val());
+					content.text(content.children().val());
+				}else {
+					alert("가계부 수정에 실패했습니다.");
+				}
+			}
+		});
+	});
+
+
+	// click event - remove AccountBook
+	// delete data of AccountBook
+	$(document).on("click", "#rmAccountBook", function(){
+		var num = $(this).next().next().val();
+
+		$.ajax({
+			url: "rmAccountBook.do",
+			type: "POST",
+			data: {"num":num},
+			error: function(jqXHR){
+				alert("jqXHR.status: " + jqXHR.status);
+				alert("jqXHR.statusText(): " + jqXHR.statusText());
+			},
+			dataType: "text",
+			success: function(resData){
+				var result = $.trim(resData);
+				if(result == '1'){
+					if(calendarType == "daily"){
+						getDaily(clickedDate);
+					}else{
+						getMonthly(clickedDate);
+					}
+				}else {
+					alert("가계부 삭제에 실패했습니다.");
+				}
+			}
+		});
+	});
 });
 
 
@@ -1051,7 +1414,14 @@ function printSchedule(resData){
 //						alert("s "+start);
 					}
 				}else if(key=="finish_date"){
-					end = resData[i][key];
+					endD = new Date(resData[i][key]);
+//					alert(endD);
+					var tempT = endD.getDate()-1;
+					endD.setDate(tempT);
+					tempT = endD.getHours()+9;
+					endD.setHours(tempT);
+					end = endD.toISOString().slice(0,10).replace(/-/gi,"/");
+					
 					if(end.substr(8,1)==0){
 						end = end.substr(9,1);
 //						alert("e "+end);
@@ -1087,12 +1457,11 @@ function printSchedule(resData){
 		}
 		
 //		alert("e-s :"+ (end-start));
-		if((end-start) <= 1 ){
+		if((end-start) == 0 ){
 //			alert("하루");
 			$div2.text(start+"일");
-		}else if((end-start) > 1){
+		}else{
 //			alert("이틀이상");
-			end = end-1;
 			$div2.text(start+"~"+end+"일");
 		}
 
@@ -1131,7 +1500,14 @@ function printScheduleTab(resData){
 						start = start.substr(8,2);
 					}
 				}else if(key=="finish_date"){
-					end = resData[i][key];
+					endD = new Date(resData[i][key]);
+//					alert(endD);
+					var tempT = endD.getDate()-1;
+					endD.setDate(tempT);
+					tempT = endD.getHours()+9;
+					endD.setHours(tempT);
+					end = endD.toISOString().slice(0,10).replace(/-/gi,"/");
+					
 					if(end.substr(8,1)==0){
 						end = end.substr(9,1);
 					}else{
@@ -1166,12 +1542,12 @@ function printScheduleTab(resData){
 		}
 		
 //		alert("e-s :"+ (end-start));
-		if((end-start) <= 1 ){
+		if((end-start) == 0 ){
 //			alert("하루");
 			$div2.text(start+"일");
-		}else if((end-start) > 1){
+		}else{
 //			alert("이틀이상");
-			end = end-1;
+//			end = end-1;
 			$div2.text(start+"~"+end+"일");
 		}
 
@@ -1236,6 +1612,9 @@ function initAutocomplete() {
 	autocomplete.addListener('place_changed', function() {
 		infowindow.close();
 		var place = autocomplete.getPlace();
+		
+		var content = '<h4 style="margin-top: 0.4em;">'+place.name+'</h4><div>'+place.formatted_address+'</div>';
+		
 		if (!place.geometry) {
 			return;
 		}
@@ -1254,11 +1633,17 @@ function initAutocomplete() {
 		});
 		marker.setVisible(true);
 
-		document.getElementById('place-name').textContent = place.name;
-		document.getElementById('place-address').textContent = place.formatted_address;
-		infowindow.setContent(document.getElementById('infowindow-content'));
-		infowindow.open(map, marker);
-
+//		document.getElementById('place-name').textContent = place.name;
+//		document.getElementById('place-address').textContent = place.formatted_address;
+		document.getElementById('placeID').value = place.place_id;
+//		infowindow.setContent(document.getElementById('infowindow-content'));
+//		infowindow.open(map, marker);
+		var infoWin = new google.maps.InfoWindow({
+			content: content
+		});
+		
+		infoWin.open(map, marker);
+		
 	});
 }
 
@@ -1280,18 +1665,25 @@ function initsrmMap() {
 	var marker = new google.maps.Marker({
 		map: srmMap,
 	});
+	
+	
+	var srmPlaceName = document.getElementById('srm-place-name');
+	var srmPlaceAddress = document.getElementById('srm-place-address');
+	var srmInfowindow = document.getElementById('srm-infowindow-content');
 
 
 	function callback(place, status) {
+		var placeName = place.name;
+		var content = '<h4 style="margin-top: 0.4em;">'+place.name+'</h4><div>'+place.formatted_address+'</div>';
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
-			marker.setPosition(place.geometry.location);
-			srmMap.setCenter(marker.getPosition());
-			marker.setMap(srmMap);
-
-			document.getElementById('srm-place-name').textContent = place.name;
-			document.getElementById('srm-place-address').textContent = place.formatted_address;
-			infowindow.setContent(document.getElementById('srm-infowindow-content'));
-			infowindow.open(srmMap, marker);
+				marker.setPosition(place.geometry.location);
+				srmMap.setCenter(marker.getPosition());
+				marker.setMap(srmMap);
+				
+				var infoWin = new google.maps.InfoWindow({
+					content: content
+				});
+				infoWin.open(srmMap, marker);
 		}
 	}
 
@@ -1305,6 +1697,92 @@ function initsrmMap() {
 }
 
 google.maps.event.addDomListener(window, 'load', initsrmMap);
+
+/*일정 클릭 지도 위치 변경*/
+function changePlace(place) {
+//	alert("init: "+place);
+	
+	var placeID = place;
+	
+	if(place == null){
+		place = 'ChIJPXacoeqifDURZFdnLXIyirI'
+	}
+
+	var request = {
+			placeId: place
+	};
+
+	var infowindow = new google.maps.InfoWindow();
+//	document.getElementById('srm-infowindow-content');
+//	alert("infowindow : "+infowindow);
+
+	var srmMap = new google.maps.Map(document.getElementById('srmMap'), {
+		zoom: 17
+	});
+
+	var marker = new google.maps.Marker({
+		map: srmMap,
+	});
+	
+//	var srmPlaceName = document.getElementById('srm-place-name');
+//	var srmPlaceAddress = document.getElementById('srm-place-address');
+//	var srmInfowindow = document.getElementById('srm-infowindow-content');
+
+//	$("#srm-infowindow-content").remove();
+//	var infoDiv = '<div id="srm-infowindow-content"><span id="srm-place-name" class="title"></span><br><span id="srm-place-address"></span></div>'
+//	$(".googleMapDiv").append(infoDiv);
+
+	function callback(place, status) {
+//		alert("callback: "+place.name);
+		var placeName = place.name;
+		var address = place.formatted_address;
+		var content = '<h4 style="margin-top: 0.4em;">'+place.name+'</h4><div>'+place.formatted_address+'</div>';
+		if (status == google.maps.places.PlacesServiceStatus.OK) {
+			if(placeID == null){
+				marker.setPosition(place.geometry.location);
+				srmMap.setCenter(marker.getPosition());
+//				marker.setMap(null);
+				marker.setVisible(false);
+				
+//				alert(srmPlaceName.textContent);
+//				srmPlaceName.textContent = placeName;
+//				alert(srmPlaceName.textContent);
+//				srmPlaceAddress.textContent = place.formatted_address;
+//				infowindow.setContent(srmInfowindow);
+				
+//				var infoWin = new google.maps.InfoWindow({
+//					title: placeName,
+//					content: address
+//				});
+//				infoWin.open(srmMap, marker);
+				
+			}else{
+				marker.setPosition(place.geometry.location);
+				srmMap.setCenter(marker.getPosition());
+				marker.setMap(srmMap);
+				
+//				srmPlaceName.textContent = placeName;
+//				srmPlaceAddress.textContent = place.formatted_address;
+//				infowindow.setContent(srmInfowindow);
+//				infowindow.open(srmMap, marker);
+				
+				var infoWin = new google.maps.InfoWindow({
+					content: content
+				});
+				infoWin.open(srmMap, marker);
+			}
+			
+		}
+	}
+
+	service = new google.maps.places.PlacesService(srmMap);
+	service.getDetails(request, callback);
+
+	marker.addListener('click', function() {
+		infowindow.open(srmMap, marker);
+	});      
+
+}
 
 /* 일정 수정 모달 지도 */
 function initsrmEditMap() {
@@ -1370,6 +1848,7 @@ function initsrmEditMap() {
 
 		document.getElementById('srmEdit-place-name').textContent = place.name;
 		document.getElementById('srmEdit-place-address').textContent = place.formatted_address;
+		document.getElementById('srmEditplaceID').value = place.place_id;
 		infowindow.setContent(document.getElementById('srmEdit-infowindow-content'));
 		infowindow.open(srmEditmap, marker);
 	});
