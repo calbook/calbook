@@ -443,7 +443,7 @@ textarea {
 $(function(){
 	
 	$("#profileImg").change(function(event) {
-		$('#imagePreview').fadeIn('fast').attr('src', URL.createObjectURL(event.target.files[0]));
+		$('#imageProfile').fadeIn('fast').attr('src', URL.createObjectURL(event.target.files[0]));
 	});
 	
 	
@@ -516,10 +516,10 @@ function modiProfile(){
 			<div class="container">
 				<div class="card">
 					<c:if test="${member.profile == null}">
-						<img id="imagePreview" class="profile_img" src="../images/background/profile.jpg" alt="prof">
+						<img id="imageProfile" class="profile_img" src="../images/background/profile.jpg" alt="prof">
 					</c:if>
 					<c:if test="${member.profile != null}">
-						<img id="imagePreview" class="profile_img" src="upload/${member.profile}" alt="prof">
+						<img id="imageProfile" class="profile_img" src="upload/${member.profile}" alt="prof">
 					</c:if>
 					<h1 id="h1Nick">${member.nick}</h1><a id="profile_modi"><i class="fa fa-pencil"></i></a>
 					<p>${member.email}</p>
@@ -558,7 +558,7 @@ function modiProfile(){
 		<div class="content">
 			  <form enctype="multipart/form-data" action="diary_modi.do" method="POST">
 				<header>
-					<input class="title" value="${com.title}" name="title" type="text" placeholder="title" autocomplete="off">
+					<input class="title" value="${com.title}" name="title" type="text" placeholder="title" autocomplete="off" required>
 				    <div class="top">
 				    	<span class="date">조회수 : ${com.hit}</span>
 				    	<span>|</span>

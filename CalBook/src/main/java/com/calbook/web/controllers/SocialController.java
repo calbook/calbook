@@ -67,7 +67,8 @@ public class SocialController {
 		model.addAttribute("cEmail", cEmail);
 		model.addAttribute("cList", cList);
 		model.addAttribute("pg", ipg);
-		model.addAttribute("query", urlquery);
+		model.addAttribute("query", query);
+		model.addAttribute("urlquery", urlquery);
 		model.addAttribute("sPage", sPage);
 		model.addAttribute("fPage", fPage);
 		return "individual_page.jsp";

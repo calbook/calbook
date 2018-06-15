@@ -744,6 +744,9 @@ $(function(){
 					    }]
 					});
 				}else{
+					Highcharts.setOptions({
+						colors: ['#88878C', '#8798A8', '#B9CCDB', '#F0D7D2', '#F6B6B4', '#F0CEBC', '#6A738D']
+					});
 					Highcharts.chart('container', {
 					    chart: {
 					        plotBackgroundColor: null,

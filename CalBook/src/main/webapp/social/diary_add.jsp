@@ -553,7 +553,7 @@ function modiProfile(){
 		<div class="content">
 			  <form enctype="multipart/form-data" action="diary_add.do" method="POST">
 				<header>
-					<input class="title" name="title" type="text" placeholder="title" autocomplete="off">
+					<input class="title" name="title" type="text" placeholder="title" autocomplete="off" required>
 				    <div class="top">
 				    	<jsp:useBean id="today" class="java.util.Date"/>
 				    	

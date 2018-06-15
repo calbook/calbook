@@ -453,30 +453,44 @@ form {
 	
 	function modiProfile(){
 		var formData = new FormData($('#info_modi')[0]);
-		$.ajax({
-            type : 'post',
-            url : 'updateMembers.do',
-            data : formData,
-            processData : false,
-            contentType : false,
-            dataType: "text",
-            error: function(jqXHR){
-				alert("jqXHR.status: " + jqXHR.status);
-				alert("jqXHR.statusText(): " + jqXHR.statusText());
-			},
-            success : function(resData) {
-            	if(resData == "success"){
-            		alert("정보 수정 성공");
-            		$('.info_modi').css({
-        				"display":"none"
-        			});
-            		$('#h1Nick').text($('#nick').val());
-            		$('#pPhone').text($('#phone').val());            		
-            	}else{
-            		alert("정보 수정 실패");
-            	}
-            }
-        });		
+		var nick = $('#nick').val();
+		var phone = $('#phone').val();
+		var pwd = $('#password').val();
+		var pwd_check = $('#password_check').val();
+		if(nick == null || nick == "null" || nick == ""){
+			alert("닉네임을 입력해주세요.");
+		}else if(phone == null || phone == "null" || phone == ""){
+			alert("핸드폰 번호를 입력해주세요.");
+		}else if(pwd == null || pwd_check == null || pwd == "" || pwd_check == ""){
+			alert("비밀번호를 입력해주세요.");
+		}else if(pwd != pwd_check){
+			alert("비밀번호가 일치하지 않습니다.");
+		}else{
+			$.ajax({
+	            type : 'post',
+	            url : 'updateMembers.do',
+	            data : formData,
+	            processData : false,
+	            contentType : false,
+	            dataType: "text",
+	            error: function(jqXHR){
+					alert("jqXHR.status: " + jqXHR.status);
+					alert("jqXHR.statusText(): " + jqXHR.statusText());
+				},
+	            success : function(resData) {
+	            	if(resData == "success"){
+	            		alert("정보 수정 성공");
+	            		$('.info_modi').css({
+	        				"display":"none"
+	        			});
+	            		$('#h1Nick').text($('#nick').val());
+	            		$('#pPhone').text($('#phone').val());            		
+	            	}else{
+	            		alert("정보 수정 실패");
+	            	}
+	            }
+	        });
+		}
 	}
 </script>
 </head>
