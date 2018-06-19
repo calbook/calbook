@@ -145,10 +145,10 @@ function printData(resData, checkNewFriends){
 	}else if(checkNewFriends == false){
 	   for(var i in resData){
 		  s += '<figure class="snip1157">';
-		  if(resData['profile'] == null){
+		  if(resData[i]['profile'] == null){
 			  s += '<img src="../images/profile.jpg" alt="sq-sample3" />';
 		  }else{
-			  s += '<img src="upload/'+resData['profile']+'" alt="sq-sample3" />';
+			  s += '<img src="upload/'+resData[i]['profile']+'" alt="sq-sample3" />';
 		  }
 	      s += '<div class="author"><h5><span style="font-size: 17px;">';
 	      s += resData[i]['nick']+'</span><br><span>'+resData[i]['email']+'</span></h5><input class="email" type="hidden" name="f_email" value="'+resData[i]['email']+'" />';
@@ -665,6 +665,15 @@ figure.snip1157 button:HOVER {
     font-weight: bold;
     padding: 0px 40px 0 20px;
  }
+ .friendModal-content {
+		background-color: black;
+		margin: 10% auto; /* 10% from the top and centered */
+		padding: 20px;
+		border: 1px solid #888;
+		width: 60%;
+		height: 80%; /* Could be more or less, depending on screen size */
+	}
+
 }
 /* end of accordion */
 
@@ -693,9 +702,6 @@ figure.snip1157 button:HOVER {
     }
 }
 
-
-
-
 /* 모달 css */
 /* The Modal (background) */
 .friendModal {
@@ -713,8 +719,6 @@ figure.snip1157 button:HOVER {
 
 /* Modal Content/Box */
 .friendModal-content {
-  /*  background: url("../images/modal_schedule.jpg"); */
-   /*  background-color: #fefefe; */
    background-color: black;
     margin: 10% auto; /* 10% from the top and centered */
     padding: 20px;
@@ -792,6 +796,17 @@ figure.snip1157 button:HOVER {
    overflow: auto;
 }
 /* 모달 안 tab css  */
+
+@media (max-width: 1100px) {
+	 .friendModal-content {
+		background-color: black;
+		margin: 10% auto; /* 10% from the top and centered */
+		padding: 20px;
+		border: 1px solid #888;
+		width: 60%;
+		height: 80%; /* Could be more or less, depending on screen size */
+	}
+}
 
 /* 모달 css  */
 
@@ -899,7 +914,7 @@ figure.snip1157 button:HOVER {
 			<!-- Modal content -->
 			<div class="friendModal-content">
 				<div class="friendModal_tab">
-				<button class="friendModal_tablinks" onclick="openCity(event, 'accepted')" id="defaultOpen acceptedFriends">신청 받은 친구 목록</button>
+				<button class="friendModal_tablinks active" onclick="openCity(event, 'accepted')" id="defaultOpen acceptedFriends">신청 받은 친구 목록</button>
 				<button class="friendModal_tablinks" onclick="openCity(event, 'apply')" id="applyFriends">신청 한 친구 목록</button>
 				<button class="friendModal_tablinks" onclick="openCity(event, 'acceptedG')" id="acceptedGroups">초대 받은 모임 목록</button>
 				</div>
@@ -1269,7 +1284,7 @@ function printData3(resData){
 	for(var i in resData){
 		s += '<figure class="snip1157">';
 		if(resData[i]['profile']==null){
-			s += '<img src="../images/profile.jpg" alt="sq-sample3" />';
+			s += '<img src="http://via.placeholder.com/45x45" />';
 		}else{
 			s += '<img src="upload/'+resData[i]['profile']+'" alt="sq-sample3" />';
 		}

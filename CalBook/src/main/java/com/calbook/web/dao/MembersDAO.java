@@ -16,4 +16,9 @@ public interface MembersDAO {
    // 개인정보 수정하기
    public int updateMembers(Members m);
    
+   // 중복체크(전화번호)
+   public Members checkMembersPhone(String email, String phone);
+   
+   // 중복체크(닉네임)
+   public Members checkMembersNick(String email, String nick);
 }

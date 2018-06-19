@@ -23,6 +23,15 @@
    <update id="updateMembers">
       UPDATE MEMBERS SET NICK=#{nick}, PHONE=#{phone}, PWD=#{pwd}, PROFILE=#{profile, jdbcType=VARCHAR} WHERE EMAIL=#{email}
    </update>
-
+   
+   <!-- 중복체크(전화번호)  -->
+   <select id="checkMembersPhone" resultType="com.calbook.web.vo.Members">
+      SELECT * FROM MEMBERS WHERE PHONE=#{param2} AND EMAIL NOT IN(#{param1})
+   </select>
+   
+   <!-- 중복체크(닉네임)  -->
+   <select id="checkMembersNick" resultType="com.calbook.web.vo.Members">
+      SELECT * FROM MEMBERS WHERE NICK=#{param2} AND EMAIL NOT IN(#{param1})
+   </select>
 
 </mapper>

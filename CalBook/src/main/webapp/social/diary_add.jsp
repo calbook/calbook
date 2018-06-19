@@ -487,30 +487,52 @@ function modiProfile(){
     }else if(pwd != pwd_check){
        alert("비밀번호가 일치하지 않습니다.");
     }else{
+       var check = 0;
+
        $.ajax({
-             type : 'post',
-             url : 'updateMembers.do',
-             data : formData,
-             processData : false,
-             contentType : false,
-             dataType: "text",
-             error: function(jqXHR){
+          url: "checkMembers.do",
+          type: "POST",
+          data: {"nick":nick, "phone":phone},
+          error: function(jqXHR){
              alert("jqXHR.status: " + jqXHR.status);
              alert("jqXHR.statusText(): " + jqXHR.statusText());
           },
-             success : function(resData) {
-                if(resData == "success"){
-                   alert("정보 수정 성공");
-                   $('.info_modi').css({
-                     "display":"none"
+          dataType: "text",
+          success: function(resData){
+             var result = $.trim(resData);
+             if(result == "true"){
+                $.ajax({
+                      type : 'post',
+                      url : 'updateMembers.do',
+                      data : formData,
+                      processData : false,
+                      contentType : false,
+                      dataType: "text",
+                      error: function(jqXHR){
+                      alert("jqXHR.status: " + jqXHR.status);
+                      alert("jqXHR.statusText(): " + jqXHR.statusText());
+                   },
+                      success : function(resData) {
+                         if(resData == "success"){
+                            alert("정보 수정 성공");
+                            $('.info_modi').css({
+                              "display":"none"
+                           });
+                            $('#h1Nick').text($('#nick').val());
+                            $('#pPhone').text($('#phone').val());
+                            $('#password_check').val('');
+                         }else{
+                            alert("정보 수정 실패");
+                         }
+                      }
                   });
-                   $('#h1Nick').text($('#nick').val());
-                   $('#pPhone').text($('#phone').val());                  
-                }else{
-                   alert("정보 수정 실패");
+                }else if(result == "nick_false"){
+                   alert("중복되는 닉네임입니다.");
+                }else if(result == "phone_false"){
+                   alert("중복되는 전화번호입니다.");
                 }
-             }
-         });
+          }
+       });
     }
  }
 </script>

@@ -69,7 +69,13 @@
 		var s='';
 		var s2= '';
 		for(var i in resData){
-			s += '<figure class="snip1157"><img src="../images/profile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
+			s += '<figure class="snip1157">';
+			if(resData[i]['profile'] == null){
+				s += '<img src="../images/profile.jpg" alt="sq-sample3" />';
+			}else{
+				s += '<img src="upload/'+resData[i]['profile']+'" alt="sq-sample3" />';
+			}
+			s += '<div class="author"><h5><span style="font-size: 17px;">';
 			s += resData[i]['nick']+'</span><br><span>'+resData[i]['email']+'</span></h5><input class="email" type="hidden" name="f_email" value="'+resData[i]['email']+'" />';
 			
 			
@@ -97,7 +103,13 @@
 		var s='';
 		
 		for(var i in resData){
-			s += '<figure class="snip1157"><img src="../images/profile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
+			s += '<figure class="snip1157">';
+			if(resData[i]['profile'] == null){
+				s += '<img src="../images/profile.jpg" alt="sq-sample3" />';
+			}else{
+				s += '<img src="upload/'+resData[i]['profile']+'" alt="sq-sample3" />';
+			}
+			s += '<div class="author"><h5><span style="font-size: 17px;">';
 			s += resData[i]['nick']+'</span><br><span>'+resData[i]['email']+'</span></h5><input class="email" type="hidden" name="f_email" value="'+resData[i]['email']+'" />';
 			if(resData[i]['status_accept']==1 && resData[i]['g_num']==$("#g_num").val()){
 				s += '<br><span style="color:yellow">이미 초대하였습니다.</span>';
@@ -573,6 +585,7 @@ figure.snip1157 button:HOVER {
     font-weight: bold;
     padding: 0px 40px 0 20px;
  }
+ 
 }
 /* end of accordion */
 
@@ -621,8 +634,6 @@ figure.snip1157 button:HOVER {
 
 /* Modal Content/Box */
 .friendModal-content {
-  /*  background: url("../images/modal_schedule.jpg"); */
-   /*  background-color: #fefefe; */
    background-color: black;
     margin: 10% auto; /* 10% from the top and centered */
     padding: 20px;
@@ -744,9 +755,13 @@ figure.snip1157 button:HOVER {
 		<div id="scroll" class="scroll">
 			<c:forEach var="m" items="${friends}">
 				<figure class="snip1157">
-		  			<img src="../images/profile.jpg" alt="sq-sample3" />
+		  			<c:if test="${m.profile == null}">
+						<img src="../images/profile.jpg" alt="sq-sample3" />
+					</c:if>
+					<c:if test="${m.profile != null}">
+						<img src="upload/${m.profile}" alt="sq-sample3" />
+					</c:if>
 		  			<div class="author">
-		    			<%-- <h5>${m.nick}<br><span>${m.email}</span></h5> --%>
 		    			<h5><span style="font-size: 17px;">${m.nick}</span><br><span>${m.email}</span></h5>
 		    			<input class="email" type="hidden" name="f_email" value="${m.email}" />
 		    			<c:if test="${m.status_accept == -1}">
@@ -778,11 +793,12 @@ figure.snip1157 button:HOVER {
 				<div style="height:300px;">
 					<span>멤버</span>
 					<div id="groupMemberScroll" class="groupMemberScroll">
-						<span>${g.owner}   
-							<i class="fa fa-fort-awesome"></i>
-						</span>
 						<c:forEach var="m" items="${groupMembers}">
-							<span>${m.email}</span>
+							<span>${m.nick}
+								<c:if test="${m.email==g.owner}">
+									<i class="fa fa-fort-awesome"></i>
+								</c:if>
+							</span>
 						</c:forEach>
 						<div id="groupMemberDiv">
 						</div>

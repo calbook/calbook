@@ -20,8 +20,8 @@
 			<img style="width: 350px;" alt="logo" src="../images/icon/white_calbook.png">
 
 			<p class="footer-links">
-				<a href="#">Home</a> · <a href="#">Schedule</a> · <a href="#">Group</a>
-				· <a href="#">About</a> · <a href="#">Contact</a>
+				<a href="../index.do">Home</a> · <a href="../scheduleBook/scheduleBook.do">Schedule</a> · <a href="../social/social.do">Group</a>
+				· <a href="#">About</a> · <a href="mailto:tndusdl1109@naver.com">Contact</a>
 			</p>
 
 			<p class="footer-company-name">CalBook &copy; 2018</p>
@@ -46,10 +46,10 @@
 			<div>
 				<i class="fa fa-envelope"></i>
 				<p>
-					<span>이메일</span><a href="mailto:support@company.com">tndusdl1109@naver.com</a>
-					<span>이메일</span><a href="mailto:support@company.com">gloria931009@gmail.com</a>
-					<span>이메일</span><a href="mailto:support@company.com">sha2918@gmail.com</a>
-					<span>이메일</span><a href="mailto:support@company.com">pyr7221@gmail.com</a>
+					<span>이메일</span><a href="mailto:tndusdl1109@naver.com">tndusdl1109@naver.com</a>
+					<span>이메일</span><a href="mailto:gloria931009@gmail.com">gloria931009@gmail.com</a>
+					<span>이메일</span><a href="mailto:sha2918@gmail.com">sha2918@gmail.com</a>
+					<span>이메일</span><a href="mailto:pyr7221@gmail.com">pyr7221@gmail.com</a>
 				</p>
 			</div>
 	

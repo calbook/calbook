@@ -376,6 +376,13 @@ $(function(){
 	google.maps.event.addDomListener(window, 'load', initMap(location));
 });
 function initMap(location) {
+	
+	var placeID = location;
+	
+	if(location == null || location == ""){
+		location = 'ChIJKwjLMvOifDURqPAMQqxwK-k';
+	}
+	
 	var request = {
 		placeId: location
 	};
@@ -397,16 +404,27 @@ function initMap(location) {
 	
 
 	function callback(place, status) {
+		infowindow.close();
 		var placeName = place.name;
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
-			marker.setPosition(place.geometry.location);
-			map.setCenter(marker.getPosition());
-			marker.setMap(map);
-			
-			PlaceName.textContent = placeName;
-			PlaceAddress.textContent = place.formatted_address;
-			infowindow.setContent(Infowindow);
-			infowindow.open(map, marker);
+			if(placeID == "" || placeID == null){
+				var mapOptions = {
+						center: new google.maps.LatLng(37.566229 , 126.978016),
+						zoom: 13
+				};
+
+				map.setOptions(mapOptions);
+				marker.setVisible(false);
+			}else{	
+				marker.setPosition(place.geometry.location);
+				map.setCenter(marker.getPosition());
+				marker.setMap(map);
+				
+				PlaceName.textContent = placeName;
+				PlaceAddress.textContent = place.formatted_address;
+				infowindow.setContent(Infowindow);
+				infowindow.open(map, marker);
+			}
 		}
 	}
 

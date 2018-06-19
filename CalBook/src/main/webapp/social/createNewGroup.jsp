@@ -69,7 +69,13 @@
 		var s='';
 		var s2= '';
 		for(var i in resData){
-			s += '<figure class="snip1157"><img src="../images/profile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
+			s += '<figure class="snip1157">';
+			if(resData[i]['profile'] == null){
+				s += '<img src="../images/profile.jpg" alt="sq-sample3" />';
+			}else{
+				s += '<img src="upload/'+resData[i]['profile']+'" alt="sq-sample3" />';
+			}
+			s += '<div class="author"><h5><span style="font-size: 17px;">';
 			s += resData[i]['nick']+'</span><br><span>'+resData[i]['email']+'</span></h5><input class="email" type="hidden" name="f_email" value="'+resData[i]['email']+'" />';
 			
 			if(resData[i]['status_accept']==0 && resData[i]['g_num']==$("#g_num").val()){
@@ -92,7 +98,13 @@
 		var s='';
 		
 		for(var i in resData){
-			s += '<figure class="snip1157"><img src="../images/profile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
+			s += '<figure class="snip1157">';
+			if(resData[i]['profile'] == null){
+				s += '<img src="../images/profile.jpg" alt="sq-sample3" />';
+			}else{
+				s += '<img src="upload/'+resData[i]['profile']+'" alt="sq-sample3" />';
+			}
+			s += '<div class="author"><h5><span style="font-size: 17px;">';
 			s += resData[i]['nick']+'</span><br><span>'+resData[i]['email']+'</span></h5><input class="email" type="hidden" name="f_email" value="'+resData[i]['email']+'" />';
 			if(resData[i]['status_accept']==0 && resData[i]['g_num']==$("#g_num").val()){
 				s += '<button class="btnCancelGroupM" type="button"><i class="fa fa-close"></i></button></div></figure>';
@@ -730,9 +742,13 @@ figure.snip1157 button:HOVER {
 		<div id="scroll" class="scroll">
 			<c:forEach var="m" items="${friends}">
 				<figure class="snip1157">
-		  			<img src="../images/profile.jpg" alt="sq-sample3" />
+		  			<c:if test="${m.profile == null}">
+						<img src="../images/profile.jpg" alt="sq-sample3" />
+					</c:if>
+					<c:if test="${m.profile != null}">
+						<img src="upload/${m.profile}" alt="sq-sample3" />
+					</c:if>
 		  			<div class="author">
-		    			<%-- <h5>${m.nick}<br><span>${m.email}</span></h5> --%>
 		    			<h5><span style="font-size: 17px;">${m.nick}</span><br><span>${m.email}</span></h5>
 		    			<input class="email" type="hidden" name="f_email" value="${m.email}" />
 		    			<button class="btnCheckGroupM" type="button"><i class="fa fa-check-circle-o"></i></button>
@@ -755,7 +771,6 @@ figure.snip1157 button:HOVER {
 			<h1>모임 멤버초대</h1>
 			<span>모임명 : ${g.name}</span>
 			<span>모임내용 : ${g.content}</span>
-			<span>그룹번호 : ${g.num} </span>
 			<input type="hidden" id="g_num" name="g_num" value="${g.num}">
 			<div style="height:300px;">
 				<span>멤버</span>

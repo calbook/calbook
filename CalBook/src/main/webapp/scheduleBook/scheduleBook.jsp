@@ -222,8 +222,8 @@
 				    <form id="scsaveForm">
 				    	<div class="smcontentsDiv">
 					       	<input class = "border borderTitle smtitle" type = "text" name = "title" size = "50" placeholder="제목을 입력해주세요" required>
-					       	<span class="spanDS">시작 날짜 : </span><input class = "border borderDate startD" type = "text" name = "sdate" size = "20" disabled>
-					       	<span class="spanDE">끝 날짜 : </span><input class = "border borderDate endD" type = "text" name = "edate" size = "20" disabled>
+					       	<P><span class="spanDS">시작 날짜 : </span><input class = "border borderDate startD" type = "text" name = "sdate" size = "20" disabled></P>
+					       	<p><span class="spanDE">끝 날짜 : </span><input class = "border borderDate endD" type = "text" name = "edate" size = "20" disabled></p>
 					       	<span class="importantSpan">중요도 : </span>
 					       	<select class="importantSelect" name = "important" placeholder="중요도">
 					              <option value="3" class="modalR">상</option>
@@ -320,8 +320,8 @@
 				    <form id="srmsaveForm">
 				    	<div class="smcontentsDiv">
 					    	<input class = "border borderTitle srmtitle" type = "text" name = "srmtitle" size = "50" placeholder="제목을 입력해주세요" required>
-					       	<span class="spanDS">시작 날짜 : </span><input class = "border borderDate startD" type = "text" name = "sdate" size = "20" disabled>
-					        <span class="spanDE">끝 날짜 : </span><input class = "border borderDate endD" type = "text" name = "edate" size = "20" disabled>
+					       	<p><span class="spanDS">시작 날짜 : </span><input class = "border borderDate startD" type = "text" name = "sdate" size = "20" disabled></p>
+					        <p><span class="spanDE">끝 날짜 : </span><input class = "border borderDate endD" type = "text" name = "edate" size = "20" disabled></p>
 					       	<span class="importantSpan">중요도 : </span>
 					       	<select class="importantSelect" name = "srmimportant" placeholder="중요도">
 					              <option value="3" class="modalR">상</option>

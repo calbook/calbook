@@ -34,8 +34,7 @@ $(function(){
 	accountTitle.html('가계부(선택된 날짜: <span>'+today+'</span>)');
 	   
 	// Get Data SumAccountBook&AccountBook
-	getDaily(today);
-	   
+	getMonthly(today);
 	   
 //	var plusstartD = startD.add(1, 'days').format('YYYY/MM/DD');
 //	var subendD = endD.add(1, 'days').format('YYYY/MM/DD');
@@ -44,6 +43,7 @@ $(function(){
 	
     var email = $("#myEmail").val();
     
+//    google.maps.event.addDomListener(window, 'load', initsrmEditMap);
     
 	$("#datepicker").datepicker({
 	    changeMonth: true,
@@ -358,11 +358,8 @@ $(function(){
 		
 		clickedDate = $("#fullcalendar").fullCalendar('getDate').format().replace(/-/gi,"/").substr(0,10);
 //	    alert(clickedDate);
-	    if(calendarType == "daily"){
-	    	getDaily(clickedDate);
-	    }else{
-	    	getMonthly(clickedDate);
-	    }
+		calendarType = "monthly";
+		getMonthly(clickedDate);
 	});
 	
 	/*다음달*/
@@ -406,11 +403,8 @@ $(function(){
 		
 		
 		clickedDate = $("#fullcalendar").fullCalendar('getDate').format().replace(/-/gi,"/").substr(0,10);
-	    if(calendarType == "daily"){
-	       getDaily(clickedDate);
-	    }else{
-	       getMonthly(clickedDate);
-	    }
+		calendarType = "monthly";
+		getMonthly(clickedDate);
 	});
 	
 	/*월별버튼*/
@@ -691,6 +685,7 @@ $(function(){
 		$(".smcontent").val('');
 		$(".modalO").attr("selected","selected");
 		$("#pac-input").val('');
+		$("#placeID").val('');
 		
 		sModal.style.display = "block";
 		$("#datepicker").css("cssText","z-index:0 !important;");
@@ -995,7 +990,9 @@ $(function(){
 		}else{
 			$(".modalG").attr("selected", "selected");
 		}
-		$(".borderContent").text(content);
+		
+		$(".borderContent").val('');
+		$(".borderContent").val(content);
 		$("#srmEditplaceID").val(place);
 		
 		
@@ -1272,34 +1269,40 @@ $(function(){
 	// save data of AccountBook
 	$(document).on("click", "#modiCheckAccountBook", function(){
 		var num = $(this).next().val();
-		$(this).attr({
-			"id":"modiAccountBook"
-		});
+		var amount1 = amount.children().val();
 
-		$.ajax({
-			url: "modiAccountBook.do",
-			type: "POST",
-			data: {"num":num, "content":content.children().val(), "amount":amount.children().val()},
-			error: function(jqXHR){
-				alert("jqXHR.status: " + jqXHR.status);
-				alert("jqXHR.statusText(): " + jqXHR.statusText());
-			},
-			dataType: "text",
-			success: function(resData){
-				var result = $.trim(resData);
-				if(result == '1'){
-					if(calendarType == "daily"){
-						getDaily(clickedDate);
-					}else{
-						getMonthly(clickedDate);
-					}
-					amount.text(amount.children().val());
-					content.text(content.children().val());
-				}else {
-					alert("가계부 수정에 실패했습니다.");
-				}
-			}
-		});
+		if($.isNumeric(amount1)){
+	         $.ajax({
+	            url: "modiAccountBook.do",
+	            type: "POST",
+	            data: {"num":num, "content":content.children().val(), "amount":amount.children().val()},
+	            error: function(jqXHR){
+	               alert("jqXHR.status: " + jqXHR.status);
+	               alert("jqXHR.statusText(): " + jqXHR.statusText());
+	            },
+	            dataType: "text",
+	            success: function(resData){
+	               var result = $.trim(resData);
+	               if(result == '1'){
+	                  if(calendarType == "daily"){
+	                     getDaily(clickedDate);
+	                  }else{
+	                     getMonthly(clickedDate);
+	                  }
+	                  amount.text(amount.children().val());
+	                  content.text(content.children().val());
+	               }else {
+	                  alert("가계부 수정에 실패했습니다.");
+	               }
+	            }
+	         });
+	         $(this).attr({
+	            "id":"modiAccountBook"
+	         });
+	      }else if(!$.isNumeric(amount1)){
+	         alert("금액을 다시 입력해주세요.");
+	      }
+		
 	});
 
 
@@ -1684,54 +1687,6 @@ google.maps.event.addDomListener(window, 'load', initAutocomplete);
 
 
 /* 상세일정 모달 지도 */
-/*function initsrmMap() {
-
-	var request = {
-			placeId: 'ChIJPXacoeqifDURZFdnLXIyirI'
-	};
-
-	var infowindow = new google.maps.InfoWindow();
-
-	var srmMap = new google.maps.Map(document.getElementById('srmMap'), {
-		zoom: 17
-	});
-
-	var marker = new google.maps.Marker({
-		map: srmMap,
-	});
-	
-	
-	var srmPlaceName = document.getElementById('srm-place-name');
-	var srmPlaceAddress = document.getElementById('srm-place-address');
-	var srmInfowindow = document.getElementById('srm-infowindow-content');
-
-
-	function callback(place, status) {
-		var placeName = place.name;
-		var content = '<h4 style="margin-top: 0.4em;">'+place.name+'</h4><div>'+place.formatted_address+'</div>';
-		if (status == google.maps.places.PlacesServiceStatus.OK) {
-				marker.setPosition(place.geometry.location);
-				srmMap.setCenter(marker.getPosition());
-				marker.setMap(srmMap);
-				
-				var infoWin = new google.maps.InfoWindow({
-					content: content
-				});
-				infoWin.open(srmMap, marker);
-		}
-	}
-
-	service = new google.maps.places.PlacesService(srmMap);
-	service.getDetails(request, callback);
-
-	marker.addListener('click', function() {
-		infowindow.open(srmMap, marker);
-	});      
-
-}
-
-google.maps.event.addDomListener(window, 'load', initsrmMap);*/
-
 /*일정 클릭 지도 위치 변경*/
 function changePlace(place) {
 //	alert("init: "+place);
@@ -1747,8 +1702,6 @@ function changePlace(place) {
 	};
 
 	var infowindow = new google.maps.InfoWindow();
-//	document.getElementById('srm-infowindow-content');
-//	alert("infowindow : "+infowindow);
 
 	var srmMap = new google.maps.Map(document.getElementById('srmMap'), {
 		zoom: 17
@@ -1758,13 +1711,6 @@ function changePlace(place) {
 		map: srmMap,
 	});
 	
-//	var srmPlaceName = document.getElementById('srm-place-name');
-//	var srmPlaceAddress = document.getElementById('srm-place-address');
-//	var srmInfowindow = document.getElementById('srm-infowindow-content');
-
-//	$("#srm-infowindow-content").remove();
-//	var infoDiv = '<div id="srm-infowindow-content"><span id="srm-place-name" class="title"></span><br><span id="srm-place-address"></span></div>'
-//	$(".googleMapDiv").append(infoDiv);
 
 	function callback(place, status) {
 //		alert("callback: "+place.name);
@@ -1778,27 +1724,11 @@ function changePlace(place) {
 //				marker.setMap(null);
 				marker.setVisible(false);
 				
-//				alert(srmPlaceName.textContent);
-//				srmPlaceName.textContent = placeName;
-//				alert(srmPlaceName.textContent);
-//				srmPlaceAddress.textContent = place.formatted_address;
-//				infowindow.setContent(srmInfowindow);
-				
-//				var infoWin = new google.maps.InfoWindow({
-//					title: placeName,
-//					content: address
-//				});
-//				infoWin.open(srmMap, marker);
 				
 			}else{
 				marker.setPosition(place.geometry.location);
 				srmMap.setCenter(marker.getPosition());
 				marker.setMap(srmMap);
-				
-//				srmPlaceName.textContent = placeName;
-//				srmPlaceAddress.textContent = place.formatted_address;
-//				infowindow.setContent(srmInfowindow);
-//				infowindow.open(srmMap, marker);
 				
 				var infoWin = new google.maps.InfoWindow({
 					content: content
@@ -1854,7 +1784,7 @@ function initsrmEditMap() {
 	});
 
 	autocomplete.addListener('place_changed', function() {
-		alert('place_changed');
+//		alert('place_changed');
 		infowindow.close();
 		var place = autocomplete.getPlace();
 		var content = '<h4 style="margin-top: 0.4em;">'+place.name+'</h4><div>'+place.formatted_address+'</div>';
@@ -1868,7 +1798,7 @@ function initsrmEditMap() {
 			srmEditmap.setCenter(place.geometry.location);
 			srmEditmap.setZoom(13);
 		}
-		alert("autocom : "+place.geometry.location);
+//		alert("autocom : "+place.geometry.location);
 
 		// Set the position of the marker using the place ID and location.
 		srmMarker.setPlace({
@@ -1888,11 +1818,11 @@ function initsrmEditMap() {
 }
 
 function changesrmEditmap(place) {
-	alert('changesrmEditmap');
+//	alert('changesrmEditmap');
 	
-	infowindow.close();
+//	infowindow.close();
 //	srmMarker.setMap(null);
-	srminput.value="";
+	
 
 	var placeID = place;
 
@@ -1907,6 +1837,7 @@ function changesrmEditmap(place) {
 	
 	
 	function callback(place, status) {
+		srminput.value="";
 		infowindow.close();
 		var content = '<h4 style="margin-top: 0.4em;">'+place.name+'</h4><div>'+place.formatted_address+'</div>';
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
@@ -1920,11 +1851,6 @@ function changesrmEditmap(place) {
 				srmMarker.setVisible(false);
 				
 			}else{
-				alert(place.geometry.location);
-				var loc = place.geometry.location;
-				alert(loc);
-				alert(content);
-				
 				srmEditmap.setZoom(17);
 				
 				srmMarker.setPosition(place.geometry.location);
@@ -1933,7 +1859,7 @@ function changesrmEditmap(place) {
 					location: place.geometry.location
 				});
 				srmEditmap.setCenter(srmMarker.getPosition());
-				alert(srmMarker.getPosition());
+//				alert(srmMarker.getPosition());
 				srmMarker.setMap(srmEditmap);
 				srmMarker.setVisible(true);
 
@@ -1946,24 +1872,6 @@ function changesrmEditmap(place) {
 	service = new google.maps.places.PlacesService(srmEditmap);
 	service.getDetails(request, callback);
 	
-	/*var service = new google.maps.places.PlacesService(map);
-	  service.getDetails(request, function(place, status) {
-	    if (status == google.maps.places.PlacesServiceStatus.OK) {
-	      alert(place);
-	      return;
-	    }
-	    srmMarker = new google.maps.Marker({
-	      map: map,
-	      position: place.geometry.location
-	    });
-
-	    srmMarker.setMap(srmEditmap);
-	  });*/
-	
 }
-
-
-
-
 
 google.maps.event.addDomListener(window, 'load', initsrmEditMap);

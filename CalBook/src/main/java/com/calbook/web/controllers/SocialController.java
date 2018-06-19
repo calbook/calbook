@@ -1043,6 +1043,27 @@ public class SocialController {
    }
    
    
+   @RequestMapping(value={"checkMembers.do"}, method=RequestMethod.POST)
+   @ResponseBody
+   public String checkPhoneMembers(String nick, String phone, HttpServletRequest request) {
+      MembersDAO mdao = ss.getMapper(MembersDAO.class);
+      HttpSession session = request.getSession();
+      String email = (String) session.getAttribute("email");
+
+      Members mPhone = mdao.checkMembersPhone(email, phone);
+      Members mNick = mdao.checkMembersNick(email, nick);
+
+      
+      if(mNick != null) {
+         return "nick_false";
+      }else if(mPhone != null) {
+         return "phone_false";
+      }else {
+         return "true";
+      }
+   }
+   
+   
    @RequestMapping(value={"updateMembers.do"}, method=RequestMethod.POST)
    @ResponseBody
    public String updateMembers(HttpServletRequest request) {
