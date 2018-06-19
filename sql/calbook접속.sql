@@ -40,8 +40,10 @@ CREATE TABLE MEMBERS(
     CONSTRAINT PK_MEMBERS_EMAIL PRIMARY KEY(EMAIL)
 );
 
-SELECT * FROM MEMBERS WHERE EMAIL='jackie-kim@gmail.com';
+SELECT * FROM MEMBERS WHERE EMAIL='pyr7221@naver.com';
 SELECT * FROM MEMBERS;
+SELECT * FROM MEMBERS WHERE PHONE='010-1234-5678' AND EMAIL NOT IN'pyr7221@naver.com';
+SELECT * FROM MEMBERS WHERE NICK='yereePark' AND EMAIL NOT IN'pyr7221@naver.com';
 DELETE MEMBERS WHERE EMAIL='pyr7221@naver.com';
 UPDATE MEMBERS SET NICK='', PHONE='', PWD='', PROFILE='', OPEN= WHERE EMAIL='';
 
@@ -125,12 +127,6 @@ SELECT SUM(AMOUNT) SUM, SUB_KIND KIND FROM ACCOUNTBOOK WHERE M_EMAIL='pyr7221@na
 SELECT SUM(AMOUNT) SUM, KIND FROM ACCOUNTBOOK WHERE ADATE BETWEEN '2018/05/28' AND '2018/05/30' GROUP BY KIND, M_EMAIL HAVING M_EMAIL='pyr7221@naver.com' ORDER BY KIND;
 SELECT * FROM ACCOUNTBOOK WHERE ADATE BETWEEN '2018/05/28' AND '2018/05/30' AND M_EMAIL='pyr7221@naver.com' ORDER BY ADATE;
 
-INSERT INTO ACCOUNTBOOK VALUES(NVL((SELECT MAX(NUM) FROM ACCOUNTBOOK)+1,1), 'pyr7221@naver.com', SYSDATE, '수입', '용돈', 200000, '용돈');
-INSERT INTO ACCOUNTBOOK VALUES(NVL((SELECT MAX(NUM) FROM ACCOUNTBOOK)+1,1), 'pyr7221@naver.com', SYSDATE, '지출', '식비', 3900, '점심(미스사이공)');
-INSERT INTO ACCOUNTBOOK VALUES(NVL((SELECT MAX(NUM) FROM ACCOUNTBOOK)+1,1), 'pyr7221@naver.com', SYSDATE, '지출', '식비', 1000, '간식(팝콘과자)');
-INSERT INTO ACCOUNTBOOK VALUES(NVL((SELECT MAX(NUM) FROM ACCOUNTBOOK)+1,1), 'pyr7221@naver.com', SYSDATE, '지출', '식비', 1900, '간식(감동란)');
-INSERT INTO ACCOUNTBOOK VALUES(NVL((SELECT MAX(NUM) FROM ACCOUNTBOOK)+1,1), 'pyr7221@naver.com', SYSDATE, '지출', '교통/차량', 3500, '교통비(왕복)');
-INSERT INTO ACCOUNTBOOK VALUES(NVL((SELECT MAX(NUM) FROM ACCOUNTBOOK)+1,1), 'pyr7221@naver.com', '2018/06/01', '지출', '기타', 1500, '편의점(우유)');
 
 DELETE ACCOUNTBOOK WHERE NUM=12;
 
@@ -152,30 +148,15 @@ CREATE TABLE COMMUNITY(
     CONSTRAINT FK_COMMUNITY_WRITER FOREIGN KEY(WRITER) REFERENCES MEMBERS(EMAIL)
 );
 ALTER TABLE COMMUNITY ADD URL VARCHAR2(200) DEFAULT NULL;
-ALTER TABLE COMMUNITY MODIFY CONTENT VARCHAR2(1000) DEFAULT NULL;
+ALTER TABLE COMMUNITY MODIFY CONTENT VARCHAR2(4000) DEFAULT NULL;
+ALTER TABLE COMMUNITY MODIFY TITLE VARCHAR2(500);
 SELECT * FROM COMMUNITY;
-SELECT RN, N.* FROM (SELECT ROWNUM AS RN, M.* FROM (SELECT * FROM COMMUNITY WHERE WRITER='pyr7221@naver.com' AND (TITLE LIKE '%3%' OR CONTENT LIKE '%3%') ORDER BY SEQ DESC) M) N WHERE RN BETWEEN 1 AND 10;
+SELECT RN, N.* FROM (SELECT ROWNUM AS RN, M.* FROM (SELECT * FROM COMMUNITY WHERE WRITER='pyr7221@naver.com' AND (TITLE LIKE '%%' OR CONTENT LIKE '%%') ORDER BY SEQ DESC) M) N WHERE RN BETWEEN 1 AND 10;
 SELECT COUNT(SEQ) FROM COMMUNITY WHERE WRITER='pyr7221@naver.com' AND (TITLE LIKE '%%' OR CONTENT LIKE '%%');
 SELECT SEQ, TITLE, CONTENT, TO_CHAR(CDATE, 'YYYY/MM/DD') CDATE, WRITER, HIT, URL FROM COMMUNITY WHERE SEQ=1;
 UPDATE COMMUNITY SET HIT=HIT+1 WHERE SEQ=1;
 
 DELETE COMMUNITY WHERE SEQ=21;
 
-INSERT INTO COMMUNITY VALUES(NVL((SELECT MAX(SEQ) FROM COMMUNITY)+1,1), '여의도 자전거 나들이2', '근로자의 날 대신 석가탄신일 전날에 쉬게 되었다. 그래서 가원이와 여의도에서 만나 자전거를 탔다. 한시간에 3000원인대 싼거같지는 않지만 하루쯤 잠깐 타기에는 적절한거같다! 오랜만에 타서 오르막 길 올라갈 때 무릎이 덜덜 떨렸지만 애써 무시하고 열심히 달렸다. 날씨도 적당히 흐릿하고 더운게 자전거 타기에 딱 좋은 날씨였다. 학원 수료하고 한번 더 타러 가야겠다..!', '2018/05/21', 'pyr7221@naver.com', 0, NULL);
-INSERT INTO COMMUNITY VALUES(NVL((SELECT MAX(SEQ) FROM COMMUNITY)+1,1), '여의도 자전거 나들이3', '근로자의 날 대신 석가탄신일 전날에 쉬게 되었다. 그래서 가원이와 여의도에서 만나 자전거를 탔다. 한시간에 3000원인대 싼거같지는 않지만 하루쯤 잠깐 타기에는 적절한거같다! 오랜만에 타서 오르막 길 올라갈 때 무릎이 덜덜 떨렸지만 애써 무시하고 열심히 달렸다. 날씨도 적당히 흐릿하고 더운게 자전거 타기에 딱 좋은 날씨였다. 학원 수료하고 한번 더 타러 가야겠다..!', '2018/05/21', 'pyr7221@naver.com', 0, NULL);
-INSERT INTO COMMUNITY VALUES(NVL((SELECT MAX(SEQ) FROM COMMUNITY)+1,1), '여의도 자전거 나들이4', '근로자의 날 대신 석가탄신일 전날에 쉬게 되었다. 그래서 가원이와 여의도에서 만나 자전거를 탔다. 한시간에 3000원인대 싼거같지는 않지만 하루쯤 잠깐 타기에는 적절한거같다! 오랜만에 타서 오르막 길 올라갈 때 무릎이 덜덜 떨렸지만 애써 무시하고 열심히 달렸다. 날씨도 적당히 흐릿하고 더운게 자전거 타기에 딱 좋은 날씨였다. 학원 수료하고 한번 더 타러 가야겠다..!', '2018/05/21', 'pyr7221@naver.com', 0, NULL);
-INSERT INTO COMMUNITY VALUES(NVL((SELECT MAX(SEQ) FROM COMMUNITY)+1,1), '여의도 자전거 나들이5', '근로자의 날 대신 석가탄신일 전날에 쉬게 되었다. 그래서 가원이와 여의도에서 만나 자전거를 탔다. 한시간에 3000원인대 싼거같지는 않지만 하루쯤 잠깐 타기에는 적절한거같다! 오랜만에 타서 오르막 길 올라갈 때 무릎이 덜덜 떨렸지만 애써 무시하고 열심히 달렸다. 날씨도 적당히 흐릿하고 더운게 자전거 타기에 딱 좋은 날씨였다. 학원 수료하고 한번 더 타러 가야겠다..!', '2018/05/21', 'pyr7221@naver.com', 0, NULL);
-INSERT INTO COMMUNITY VALUES(NVL((SELECT MAX(SEQ) FROM COMMUNITY)+1,1), '여의도 자전거 나들이6', '근로자의 날 대신 석가탄신일 전날에 쉬게 되었다. 그래서 가원이와 여의도에서 만나 자전거를 탔다. 한시간에 3000원인대 싼거같지는 않지만 하루쯤 잠깐 타기에는 적절한거같다! 오랜만에 타서 오르막 길 올라갈 때 무릎이 덜덜 떨렸지만 애써 무시하고 열심히 달렸다. 날씨도 적당히 흐릿하고 더운게 자전거 타기에 딱 좋은 날씨였다. 학원 수료하고 한번 더 타러 가야겠다..!', '2018/05/21', 'pyr7221@naver.com', 0, NULL);
-INSERT INTO COMMUNITY VALUES(NVL((SELECT MAX(SEQ) FROM COMMUNITY)+1,1), '여의도 자전거 나들이7', '근로자의 날 대신 석가탄신일 전날에 쉬게 되었다. 그래서 가원이와 여의도에서 만나 자전거를 탔다. 한시간에 3000원인대 싼거같지는 않지만 하루쯤 잠깐 타기에는 적절한거같다! 오랜만에 타서 오르막 길 올라갈 때 무릎이 덜덜 떨렸지만 애써 무시하고 열심히 달렸다. 날씨도 적당히 흐릿하고 더운게 자전거 타기에 딱 좋은 날씨였다. 학원 수료하고 한번 더 타러 가야겠다..!', '2018/05/21', 'pyr7221@naver.com', 0, NULL);
-INSERT INTO COMMUNITY VALUES(NVL((SELECT MAX(SEQ) FROM COMMUNITY)+1,1), '여의도 자전거 나들이8', '근로자의 날 대신 석가탄신일 전날에 쉬게 되었다. 그래서 가원이와 여의도에서 만나 자전거를 탔다. 한시간에 3000원인대 싼거같지는 않지만 하루쯤 잠깐 타기에는 적절한거같다! 오랜만에 타서 오르막 길 올라갈 때 무릎이 덜덜 떨렸지만 애써 무시하고 열심히 달렸다. 날씨도 적당히 흐릿하고 더운게 자전거 타기에 딱 좋은 날씨였다. 학원 수료하고 한번 더 타러 가야겠다..!', '2018/05/21', 'pyr7221@naver.com', 0, NULL);
-INSERT INTO COMMUNITY VALUES(NVL((SELECT MAX(SEQ) FROM COMMUNITY)+1,1), '여의도 자전거 나들이9', '근로자의 날 대신 석가탄신일 전날에 쉬게 되었다. 그래서 가원이와 여의도에서 만나 자전거를 탔다. 한시간에 3000원인대 싼거같지는 않지만 하루쯤 잠깐 타기에는 적절한거같다! 오랜만에 타서 오르막 길 올라갈 때 무릎이 덜덜 떨렸지만 애써 무시하고 열심히 달렸다. 날씨도 적당히 흐릿하고 더운게 자전거 타기에 딱 좋은 날씨였다. 학원 수료하고 한번 더 타러 가야겠다..!', '2018/05/21', 'pyr7221@naver.com', 0, NULL);
-INSERT INTO COMMUNITY VALUES(NVL((SELECT MAX(SEQ) FROM COMMUNITY)+1,1), '여의도 자전거 나들이10', '근로자의 날 대신 석가탄신일 전날에 쉬게 되었다. 그래서 가원이와 여의도에서 만나 자전거를 탔다. 한시간에 3000원인대 싼거같지는 않지만 하루쯤 잠깐 타기에는 적절한거같다! 오랜만에 타서 오르막 길 올라갈 때 무릎이 덜덜 떨렸지만 애써 무시하고 열심히 달렸다. 날씨도 적당히 흐릿하고 더운게 자전거 타기에 딱 좋은 날씨였다. 학원 수료하고 한번 더 타러 가야겠다..!', '2018/05/21', 'pyr7221@naver.com', 0, NULL);
-INSERT INTO COMMUNITY VALUES(NVL((SELECT MAX(SEQ) FROM COMMUNITY)+1,1), '여의도 자전거 나들이11', '근로자의 날 대신 석가탄신일 전날에 쉬게 되었다. 그래서 가원이와 여의도에서 만나 자전거를 탔다. 한시간에 3000원인대 싼거같지는 않지만 하루쯤 잠깐 타기에는 적절한거같다! 오랜만에 타서 오르막 길 올라갈 때 무릎이 덜덜 떨렸지만 애써 무시하고 열심히 달렸다. 날씨도 적당히 흐릿하고 더운게 자전거 타기에 딱 좋은 날씨였다. 학원 수료하고 한번 더 타러 가야겠다..!', '2018/05/21', 'pyr7221@naver.com', 0, NULL);
-INSERT INTO COMMUNITY VALUES(NVL((SELECT MAX(SEQ) FROM COMMUNITY)+1,1), '여의도 자전거 나들이12', '근로자의 날 대신 석가탄신일 전날에 쉬게 되었다. 그래서 가원이와 여의도에서 만나 자전거를 탔다. 한시간에 3000원인대 싼거같지는 않지만 하루쯤 잠깐 타기에는 적절한거같다! 오랜만에 타서 오르막 길 올라갈 때 무릎이 덜덜 떨렸지만 애써 무시하고 열심히 달렸다. 날씨도 적당히 흐릿하고 더운게 자전거 타기에 딱 좋은 날씨였다. 학원 수료하고 한번 더 타러 가야겠다..!', '2018/05/21', 'pyr7221@naver.com', 0, NULL);
-INSERT INTO COMMUNITY VALUES(NVL((SELECT MAX(SEQ) FROM COMMUNITY)+1,1), '여의도 자전거 나들이13', '근로자의 날 대신 석가탄신일 전날에 쉬게 되었다. 그래서 가원이와 여의도에서 만나 자전거를 탔다. 한시간에 3000원인대 싼거같지는 않지만 하루쯤 잠깐 타기에는 적절한거같다! 오랜만에 타서 오르막 길 올라갈 때 무릎이 덜덜 떨렸지만 애써 무시하고 열심히 달렸다. 날씨도 적당히 흐릿하고 더운게 자전거 타기에 딱 좋은 날씨였다. 학원 수료하고 한번 더 타러 가야겠다..!', '2018/05/21', 'pyr7221@naver.com', 0, NULL);
-INSERT INTO COMMUNITY VALUES(NVL((SELECT MAX(SEQ) FROM COMMUNITY)+1,1), '여의도 자전거 나들이14', '근로자의 날 대신 석가탄신일 전날에 쉬게 되었다. 그래서 가원이와 여의도에서 만나 자전거를 탔다. 한시간에 3000원인대 싼거같지는 않지만 하루쯤 잠깐 타기에는 적절한거같다! 오랜만에 타서 오르막 길 올라갈 때 무릎이 덜덜 떨렸지만 애써 무시하고 열심히 달렸다. 날씨도 적당히 흐릿하고 더운게 자전거 타기에 딱 좋은 날씨였다. 학원 수료하고 한번 더 타러 가야겠다..!', '2018/05/21', 'pyr7221@naver.com', 0, NULL);
-INSERT INTO COMMUNITY VALUES(NVL((SELECT MAX(SEQ) FROM COMMUNITY)+1,1), '여의도 자전거 나들이15', '근로자의 날 대신 석가탄신일 전날에 쉬게 되었다. 그래서 가원이와 여의도에서 만나 자전거를 탔다. 한시간에 3000원인대 싼거같지는 않지만 하루쯤 잠깐 타기에는 적절한거같다! 오랜만에 타서 오르막 길 올라갈 때 무릎이 덜덜 떨렸지만 애써 무시하고 열심히 달렸다. 날씨도 적당히 흐릿하고 더운게 자전거 타기에 딱 좋은 날씨였다. 학원 수료하고 한번 더 타러 가야겠다..!', '2018/05/21', 'pyr7221@naver.com', 0, NULL);
-INSERT INTO COMMUNITY VALUES(NVL((SELECT MAX(SEQ) FROM COMMUNITY)+1,1), '여의도 자전거 나들이16', '근로자의 날 대신 석가탄신일 전날에 쉬게 되었다. 그래서 가원이와 여의도에서 만나 자전거를 탔다. 한시간에 3000원인대 싼거같지는 않지만 하루쯤 잠깐 타기에는 적절한거같다! 오랜만에 타서 오르막 길 올라갈 때 무릎이 덜덜 떨렸지만 애써 무시하고 열심히 달렸다. 날씨도 적당히 흐릿하고 더운게 자전거 타기에 딱 좋은 날씨였다. 학원 수료하고 한번 더 타러 가야겠다..!', '2018/05/21', 'pyr7221@naver.com', 0, NULL);
-INSERT INTO COMMUNITY VALUES(NVL((SELECT MAX(SEQ) FROM COMMUNITY)+1,1), '여의도 자전거 나들이18', '근로자의 날 대신 석가탄신일 전날에 쉬게 되었다. 그래서 가원이와 여의도에서 만나 자전거를 탔다. 한시간에 3000원인대 싼거같지는 않지만 하루쯤 잠깐 타기에는 적절한거같다! 오랜만에 타서 오르막 길 올라갈 때 무릎이 덜덜 떨렸지만 애써 무시하고 열심히 달렸다. 날씨도 적당히 흐릿하고 더운게 자전거 타기에 딱 좋은 날씨였다. 학원 수료하고 한번 더 타러 가야겠다..!', TO_CHAR(SYSDATE, 'YYYY/MM/DD'), 'pyr7221@naver.com', 0, NULL);
 
 
