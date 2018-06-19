@@ -1,0 +1,405 @@
+@charset "UTF-8";
+
+/* 가계부 css */
+.account {
+	margin-top: 10px;
+}
+
+.topSection {
+	margin-top: 2%;
+	margin-bottom: 2%;
+}
+
+.titleSection {
+	float: left;
+	width: 20%;
+}
+
+.titleContents {
+	float: left;
+	text-align: right;
+	width: 70%;
+}
+
+.btnSection {
+	float: left;
+	width: 6%;
+	margin-top: 3px;
+}
+
+.accountTitle {
+	color: #3f3f3f;
+	/* width: 15%; */
+	font-size: 20px;
+}
+
+.accountTitle span {
+   color: #22741C;
+}
+
+
+.accountText {
+	color: #747474;
+	text-align: right;
+}
+
+.accountInput {
+	background-color: transparent;
+	color: black;
+	height: 5px;
+	padding: 10px;
+	width: 100px;
+	outline: none;
+}
+
+.btn-report {
+	background-color: transparent;
+	border: 0px solid;
+	cursor: pointer;
+}
+
+.report_img {
+	width: 32px;
+	height: 32px;
+}
+
+.account_contents {
+	float: left;
+	width: 100%;
+}
+
+.plusRow {
+	text-align: center;
+}
+
+.accountPlusbtn {
+	color: #747474;
+	background: transparent;
+	border: 0;
+	outline: none;
+	padding-bottom: 0;
+}
+
+.accountPlusbtn:HOVER {
+	color: #aaa;
+}
+
+.accountCRow {
+	background-color: transparent;
+	border: 1px solid #ddd;
+	padding: 5px;
+	overflow: hidden;
+}
+
+.rowContents {
+	float: left;
+}
+
+.rowbtn {
+	float: right;
+}
+
+.accountRowSavebtn {
+	color: #747474;
+	background: transparent;
+	border: 0;
+	outline: none;
+	padding-bottom: 0;
+	cursor: pointer;
+}
+
+.accountRowSavebtn:HOVER {
+	color: #aaa;
+}
+
+.account_contents span {
+	color: #747474;
+}
+
+.removebtn {
+	color: #747474;
+	margin: 3px;
+	cursor: pointer;
+}
+
+.modifybtn {
+	color: #747474;
+	margin: 4px;
+	cursor: pointer;
+}
+
+.removebtn:HOVER {
+	color: #aaa;
+}
+
+.modifybtn:HOVER {
+	color: #aaa;
+}
+
+/* account table CSS */
+.accountTable, .totalBudget, .accountTableReg{
+   width: 100%;
+
+}
+.accountTableDiv{
+   width: 100%;
+   height: 170px;
+   overflow: auto;
+}
+.accountTableReg{
+   border-top: 1px solid #747474;
+   border-bottom: 1px solid #747474;
+   text-align: center;
+} 
+.accountTitle{
+   float: left;
+}
+.btn-report{
+   float: right;
+}
+.adate, .kind, .balance, .content{
+   text-align: center;
+}
+.accountTableTh th{
+   background-color: #f2eee5;
+}
+
+
+
+
+.accountM_modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.accountM_modal-content {
+    background-color: #FFFFFF;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 3px solid #888;
+    width: 30%;
+    /* height: 50%; */
+    align-items: center;
+   justify-content: center;
+   flex-direction: column;
+   font-family:  "Baloo";
+   
+     /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.accountM_close {
+    color: black;
+    font-size: 30px;
+    font-weight: bold;
+    display:table; 
+    margin-left:auto; 
+    margin-right:auto;
+
+    
+}
+
+.accountM_close:hover,
+.accountM_close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.flex {
+   display: flex;
+}
+.flex.center-v {
+   align-items: center;
+}
+.flex.center-h {
+   justify-content: center;
+}
+.flex.center-vh {
+   align-items: center;
+   justify-content: center;
+}
+.flex.start {
+   justify-content: flex-start;
+}
+.flex.end {
+   justify-content: flex-end;
+}
+.flex.around {
+   justify-content: space-around;
+}
+.flex.between {
+   justify-content: space-between;
+}
+.flex.row {
+   flex-direction: row;
+}
+.flex.column {
+   flex-direction: column;
+}
+.flex.wrap {
+   flex-wrap: wrap;
+}
+.disable-select {
+  -webkit-user-select: none;  
+  -moz-user-select: none;    
+  -ms-user-select: none;      
+  user-select: none;
+}
+/* calneder */
+.clickable, #accountM_calender-title, 
+#calender-panel, #calender-buttons {
+   cursor: pointer;
+}
+.colorRed {
+   color: #FF6B6B;
+}
+.bgColorRed {
+   background-color: #FF6B6B;
+}
+.bgColorDarkRed {
+   background-color: #bc6969;   
+}
+.width-full {
+   width: 100%;
+}
+.width-half {
+   width: 50%;
+}
+.width-3-4 {
+   width: 75%;
+}
+.width-1-4 {
+   width: 25%;
+}
+.overflow-hidden {
+   overflow: hidden;
+}
+#accountM_calender-title {
+   background: transparent ;
+   color: black;
+   font-size: 35pt;
+   height: 60px;
+   width:300px;
+   margin:auto;
+}
+
+#accountM_calender-title div {
+   height: 60px;
+   width: auto;
+   text-align: center;
+}
+
+#accountM_calender-title p {
+   height: 60px;
+   width: 150px;   
+   text-align: center;
+
+}
+
+#accountM_left {
+   margin-left: 25px;
+}
+
+#accountM_calender-title #accountM_left:hover span {
+   padding-right: 10px;
+   transition: .2s;
+   float: right;
+}
+#accountM_calender-title #accountM_right:hover span {
+   padding-left: 10px;
+   transition: .2s;
+   float: left;
+}
+
+.month {
+   width: 100px;
+   height: 100px;
+   transition: .4s;
+}
+
+#days p {
+   width: 100px;
+   text-align: center;   
+   font-size: 15pt;
+}
+
+.month-selector {
+   width: 100%;
+   height: 100%;
+   transition: .4s;
+   position: relative;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+}
+.month-selector.clicked {
+      background: #FF6B6B;
+      color: white;
+}
+.month-selector.booked {
+      background: #743131;
+      color: white;
+      overflow: hidden;
+}
+.month-selector.booked:after {
+         content: 'X';
+         position: absolute;
+         margin-top: -3px;
+         font-size: 100pt;
+         font-family: "Ubuntu";
+         opacity: 0.1;
+} 
+.month-selector.booked.clicked {
+      background: #894747;
+      color: white;
+      overflow: hidden;
+}
+
+.clickable:hover {
+   z-index: 3;
+   height: 110px;
+   width: 110px;
+   box-shadow: 0px 0px 13px 4px rgba(0, 0, 0, 0.14);
+   background: #FF6B6B;
+   color: white;
+}
+
+.accountM_image {
+   width:200px;
+   height:200px;
+   display: block;
+   margin-left: auto;
+   margin-right: auto;
+}
+.accountM_comment{
+   color: black;
+    font-size: 30px;
+    display:table; 
+    margin-left:auto; 
+    margin-right:auto;
+    font-style: sans-serif;
+}
+#accountM_calender-wrapper {
+   text-align: center;
+}
+
+@media ( max-width : 1300px) {
+   .tabs.accountbook {
+      height: auto;
+   }
+   
+   .accountTableDiv{
+      height: 100px;
+   }
+}
+

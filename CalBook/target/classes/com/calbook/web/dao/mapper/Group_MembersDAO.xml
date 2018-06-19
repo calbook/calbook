@@ -1,0 +1,69 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.calbook.web.dao.Group_MembersDAO">
+	<!-- 그룹 생성중 멤버추가 ajax -->
+	<insert id="addGroupMember">
+		INSERT INTO GROUP_MEMBERS VALUES (#{param1}, #{param2}, #{param3}, null)
+	</insert>
+	
+	<!-- 그룹 생성중 멤버추가 취소 ajax -->
+	<delete id="cancelGroupMember">
+		DELETE GROUP_MEMBERS WHERE G_NUM=#{param1} AND M_EMAIL=#{param2}
+	</delete>
+	
+	
+	<!-- 그룹생성중 멤버추가중 친구리스트 불러오기  ajax -->
+	<select id="getGroupFriendsList" resultType="com.calbook.web.vo.TmpMember">
+		SELECT * FROM ((SELECT * FROM FRIENDS F INNER JOIN MEMBERS M ON F.F_EMAIL=M.EMAIL LEFT OUTER JOIN (SELECT * FROM GROUP_MEMBERS WHERE G_NUM=#{param2}) GM ON F.F_EMAIL=GM.M_EMAIL WHERE RELATION=1 AND F.M_EMAIL=#{param1}) UNION (SELECT * FROM FRIENDS F INNER JOIN MEMBERS M ON F.M_EMAIL=M.EMAIL LEFT OUTER JOIN (SELECT * FROM GROUP_MEMBERS WHERE G_NUM=#{param2}) GM ON F.M_EMAIL=GM.M_EMAIL WHERE RELATION=1 AND F.F_EMAIL=#{param1})) ORDER BY NICK	
+	</select>
+	
+	<!-- 그룹생성중 멤버추가중  검색 친구리스트 불러오기  ajax -->
+	<select id="getSearchGroupFriendsList" resultType="com.calbook.web.vo.TmpMember">
+		SELECT * FROM ((SELECT * FROM FRIENDS F INNER JOIN MEMBERS M ON F.F_EMAIL=M.EMAIL LEFT OUTER JOIN (SELECT * FROM GROUP_MEMBERS WHERE G_NUM=#{param2}) GM ON F.F_EMAIL=GM.M_EMAIL WHERE RELATION=1 AND F.M_EMAIL=#{param1}) UNION (SELECT * FROM FRIENDS F INNER JOIN MEMBERS M ON F.M_EMAIL=M.EMAIL LEFT OUTER JOIN (SELECT * FROM GROUP_MEMBERS WHERE G_NUM=#{param2}) GM ON F.M_EMAIL=GM.M_EMAIL WHERE RELATION=1 AND F.F_EMAIL=#{param1})) WHERE ${param3} LIKE '%${param4}%' ORDER BY ${param3}	
+	</select>
+	
+	<!-- 그룹수정시 그룹멤버리스트 불러오기 -->
+	<select id="getGroupMemberList" resultType="com.calbook.web.vo.Members">
+		SELECT * FROM GROUP_MEMBERS GM INNER JOIN MEMBERS M ON GM.M_EMAIL=M.EMAIL WHERE GM.G_NUM=#{g_num} AND GM.STATUS_ACCEPT=2
+	</select>
+	
+	<!-- 그룹생성 완료를 위한 그룹멤버 상태변경 -->
+	<update id="updateMembersStatusAccept">
+		UPDATE GROUP_MEMBERS SET STATUS_ACCEPT=1 WHERE G_NUM=#{g_num} AND STATUS_ACCEPT=0
+	</update>
+	
+	<!-- 그룹 친구추가 취소  -->
+	<delete id="addFriendsCancel">
+		DELETE GROUP_MEMBERS WHERE G_NUM=#{g_num} AND STATUS_ACCEPT=0
+	</delete>
+	
+	<!-- 초대받은 그룹가입완료 -->
+	<update id="updateAcceptGroup">
+		UPDATE GROUP_MEMBERS SET STATUS_ACCEPT=2 WHERE M_EMAIL=#{param1} AND G_NUM=#{param2}
+	</update>
+	
+	<!-- 초대받은 그룹가입거절 -->
+	<delete id="deleteRefuseGroup">
+		DELETE GROUP_MEMBERS WHERE M_EMAIL=#{param1} AND G_NUM=#{param2}
+	</delete>
+	
+	<!-- 그룹 탈퇴 ajax-->
+	<update id="signOutGroup">
+		UPDATE GROUP_MEMBERS SET STATUS=SYSDATE, STATUS_ACCEPT=NULL WHERE M_EMAIL=#{param1} AND G_NUM=#{param2}
+	</update>
+	
+	<!--그룹 삭제를위한 모든 멤버 탈퇴 (1) -->
+	<update id="signOutGroupMembers1">
+		UPDATE GROUP_MEMBERS SET STATUS=SYSDATE, STATUS_ACCEPT=NULL WHERE STATUS_ACCEPT=2 AND G_NUM=#{param2}
+	</update>
+	<delete id="signOutGroupMembers2">
+		DELETE GROUP_MEMBERS WHERE STATUS_ACCEPT IN(0,1)
+	</delete>
+	
+	<!-- social page groupMemberList print -->
+	<select id="getGroupsMemberList" resultType="com.calbook.web.vo.TmpMember">
+		SELECT * FROM MEMBERS M INNER JOIN GROUP_MEMBERS GM ON GM.M_EMAIL=M.EMAIL WHERE G_NUM IN(SELECT G.NUM FROM GROUP_MEMBERS GM INNER JOIN GROUPS G ON GM.G_NUM=G.NUM WHERE GM.M_EMAIL=#{email} AND GM.STATUS IS NULL AND GM.STATUS_ACCEPT=2) AND STATUS_ACCEPT=2
+	</select>
+</mapper>

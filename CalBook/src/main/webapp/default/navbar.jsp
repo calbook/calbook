@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="../css/dnavbar.css">
+<link rel="stylesheet" href="../default/dnavbar.css">
 <title>Insert title here</title>
 </head>
 <body>
@@ -16,7 +16,7 @@
     <a href="#" class="left">공지사항</a>  
   <!--Right Links-->
     <a href="../logout.do" class="right"><img class="navImg" src = "../images/icon/exit.png"></a>
-    <a href="../social/individual_page.do" class="right"><img class="navImg" src = "../images/icon/home.png"></a>
+    <a href="../social/individual_page.do?cEmail=${email}" class="right"><img class="navImg" src = "../images/icon/home.png"></a>
 </div>
 </body>
 </html>

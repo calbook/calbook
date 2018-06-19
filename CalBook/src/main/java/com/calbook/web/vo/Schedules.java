@@ -81,5 +81,12 @@ public class Schedules {
 		this.g_num = g_num;
 	}
 	
+	@Override
+	public String toString() {
+		return "Schedules [seq=" + seq + ", m_email=" + m_email + ", title=" + title + ", content=" + content
+				+ ", important=" + important + ", start_date=" + start_date + ", finish_date=" + finish_date
+				+ ", location=" + location + ", g_num=" + g_num + "]";
+	}
+	
 	
 }

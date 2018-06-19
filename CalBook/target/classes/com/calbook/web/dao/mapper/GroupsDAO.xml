@@ -3,5 +3,44 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
     
 <mapper namespace="com.calbook.web.dao.GroupsDAO">
-
+	<!-- get groups  -->
+	<select id="getGroupList" resultType="com.calbook.web.vo.Groups">
+		SELECT * FROM GROUP_MEMBERS GM INNER JOIN GROUPS G ON GM.G_NUM=G.NUM WHERE GM.M_EMAIL=#{email} AND GM.STATUS IS NULL AND GM.STATUS_ACCEPT=2
+	</select>
+	
+	<!-- get group -->
+	<select id="getGroup" resultType="com.calbook.web.vo.Groups">
+		SELECT * FROM GROUPS WHERE NUM=#{num}
+	</select>
+	
+	
+	<!-- get max group num -->
+	<select id="getMaxGroupNum" resultType="Integer">
+		SELECT MAX(NUM) FROM GROUPS
+	</select>
+	
+	<!-- create a group  -->
+	<insert id="addGroup">
+		INSERT INTO GROUPS (NUM, OWNER, CONTENT, NAME) VALUES(#{num},#{owner},#{content},#{name})
+	</insert>
+	
+	<!-- delete a group  -->
+	<delete id="deleteGroup">
+		DELETE FROM GROUPS WHERE NUM=#{num}
+	</delete>
+	
+	<!-- update a group -->
+	<update id="updateGroup">
+		UPDATE GROUPS SET NAME=#{param1}, CONTENT=#{param2} WHERE NUM=#{param3}
+	</update>
+	
+	<!-- get accepted Groups   -->
+	<select id="getAcceptedGroups" resultType="com.calbook.web.vo.Groups">
+		SELECT * FROM GROUP_MEMBERS GM INNER JOIN GROUPS G ON GM.G_NUM=G.NUM WHERE GM.M_EMAIL=#{email} AND GM.STATUS IS NULL AND GM.STATUS_ACCEPT=1
+	</select>
+	
+	<!-- removeGroup -->
+	<update id="removeGroup">
+		UPDATE GROUPS SET STATUS=SYSDATE WHERE NUM=#{num}
+	</update>
 </mapper>

@@ -3,5 +3,56 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
     
 <mapper namespace="com.calbook.web.dao.SchedulesDAO">
+	<!-- 일정 가져오기 -->
+	<select id="getSchedulesCal" resultType="com.calbook.web.vo.Schedules">
+		SELECT * FROM SCHEDULES WHERE (M_EMAIL = #{param1} OR (G_NUM IN (SELECT G_NUM FROM GROUP_MEMBERS WHERE M_EMAIL = #{param1} AND STATUS_ACCEPT = 2))) AND (START_DATE BETWEEN #{param2} AND #{param3} OR FINISH_DATE BETWEEN #{param2} AND #{param3})
+	</select>
+	
+	<select id="getSchedulesDates" resultType="com.calbook.web.vo.Schedules">
+<!-- 		SELECT * FROM SCHEDULES WHERE (M_EMAIL = #{param1} OR G_NUM = (SELECT G_NUM FROM GROUP_MEMBERS WHERE M_EMAIL = #{param1} AND STATUS_ACCEPT = 2)) AND ((START_DATE >= #{param2} AND FINISH_DATE <![CDATA[<=]]> #{param3}) OR (START_DATE <![CDATA[<=]]> #{param2} AND FINISH_DATE >= #{param3})) ORDER BY START_DATE, FINISH_DATE -->
+		SELECT * FROM SCHEDULES WHERE (M_EMAIL = #{param1} OR (G_NUM IN (SELECT G_NUM FROM GROUP_MEMBERS WHERE M_EMAIL = #{param1} AND STATUS_ACCEPT = 2))) AND ((START_DATE >= #{param2} AND FINISH_DATE <![CDATA[<=]]> #{param3}) OR (START_DATE <![CDATA[<=]]> #{param2} AND FINISH_DATE >= #{param3}) OR (START_DATE >= #{param2} AND START_DATE <![CDATA[<=]]> (SELECT TO_DATE(#{param3}) - 1 FROM DUAL)) OR (FINISH_DATE >= (SELECT TO_DATE(#{param2}) + 1 FROM DUAL) AND FINISH_DATE <![CDATA[<=]]> #{param3})) ORDER BY START_DATE, FINISH_DATE
+	</select>
 
+	<select id="getSchedulesMonth" resultType="com.calbook.web.vo.Schedules">
+<!-- 		SELECT * FROM SCHEDULES WHERE (M_EMAIL = #{param1} OR G_NUM = (SELECT G_NUM FROM GROUP_MEMBERS WHERE M_EMAIL = #{param1} AND STATUS_ACCEPT = 2)) AND ((START_DATE >= #{param2} AND FINISH_DATE <![CDATA[<=]]> #{param3}) OR (START_DATE <![CDATA[<=]]> #{param2} AND FINISH_DATE >= #{param3})) ORDER BY START_DATE, FINISH_DATE -->
+<!-- 		SELECT * FROM SCHEDULES WHERE (M_EMAIL = #{param1} OR G_NUM = (SELECT G_NUM FROM GROUP_MEMBERS WHERE M_EMAIL = #{param1} AND STATUS_ACCEPT = 2)) AND (START_DATE BETWEEN #{param2} AND (SELECT TO_DATE(#{param3}) - 1 FROM DUAL) AND FINISH_DATE BETWEEN (SELECT TO_DATE(#{param2}) + 1 FROM DUAL) AND #{param3}) ORDER BY START_DATE, FINISH_DATE -->
+		SELECT * FROM SCHEDULES WHERE (M_EMAIL = #{param1} OR (G_NUM IN (SELECT G_NUM FROM GROUP_MEMBERS WHERE M_EMAIL = #{param1} AND STATUS_ACCEPT = 2))) AND ((START_DATE >= #{param2} AND FINISH_DATE <![CDATA[<=]]> #{param3}) OR (START_DATE <![CDATA[<=]]> #{param2} AND FINISH_DATE >= #{param3}) OR (START_DATE >= #{param2} AND START_DATE <![CDATA[<=]]> (SELECT TO_DATE(#{param3}) - 1 FROM DUAL)) OR (FINISH_DATE >= (SELECT TO_DATE(#{param2}) + 1 FROM DUAL) AND FINISH_DATE <![CDATA[<=]]> #{param3})) ORDER BY START_DATE, FINISH_DATE
+	</select>
+	
+	<delete id="delSchedule">
+		DELETE SCHEDULES WHERE SEQ = #{seq}
+	</delete>
+	
+	<insert id="addSchedule">
+		INSERT INTO SCHEDULES VALUES((SELECT MAX(SEQ)+1 FROM SCHEDULES),#{m_email},#{title},#{content},#{important},#{start_date},#{finish_date},#{location, jdbcType=VARCHAR},null)
+	</insert>
+	
+	<select id="getSchedule" resultType="com.calbook.web.vo.Schedules">
+		SELECT * FROM SCHEDULES WHERE SEQ = #{seq}
+	</select>
+	
+	<update id="updateSchedule">
+		UPDATE SCHEDULES SET TITLE = #{title}, CONTENT = #{content}, IMPORTANT = #{important}, LOCATION = #{location, jdbcType=VARCHAR} WHERE SEQ = #{seq}
+	</update>
+	
+	<select id="getGroupSchedules" resultType="com.calbook.web.vo.Schedules">
+		SELECT SEQ, M_EMAIL, TITLE, CONTENT, IMPORTANT, TO_CHAR(START_DATE, 'YYYY/MM/DD') AS START_DATE, TO_CHAR(TO_DATE(FINISH_DATE)-1, 'YYYY/MM/DD') AS FINISH_DATE, LOCATION, G_NUM FROM SCHEDULES WHERE G_NUM=#{g_num} AND FINISH_DATE>SYSDATE ORDER BY START_DATE
+	</select>
+	
+	<insert id="addGroupSchedules">
+		INSERT INTO SCHEDULES VALUES(NVL((SELECT MAX(SEQ)+1 FROM SCHEDULES),1),#{m_email},#{title},#{content},#{important},#{start_date},TO_DATE(#{finish_date})+1,#{location},#{g_num})
+	</insert>
+	
+	<select id="getGroupSchedule" resultType="com.calbook.web.vo.Schedules">
+		SELECT SEQ, M_EMAIL, TITLE, CONTENT, IMPORTANT, TO_CHAR(START_DATE, 'YYYY/MM/DD') AS START_DATE, TO_CHAR(FINISH_DATE, 'YYYY/MM/DD') AS FINISH_DATE, LOCATION, G_NUM FROM SCHEDULES WHERE SEQ=#{seq}
+	</select>
+	
+	<update id="updateGroupSchedule">
+		UPDATE SCHEDULES SET TITLE=#{title}, CONTENT=#{content}, IMPORTANT=#{important}, START_DATE=#{start_date}, FINISH_DATE=#{finish_date}, LOCATION=#{location} WHERE SEQ=#{seq}
+	</update>
+	
+	<delete id="deleteGroupSchedule">
+		DELETE SCHEDULES WHERE SEQ=#{seq}
+	</delete>
+	
 </mapper>
