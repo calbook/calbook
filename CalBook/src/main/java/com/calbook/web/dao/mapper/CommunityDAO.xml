@@ -6,7 +6,7 @@
    <select id="getCommunityList" resultType="com.calbook.web.vo.Community">
       SELECT RN, N.* FROM (SELECT ROWNUM AS RN, M.* FROM 
          (SELECT * FROM COMMUNITY WHERE WRITER=#{param1} AND (TITLE LIKE '%${param2}%' OR CONTENT LIKE '%${param2}%') ORDER BY SEQ DESC) M) N 
-            WHERE RN BETWEEN 1+(#{param3}-1)*15 AND 1+(#{param3}-1)*15 + 9
+            WHERE RN BETWEEN 1+(#{param3}-1)*10 AND 1+(#{param3}-1)*10 + 9
    </select>
    
    <select id="getCommunityCount" resultType="Integer">

@@ -44,9 +44,12 @@
 	border: 0;
 	font-family: sans-serif;
 }
-
+ 
 body {
-   margin: 0;
+	background:url(../images/background/groupBackground.jpg) no-repeat center fixed;
+	background-size: cover;
+/* 	background:#f2eee5; */
+	margin: 0;
 }
 
 html, body {
@@ -56,9 +59,7 @@ html, body {
 }
 
 html{    
-  background:url(http://thekitemap.com/images/feedback-img.jpg) no-repeat;
-  background-size: cover;
-  height:100%;
+	height:100%;
 }
 
 #feedback-page{
@@ -67,25 +68,21 @@ html{
 
 #form-main{
 	width:100%;
-	float:left;
 	padding-top:0px;
 }
 
 #form-div {
-	background-color:rgba(72,72,72,0.4);
+	background-color:rgba(72,72,72,0.7);
 	padding-left:35px;
 	padding-right:35px;
 	padding-top:35px;
 	padding-bottom:50px;
 	width: 450px;
 	height:800px;
-	float: left;
-	left: 50%;
-	position: absolute;
-  margin-top:30px;
-	margin-left: -260px;
-  -moz-border-radius: 7px;
-  -webkit-border-radius: 7px;
+	margin-top:30px;
+	margin: auto;
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
 }
 
 .feedback-input {
@@ -314,47 +311,49 @@ input:focus, textarea:focus {
    <jsp:include page="../default/navbar.jsp" />
 </div>
 	<br><br>
-	<div id="form-main">
-	  <div id="form-div">
-	    <form class="form" action="registerProc.do" method="post" id="form1">
-	      <h1 style="text-align: center; color: #FFFFFF;">모임의 일정 추가</h1>
-	      <p class="name">
-	        <input name="title" type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" placeholder="title" id="title" />
-	      </p>
-	      <p>StartDate: <input type="text" id="sdate" name="start_date" class="datepicker">	EndDate: <input type="text" name="finish_date" id="edate" class="datepicker"></p>
-		  <input type="hidden" name="g_num" value="${group.num}">
-	      <p>중요도: 
-		      <select name="important">
-		      	<option value="3">상</option>
-		      	<option value="2">중</option>
-		      	<option value="1">하</option>
-		      </select>
-	      </p>
-	      <p class="text">
-	        <textarea name="content" class="validate[required,length[6,300]] feedback-input" id="content" placeholder="content"></textarea>
-	      </p>
-	      
-	      <div id="map"></div>
-          <input id="pac-input" class="controls" type="text" placeholder="Search Box">
-          <input id="placeID"  name="location" type="hidden">
-          <br><br>
-	      <table class="submit">
-              <col style="width:35%;">
-              <col style="width:30%;">
-              <col style="width:35%;">
-              <tr>
-                 <td><button type="submit" id="button-blue">SUBMIT</button></td>
-                 <td></td>
-                 <td><a href="group_schedule.do?g_num=${group.num}" id="button-blue">CANCEL</a></td>
-              </tr>
-           </table>
-            <div class="ease"></div>
-	    </form>
-	  </div>
-	</div>
-<div style="position:absolute; left:0px; right:0px; bottom:0px; height:50px;">
+<div id="form-main">
+  <div id="form-div">
+    <form class="form" action="registerProc.do" method="post" id="form1">
+      <h1 style="text-align: center; color: #FFFFFF;">모임의 일정 추가</h1>
+      <p class="name">
+        <input name="title" type="text" class="validate[required,custom[onlyLetter],length[0,100]] feedback-input" placeholder="title" id="title" />
+      </p>
+      <p>시작일: <input type="text" id="sdate" name="start_date" class="datepicker">	종료일: <input type="text" name="finish_date" id="edate" class="datepicker"></p>
+	  <input type="hidden" name="g_num" value="${group.num}">
+      <p>중요도: 
+	      <select name="important">
+	      	<option value="3">상</option>
+	      	<option value="2">중</option>
+	      	<option value="1">하</option>
+	      </select>
+      </p>
+      <p class="text">
+        <textarea name="content" class="validate[required,length[6,300]] feedback-input" id="content" placeholder="content"></textarea>
+      </p>
+      
+      <div id="map"></div>
+         <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+         <input id="placeID"  name="location" type="hidden">
+         <br><br>
+      <table class="submit">
+             <col style="width:35%;">
+             <col style="width:30%;">
+             <col style="width:35%;">
+             <tr>
+                <td><button type="submit" id="button-blue">SUBMIT</button></td>
+                <td></td>
+                <td><a href="group_schedule.do?g_num=${group.num}" id="button-blue">CANCEL</a></td>
+             </tr>
+          </table>
+           <div class="ease"></div>
+    </form>
+  </div>
+</div>
+<div>
    <jsp:include page="../default/footer.jsp" />
 </div> 
+
+
 <script type="text/javascript">
 
 function initAutocomplete() {

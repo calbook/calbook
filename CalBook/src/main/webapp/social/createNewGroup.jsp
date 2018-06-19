@@ -69,7 +69,7 @@
 		var s='';
 		var s2= '';
 		for(var i in resData){
-			s += '<figure class="snip1157"><img src="../images/basicProfile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
+			s += '<figure class="snip1157"><img src="../images/profile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
 			s += resData[i]['nick']+'</span><br><span>'+resData[i]['email']+'</span></h5><input class="email" type="hidden" name="f_email" value="'+resData[i]['email']+'" />';
 			
 			if(resData[i]['status_accept']==0 && resData[i]['g_num']==$("#g_num").val()){
@@ -92,7 +92,7 @@
 		var s='';
 		
 		for(var i in resData){
-			s += '<figure class="snip1157"><img src="../images/basicProfile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
+			s += '<figure class="snip1157"><img src="../images/profile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
 			s += resData[i]['nick']+'</span><br><span>'+resData[i]['email']+'</span></h5><input class="email" type="hidden" name="f_email" value="'+resData[i]['email']+'" />';
 			if(resData[i]['status_accept']==0 && resData[i]['g_num']==$("#g_num").val()){
 				s += '<button class="btnCancelGroupM" type="button"><i class="fa fa-close"></i></button></div></figure>';
@@ -228,7 +228,7 @@ body {
 
 .search {
   height: 50px;
-  width: 70%;
+  width: 65%;
   padding: 5px 15px;
   border-radius: 50px;
   transition: 0.3s;
@@ -693,9 +693,13 @@ figure.snip1157 button:HOVER {
 
 .move{
 	color: white;
-    font-size: 20px;
+    font-size: 13px;
     font-weight: bold;
     float : right;
+}
+
+.btnList{
+	width: 80%;
 }
 
 </style>
@@ -726,7 +730,7 @@ figure.snip1157 button:HOVER {
 		<div id="scroll" class="scroll">
 			<c:forEach var="m" items="${friends}">
 				<figure class="snip1157">
-		  			<img src="../images/basicProfile.jpg" alt="sq-sample3" />
+		  			<img src="../images/profile.jpg" alt="sq-sample3" />
 		  			<div class="author">
 		    			<%-- <h5>${m.nick}<br><span>${m.email}</span></h5> --%>
 		    			<h5><span style="font-size: 17px;">${m.nick}</span><br><span>${m.email}</span></h5>
@@ -764,7 +768,7 @@ figure.snip1157 button:HOVER {
 				</div>
 			</div>
 			
-			<table>
+			<table class="btnList">
               <col style="width:47%;">
               <col style="width:6%;">
               <col style="width:47%;">

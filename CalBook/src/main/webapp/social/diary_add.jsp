@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+7<%@ page language="java" contentType="text/html; charset=UTF-8"
    pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -38,7 +38,7 @@ html, body {
    float: right;
    width: 70%;
    min-height: 1000px;
-   height: 100%;
+   height: auto;
    font-family: sans-serif;
    font-size: 18px;
    line-height: 1.5;
@@ -61,7 +61,7 @@ html, body {
 }
 
 .card {
-   height: 1000px;
+/*    height: 1000px; */
    width: 85%; 
    background-color: white;
    border: 0px solid #eee;
@@ -449,6 +449,8 @@ $(function(){
    });
    
    $('#cancel').click(function(){
+	  var src = $('#imageSrc').val();
+      $('#imagePreview').fadeIn('fast').attr('src', src);
       $('.info_modi').css({
          "display":"none"
       });
@@ -526,11 +528,18 @@ function modiProfile(){
             <div class="card">
                <c:if test="${member.profile == null}">
                   <img id="imageProfile" class="profile_img" src="../images/profile.jpg" alt="prof">
+                  <input id="imageSrc" type="hidden" value="../images/profile.jpg">
                </c:if>
                <c:if test="${member.profile != null}">
                   <img id="imageProfile" class="profile_img" src="upload/${member.profile}" alt="prof">
+                  <input id="imageSrc" type="hidden" value="upload/${member.profile}">
                </c:if>
-               <h1 id="h1Nick">${member.nick}</h1><a id="profile_modi"><i class="fa fa-pencil"></i></a>
+               <c:if test="${email == cEmail}">
+                  <h1 id="h1Nick">${member.nick}</h1><a id="profile_modi"><i class="fa fa-pencil"></i></a>
+               </c:if>
+               <c:if test="${email != cEmail}">
+                  <h1 id="h1Nick">${member.nick}</h1>
+               </c:if>
                <p>${member.email}</p>
                <p id="pPhone">${member.phone}</p>
                
@@ -540,12 +549,6 @@ function modiProfile(){
                   <span>전화번호</span> <input id="phone" name="phone" type="text" value="${member.phone}"required>
                   <span>비밀번호</span> <input id="password" name="pwd" type="password" placeholder="password" value="${member.pwd}" required>
                   <span>비밀번호 확인</span> <input id="password_check" type="password" placeholder="password check" required>
-                  <c:if test="${member.open == 1}">
-                     <span>공개유무</span><input id="open" name="open" type="checkbox" checked>                  
-                  </c:if>
-                  <c:if test="${member.open == 0}">
-                     <span>공개유무</span><input id="open" name="open" type="checkbox">
-                  </c:if>
                   <input type="hidden" id="profile_img" value="${member.profile}">
                   <div class="filebox">
                     <label for="profileImg"><i class="fa fa-camera"></i>업로드</label> 

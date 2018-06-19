@@ -47,7 +47,7 @@
 				<i class="fa fa-envelope"></i>
 				<p>
 					<span>이메일</span><a href="mailto:support@company.com">tndusdl1109@naver.com</a>
-					<span>이메일</span><a href="mailto:support@company.com">support@company.com</a>
+					<span>이메일</span><a href="mailto:support@company.com">gloria931009@gmail.com</a>
 					<span>이메일</span><a href="mailto:support@company.com">sha2918@gmail.com</a>
 					<span>이메일</span><a href="mailto:support@company.com">pyr7221@gmail.com</a>
 				</p>

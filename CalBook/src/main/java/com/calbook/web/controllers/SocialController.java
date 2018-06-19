@@ -53,11 +53,14 @@ public class SocialController {
 		GroupsDAO gdao = ss.getMapper(GroupsDAO.class);
 		List<Groups> groups = gdao.getGroupList(email);
 		
+		Group_MembersDAO gmdao = ss.getMapper(Group_MembersDAO.class);
+		List<TmpMember> groupMembers = gmdao.getGroupsMemberList(email); 
 		
 		
 		model.addAttribute("friends", friends);
 		model.addAttribute("acceptedFriends", acceptedFriends);
 		model.addAttribute("groups", groups);
+		model.addAttribute("groupMembers", groupMembers);
 		
 		return "social.jsp";
 	}
@@ -592,6 +595,24 @@ public class SocialController {
 		}
 	}
 	
+	@RequestMapping(value={"getGroupMembers.do"}, method=RequestMethod.GET)
+	@ResponseBody
+	public String getGroupMembers(HttpServletRequest request,  HttpServletResponse response) {
+		System.out.println("getGroupMembers.do");
+		HttpSession session = request.getSession();
+		String email = (String) session.getAttribute("email");
+
+		Group_MembersDAO gmdao = ss.getMapper(Group_MembersDAO.class);
+		List<TmpMember> groupMembers = gmdao.getGroupsMemberList(email); 
+
+
+		Gson gson = new Gson();
+		String groupMembersJson = gson.toJson(groupMembers);
+		System.out.println(groupMembersJson);
+		return groupMembersJson;
+
+	}
+	
    // add group
 	@RequestMapping(value={"createGroup.do"}, method=RequestMethod.POST)
 	public String createGroup(HttpServletRequest request,  HttpServletResponse response, Groups g , Model model) {
@@ -1044,23 +1065,24 @@ public class SocialController {
       String nick = mulReq.getParameter("nick");
       String phone = mulReq.getParameter("phone");
       String pwd = mulReq.getParameter("pwd");
-      String open = mulReq.getParameter("open");
-      int i_open = 0;
-      if(open != null) {
-         i_open = 1;
-      }
+
       String fileName = mulReq.getFilesystemName("file");
       System.out.println("nick: " + nick);
-      System.out.println("open: " + open);
       System.out.println("fileName: " + fileName);
-      
       Members m = new Members();
       m.setEmail(email);
       m.setNick(nick);
       m.setPhone(phone);
       m.setPwd(pwd);
-      m.setOpen(i_open);
-      m.setProfile(fileName);
+      
+      if(fileName == null) {
+    	  Members temp = mdao.getMembersEmail(email);
+    	  m.setProfile(temp.getProfile());
+      }else {
+    	  m.setProfile(fileName);    	  
+      }
+      
+      
       
       int af = mdao.updateMembers(m);
       if(af == 1) {
@@ -1072,17 +1094,16 @@ public class SocialController {
    
    
    @RequestMapping(value={"diary_detail.do"}, method=RequestMethod.GET)
-   public String diary_detil(String pg, String query, String seq, Model model) {
+   public String diary_detil(String cEmail, String pg, String query, String seq, Model model) {
       CommunityDAO cdao = ss.getMapper(CommunityDAO.class);
       MembersDAO mdao = ss.getMapper(MembersDAO.class);
       String urlquery = ChangeURL.getURLFormat(query);
-      String cEmail = null;
       int iseq = Integer.parseInt(seq);
       
       try {
          cdao.updateHit(iseq);
          Community c = cdao.getCommunity(iseq);
-         cEmail = c.getWriter();
+       
          model.addAttribute("com", c);
       }catch (Exception e) {
          System.out.println("다이어리 상세내용 불러오기 실패");
@@ -1099,13 +1120,14 @@ public class SocialController {
    
    
    @RequestMapping(value={"diary_modi.do"}, method=RequestMethod.GET)
-   public String diary_modi(String pg, String query, String seq, Model model) {
+   public String diary_modi(String cEmail, String pg, String query, String seq, Model model) {
       CommunityDAO cdao = ss.getMapper(CommunityDAO.class);
       MembersDAO mdao = ss.getMapper(MembersDAO.class);
       String urlquery = ChangeURL.getURLFormat(query);
       Community c = cdao.getCommunity(Integer.parseInt(seq));
       Members m = mdao.getMembersEmail(c.getWriter());
       
+      model.addAttribute("cEmail", cEmail);
       model.addAttribute("pg", pg);
       model.addAttribute("query", query);
       model.addAttribute("urlquery", urlquery);
@@ -1132,6 +1154,7 @@ public class SocialController {
          e.printStackTrace();
       }
       
+      String cEmail = mulReq.getParameter("cEmail");
       String pg = mulReq.getParameter("pg");
       String query = mulReq.getParameter("query");
       String urlquery = ChangeURL.getURLFormat(query);
@@ -1152,21 +1175,22 @@ public class SocialController {
       
       int af = cdao.updateCommunity(c);
       if(af == 1) {
-         return "redirect:diary_detail.do?pg="+pg+"&query="+urlquery+"&seq="+seq;
+         return "redirect:diary_detail.do?cEmail="+cEmail+"&pg="+pg+"&query="+urlquery+"&seq="+seq;
       }else {
-         return "redirect:diary_modi.do?pg="+pg+"&query="+urlquery+"&seq="+seq;
+         return "redirect:diary_modi.do?cEmail="+cEmail+"&pg="+pg+"&query="+urlquery+"&seq="+seq;
       }
    }
    
    
    @RequestMapping(value={"diary_add.do"}, method=RequestMethod.GET)
-   public String diary_add(String pg, String query, HttpServletRequest request, Model model) {
+   public String diary_add(String cEmail, String pg, String query, HttpServletRequest request, Model model) {
       MembersDAO mdao = ss.getMapper(MembersDAO.class);
       HttpSession session = request.getSession();
       String email = (String) session.getAttribute("email");
       Members m = mdao.getMembersEmail(email);
       String urlquery = ChangeURL.getURLFormat(query);
       
+      model.addAttribute("cEmail", cEmail);
       model.addAttribute("pg", pg);
       model.addAttribute("query", query);
       model.addAttribute("urlquery", urlquery);
@@ -1216,7 +1240,7 @@ public class SocialController {
       if(af == 1) {
          return "redirect:individual_page.do?cEmail="+writer+"&pg="+pg+"&query="+urlquery;
       }else {         
-         return "redirect:diary_add.do?pg="+pg+"&query="+urlquery;
+         return "redirect:diary_add.do?cEmail="+writer+"&pg="+pg+"&query="+urlquery;
       }
    }
    
@@ -1231,7 +1255,9 @@ public class SocialController {
       if(af == 1) {
          return "redirect:individual_page.do?cEmail="+email+"&pg="+pg+"&query="+urlquery;
       }else {
-         return "redirect:diary_detail.do?pg="+pg+"&query="+urlquery+"&seq="+seq;
+         return "redirect:diary_detail.do?cEmail="+email+"&pg="+pg+"&query="+urlquery+"&seq="+seq;
       }
    }
+   
+  
 }

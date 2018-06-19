@@ -93,27 +93,27 @@ $(function(){
           },
           dataType: "json",
           success: function(resData){
-         	var myEmail = $('#myEmail').val()
-             printData4(resData, myEmail);
+        	  var groupList = resData;
+        	  getGroupMembers(groupList);
           }
        });
     });
    
    $(document).on("click", ".btnRemoveGroup", function(){
-       $.ajax({
-          url: "RemoveGroupProc.do",   
-          type: "GET",
-          data: {"g_num":$(this).prev().val()},
-          error: function(jqXHR){
-             alert(jqXHR.status);
-             alert(jqXHR.statusText);
-          },
-          dataType: "json",
-          success: function(resData){
-         	var myEmail = $('#myEmail').val()
-             printData4(resData, myEmail);
-          }
-       });
+	   $.ajax({
+	        url: "RemoveGroupProc.do",   
+	        type: "GET",
+	        data: {"g_num":$(this).prev().val()},
+	        error: function(jqXHR){
+	           alert(jqXHR.status);
+	           alert(jqXHR.statusText);
+	        },
+	        dataType: "json",
+	        success: function(resData){
+	        	var groupList = resData;
+	        	getGroupMembers(groupList);
+	        }
+	     });
     });
 });
    
@@ -159,20 +159,48 @@ function printData(resData, checkNewFriends){
 	$("#scroll").append(s);
 }
 
+function getGroupMembers(groupList){
+	$.ajax({
+        url: "getGroupMembers.do",   
+        type: "GET",
+        data: {},
+        error: function(jqXHR){
+           alert(jqXHR.status);
+           alert(jqXHR.statusText);
+        },
+        dataType: "json",
+        success: function(resData){
+       	var myEmail = $('#myEmail').val()
+           printData4(groupList, resData, myEmail);
+        }
+     });
+}
+
 /* group list 출력 */
-function printData4(resData, myEmail){
+function printData4(groupList, resData, myEmail){
 	var s='<div class="adr-article-container"><div id="group" style="max-width: 500px;">';
 	
-	for(var i in resData){
-		s += '<div class="box acco"><img class="ico-accordion" src="http://via.placeholder.com/45x45" /><span class="accordion-title">'+resData[i]["name"]+'</span></div>';
+	for(var i in groupList){
+		s += '<div class="box acco"><img class="ico-accordion" src="http://via.placeholder.com/45x45" /><span class="accordion-title">'+groupList[i]["name"]+'</span></div>';
 		s += '<div class="contenuto" id="contenuto1"><div class="row"><div class="column middle">';
-		s += '<h1>'+resData[i]["name"]+'</h1><h3>'+resData[i]["content"]+'</h3></div>';
-		s += '<div class="column oneside"><input type="hidden" name="g_num" value="'+resData[i]["num"]+'">';
+		s += '<h1>'+groupList[i]["name"]+'</h1><h3>'+groupList[i]["content"]+'</h3><div class="groupMemberDiv"><table class="groupMemberTable"><tr><th>모임 멤버 <i class="fa fa-group"></i></th></tr>';
+			for(var j in resData){
+				if(resData[j]['g_num']==groupList[i]['num']){
+					if(resData[j]['email']==groupList[i]['owner']){
+						s += '<tr><td>'+resData[j]['nick']+' <i class="fa fa-fort-awesome"></i></td></tr>';
+					}else if(resData[j]['email']!=groupList[i]['owner']){
+						s += '<tr><td>'+resData[j]['nick']+'</td></tr>';
+					}
+				}
+				
+			}
+		s += '</table></div></div>';
+		s += '<div class="column oneside"><input type="hidden" name="g_num" value="'+groupList[i]["num"]+'">';
 	 
-			if(resData[i]['owner'] != myEmail){
-				s += '<button class="faBtn btnSignOutGroup" type="button"><i class="fa fa-sign-out"></i></button><a href="group_schedule.do?g_num=${g.num}"><button class="faBtn" type="button"><i class="fa fa-home"></i></button></a>';
-			}else if(resData[i]['owner'] == myEmail){
-				s += '<button class="faBtn btnRemoveGroup" type="button"><i class="fa fa-sign-out"></i></button><a href="editGroups.do?g_num=${g.num}"><button class="faBtn" type="button"><i class="fa fa-edit"></i></button></a><a href="group_schedule.do?g_num=${g.num}"><button class="faBtn" type="button"><i class="fa fa-home"></i></button></a>';
+			if(groupList[i]['owner'] != myEmail){
+				s += '<button class="faBtn btnSignOutGroup" type="button"><i class="fa fa-sign-out"></i></button><a href="group_schedule.do?g_num='+groupList[i]["num"]+'"><button class="faBtn" type="button"><i class="fa fa-home"></i></button></a>';
+			}else if(groupList[i]['owner'] == myEmail){
+				s += '<button class="faBtn btnRemoveGroup" type="button"><i class="fa fa-sign-out"></i></button><a href="editGroups.do?g_num='+groupList[i]["num"]+'"><button class="faBtn" type="button"><i class="fa fa-edit"></i></button></a><a href="group_schedule.do?g_num='+groupList[i]["num"]+'"><button class="faBtn" type="button"><i class="fa fa-home"></i></button></a>';
 			}
 		s += '</div></div></div>';
 		}
@@ -181,8 +209,7 @@ function printData4(resData, myEmail){
 	$('#groupsScroll').empty();
 	$('#groupsScroll').append(s);
 }
-   
-   
+	
 </script>
 <style>
 * {
@@ -207,12 +234,12 @@ body {
 }
 
 .column.oneside {
-   width: 30%;
+   width: 40%;
 }
 
 /* Middle column */
 .column.middle {
-    width: 70%;
+    width: 60%;
 }
 
 /* Half column */
@@ -271,6 +298,7 @@ body {
 
 /* start of searchBar */
 .search-box {
+  min-width: 640px;
   max-width: 640px;
   position: relative;
   margin: auto;
@@ -303,7 +331,7 @@ body {
 
 .search {
   height: 50px;
-  width: 45%;
+  width: 40%;
   padding: 5px 15px;
   border-radius: 50px;
   transition: 0.3s;
@@ -507,7 +535,7 @@ figure.snip1157 button:HOVER {
    background-color: transparent;
    border-radius: 50px;
    border: 3px solid #ddd;
-   width: 95%;
+   width: 100%;
    margin: auto;
    margin-top: 25px;
    margin-bottom: 25px;
@@ -531,7 +559,7 @@ figure.snip1157 button:HOVER {
    opacity: 0.7;
    width: 100%;
    padding: 5px;
-   font-size: 30px;
+   font-size: 14px;
 }
 
 .newGroup input:FOCUS {
@@ -650,7 +678,7 @@ figure.snip1157 button:HOVER {
 /* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 1290px) {
    .newGroup {
-      width: 80%;
+      width: 100%;
       margin: 0 2%;
       margin-top: 25px;
       margin-bottom: 25px;
@@ -803,6 +831,15 @@ figure.snip1157 button:HOVER {
    float:right;
 }
 
+.groupMemberTable{
+	width: 100%;
+}
+.groupMemberTable tr th{
+	text-align: left;
+	border-bottom: 1px solid #ffffff;
+}
+
+ 
 </style>
 </head>
 <body>
@@ -928,8 +965,24 @@ figure.snip1157 button:HOVER {
 							<div class="contenuto" id="contenuto1">
 								<div class="row">
 									<div class="column middle">
-									<h1>${g.name}</h1>
-									<h3>${g.content}</h3>
+										<h1>${g.name}</h1>
+										<h3>${g.content}</h3>
+										<div class="groupMemberDiv">
+											<table class="groupMemberTable">
+												<tr><th>모임 멤버 <i class="fa fa-group"></i></th></tr>
+												<c:forEach var="gm" items="${groupMembers}">
+												
+													<c:if test="${gm.g_num == g.num}">
+														<c:if test="${gm.email == g.owner}">
+															<tr><td>${gm.nick} <i class="fa fa-fort-awesome"></i></td></tr>
+														</c:if>
+														<c:if test="${gm.email != g.owner}">
+															<tr><td>${gm.nick}</td></tr>
+														</c:if>
+													</c:if>
+												</c:forEach>
+											</table>
+										</div>
 									</div>
 									
 									<div class="column oneside">

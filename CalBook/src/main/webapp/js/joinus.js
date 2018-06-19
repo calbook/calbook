@@ -124,10 +124,10 @@ $(function(){
 					var result = $.trim(resData);
 					//alert("result : "+result);
 					if(result == 'ok'){
-						//alert("로그인 성공");
+						var ip = location.host;
 						//event.preventDefault();
 						//window.location.reload();
-						window.location.assign("http://localhost/web/joinus/selectMenu.do");
+						window.location.assign("http://"+ip+"/web/joinus/selectMenu.do");
 					}else {
 						alert("이메일 혹은 비밀번호가 틀렸습니다.");
 						event.preventDefault();

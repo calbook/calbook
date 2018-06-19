@@ -52,7 +52,7 @@ html, body {
 }
 
 .card {
-   height: 1000px;
+/*    height: 1000px; */
    width: 85%;
    background-color: white;
    border: 0px solid #eee;
@@ -438,6 +438,8 @@ form {
       });
       
       $('#cancel').click(function(){
+         var src = $('#imageSrc').val();
+         $('#imagePreview').fadeIn('fast').attr('src', src);
          $('.info_modi').css({
             "display":"none"
          });
@@ -506,26 +508,20 @@ form {
             <div class="card">
                <c:if test="${member.profile == null}">
                   <img id="imagePreview" class="profile_img" src="../images/profile.jpg" alt="prof">
+                  <input id="imageSrc" type="hidden" value="../images/profile.jpg">
                </c:if>
                <c:if test="${member.profile != null}">
                   <img id="imagePreview" class="profile_img" src="upload/${member.profile}" alt="prof">
+                  <input id="imageSrc" type="hidden" value="upload/${member.profile}">
                </c:if>
-               <c:if test="${member.email == cEmail}">
+               <c:if test="${email == cEmail}">
                   <h1 id="h1Nick">${member.nick}</h1><a id="profile_modi"><i class="fa fa-pencil"></i></a>
                </c:if>
-               <c:if test="${member.email != cEmail}">
+               <c:if test="${email != cEmail}">
                   <h1 id="h1Nick">${member.nick}</h1>
                </c:if>
-               <c:if test="${member.email == cEmail}">
-                  <p>${member.email}</p>
-                  <p id="pPhone">${member.phone}</p>
-               </c:if>
-               <c:if test="${member.email != cEmail}">
-                  <c:if test="${member.open == 1}">
-                     <p>${member.email}</p>
-                     <p id="pPhone">${member.phone}</p>            
-                  </c:if>                  
-               </c:if>
+               <p>${member.email}</p>
+               <p id="pPhone">${member.phone}</p>
                
                
                <form enctype="multipart/form-data" id="info_modi" class="info_modi" action="updateMembers.do" method="get">
@@ -533,12 +529,6 @@ form {
                   <span>전화번호</span> <input id="phone" name="phone" type="text" value="${member.phone}" required>
                   <span>비밀번호</span> <input id="password" name="pwd" type="password" placeholder="password" value="${member.pwd}" required>
                   <span>비밀번호 확인</span> <input id="password_check" type="password" placeholder="password check" required>
-                  <c:if test="${member.open == 1}">
-                     <span>공개유무</span><input id="open" name="open" type="checkbox" checked>                  
-                  </c:if>
-                  <c:if test="${member.open == 0}">
-                     <span>공개유무</span><input id="open" name="open" type="checkbox">
-                  </c:if>
                   <input type="hidden" id="profile_img" value="${member.profile}">
                   <div class="filebox">
                     <label for="profileImg"><i class="fa fa-camera"></i>업로드</label> 

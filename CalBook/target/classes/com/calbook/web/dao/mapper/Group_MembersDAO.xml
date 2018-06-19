@@ -61,4 +61,9 @@
 	<delete id="signOutGroupMembers2">
 		DELETE GROUP_MEMBERS WHERE STATUS_ACCEPT IN(0,1)
 	</delete>
+	
+	<!-- social page groupMemberList print -->
+	<select id="getGroupsMemberList" resultType="com.calbook.web.vo.TmpMember">
+		SELECT * FROM MEMBERS M INNER JOIN GROUP_MEMBERS GM ON GM.M_EMAIL=M.EMAIL WHERE G_NUM IN(SELECT G.NUM FROM GROUP_MEMBERS GM INNER JOIN GROUPS G ON GM.G_NUM=G.NUM WHERE GM.M_EMAIL=#{email} AND GM.STATUS IS NULL AND GM.STATUS_ACCEPT=2) AND STATUS_ACCEPT=2
+	</select>
 </mapper>

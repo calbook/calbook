@@ -45,13 +45,13 @@ public class ScheduleBookController {
 		SchedulesDAO sdao = ss.getMapper(SchedulesDAO.class);
 		List<Schedules> slist = sdao.getSchedulesDates(session.getAttribute("email").toString(), startDate, endDate);
 		
-		for(Schedules s : slist) {
+		/*for(Schedules s : slist) {
 			System.out.println(s.toString());
-		}
+		}*/
 		
 		Gson gson = new Gson();
 		String slistJson = gson.toJson(slist);
-//		System.out.println(slistJson);
+		System.out.println(slistJson);
 		return slistJson;
 	}
 	
@@ -68,13 +68,13 @@ public class ScheduleBookController {
 		
 //		System.out.println();
 		
-		for(Schedules s : slist) {
+	/*	for(Schedules s : slist) {
 			System.out.println(s.toString());
-		}
+		}*/
 		
 		Gson gson = new Gson();
 		String slistJson = gson.toJson(slist);
-//		System.out.println(slistJson);
+		System.out.println(slistJson);
 		return slistJson;
 	}
 	
@@ -109,13 +109,13 @@ public class ScheduleBookController {
 //			System.out.println(cs.toString());
 		}
 		
-		for(CalSchedules c : clist) {
+	/*	for(CalSchedules c : clist) {
 			System.out.println(c.toString());
-		}
+		}*/
 		
 		Gson gson = new Gson();
 		String clistJson = gson.toJson(clist);
-//		System.out.println(clistJson);
+		System.out.println(clistJson);
 		return clistJson;
 	}
 	

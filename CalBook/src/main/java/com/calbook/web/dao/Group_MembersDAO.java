@@ -41,4 +41,7 @@ public interface Group_MembersDAO {
 	
 	//±×·ì »èÁ¦¸¦À§ÇÑ ¸ðµç ¸â¹ö Å»Åð SignOut all members for delete the group2
 	public int signOutGroupMembers2(int g_num);
+	
+	//social page groupMemberList print
+	public List<TmpMember> getGroupsMemberList(String email);
 }

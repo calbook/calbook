@@ -43,7 +43,8 @@ $(function(){
 	var selectedM = moment().format('YYYY/MM/DD');
 	
     var email = $("#myEmail").val();
-	
+    
+    
 	$("#datepicker").datepicker({
 	    changeMonth: true,
 	    changeYear: true,
@@ -55,6 +56,7 @@ $(function(){
 	        var c = new Date(a);
 	        var d = new Date(a);
 	        d.setDate(d.getDate()+1); 
+//	        alert(c+ ", "+ d)
 	        $("#fullcalendar").fullCalendar("gotoDate", c);
 	        $("#fullcalendar").fullCalendar("select", c, d);
 	    }
@@ -123,9 +125,9 @@ $(function(){
 	       select: function(startDate, endDate) {
 //	    	   var a = new Date(endDate);
 //	           alert('selected ' + startDate.format() + ' to ' + endDate.format());
-	           startD = startDate.format().replace(/-/gi,"/");
-	           endD = endDate.format().replace(/-/gi,"/");
-	           var subendD = endDate.add(-1, 'days').format().replace(/-/gi,"/");
+	           startD = startDate.format().replace(/-/gi,"/").substr(0,10);
+	           endD = endDate.format().replace(/-/gi,"/").substr(0,10);
+	           var subendD = endDate.add(-1, 'days').format().replace(/-/gi,"/").substr(0,10);
 //	           plusstartD = startDate.add(1, 'days').format().replace(/-/gi,"/");
 //	           var subendD = endD;
 //	           alert(startD+","+subendD);
@@ -557,6 +559,7 @@ $(function(){
 			},					
 			dataType: "json",						
 			success: function(resData){
+				$("#srmplaceID").val('');
 				for(var key in resData){
 //					alert(key);
 					if(key=="start_date"){
@@ -597,7 +600,7 @@ $(function(){
 					}else if(key == "location"){
 //						alert("장소!");
 //						alert(resData[key]);
-						$(".srmplaceID").val(resData[key]);
+						$("#srmplaceID").val(resData[key]);
 //						initsrmMap(resData[key]);
 						placeID = resData[key];
 					}
@@ -612,7 +615,6 @@ $(function(){
 //				}else{
 //					alert("존재안함");
 //				}
-				
 				
 				changePlace(placeID);
 			}
@@ -688,6 +690,7 @@ $(function(){
 		$(".smtitle").val('');
 		$(".smcontent").val('');
 		$(".modalO").attr("selected","selected");
+		$("#pac-input").val('');
 		
 		sModal.style.display = "block";
 		$("#datepicker").css("cssText","z-index:0 !important;");
@@ -703,6 +706,9 @@ $(function(){
 		date.setHours(tempT);
 		date = date.toISOString().slice(0,10).replace(/-/gi,"/");
 		$(".endD").attr("value",date);
+		
+//		initssmMap(smMap, sminput);
+		emptyssmMap();
 	}
 	
 	srbtn.onclick = function() {
@@ -967,14 +973,16 @@ $(function(){
 
 	/*수정 클릭*/
 	$("#edit").click(function() {
+		$("#srmEditplaceID").val('');
+		
 		var seq = $(".todo_modal_seq").val();
 		var title = $(".sRowtitle").text();
 		var sdate = $(".sRowSdate").text();
 		var edate = $(".sRowEdate").text();
 		var important = $(".sRowimportant").text();
 		var content = $(".sRowcontent").text();
-		var place = $(".srmplaceID").val();
-
+		var place = $("#srmplaceID").val();
+		
 //		alert(seq+" "+title+" "+sdate+" "+edate+" "+important+" "+content);
 		
 		$(".borderTitle").val(title);
@@ -988,12 +996,15 @@ $(function(){
 			$(".modalG").attr("selected", "selected");
 		}
 		$(".borderContent").text(content);
-		$(".srmEditplaceID").val(place);
-		
+		$("#srmEditplaceID").val(place);
 		
 		
 		srModal.style.display = "none";
 		srModalEdit.style.display = "block";
+		
+//		alert(place);
+//		initsrmEditMap(place);
+		changesrmEditmap(place);
 	});
 	
 	
@@ -1194,29 +1205,33 @@ $(function(){
 
 	// Save data of AccountBook
 	function saveAccountBook(kind, sub_kind, amount, content){
-		$.ajax({
-			url: "saveAccountBook.do",
-			type: "POST",
-			data: {"kind":kind, "sub_kind":sub_kind, "amount":amount, "content":content, "adate":clickedDate},
-			error: function(jqXHR){
-				alert("jqXHR.status: " + jqXHR.status);
-				alert("jqXHR.statusText(): " + jqXHR.statusText());
-			},
-			dataType: "text",
-			success: function(resData){
-				var result = $.trim(resData);
-				if(result == "1"){
-					if(calendarType == "daily"){
-						getDaily(clickedDate);
+		if(amount != "" && content != ""){
+			$.ajax({
+				url: "saveAccountBook.do",
+				type: "POST",
+				data: {"kind":kind, "sub_kind":sub_kind, "amount":amount, "content":content, "adate":clickedDate},
+				error: function(jqXHR){
+					alert("jqXHR.status: " + jqXHR.status);
+					alert("jqXHR.statusText(): " + jqXHR.statusText());
+				},
+				dataType: "text",
+				success: function(resData){
+					var result = $.trim(resData);
+					if(result == "1"){
+						if(calendarType == "daily"){
+							getDaily(clickedDate);
+						}else{
+							getMonthly(clickedDate);
+						}
+						
 					}else{
-						getMonthly(clickedDate);
+						alert("가계부 작성에 실패하였습니다.");
 					}
-
-				}else{
-					alert("가계부 작성에 실패하였습니다.");
 				}
-			}
-		});
+			});
+		}else{
+			alert("내용 또는 금액을 입력해주세요.");
+		}
 	}
 
 
@@ -1585,32 +1600,40 @@ function rgb2hex(rgb) {
 ////////////////////////지도////////////////////////
 
 /* 일정 등록 모달 지도 */
-	 
+var map;
+var marker;
+var infoWin;
+
 function initAutocomplete() {
 
-	var map = new google.maps.Map(document.getElementById('map'), {
+	map = new google.maps.Map(document.getElementById('map'), {
 		center: {lat: 37.566229 , lng: 126.978016},
 		zoom: 13
 	});
-
+	
 	var input = document.getElementById('pac-input');
-
+	
 	var autocomplete = new google.maps.places.Autocomplete(input);
 	autocomplete.bindTo('bounds', map);
 
 	map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
-	var infowindow = new google.maps.InfoWindow();
-	var marker = new google.maps.Marker({
+	var content = "";
+	
+	infoWin = new google.maps.InfoWindow({
+		content: content
+	});
+	
+	marker = new google.maps.Marker({
 		map: map
 	});
 
 	marker.addListener('click', function() {
-		infowindow.open(map, marker);
+		infoWin.open(map, marker);
 	});
 
 	autocomplete.addListener('place_changed', function() {
-		infowindow.close();
+		infoWin.close();
 		var place = autocomplete.getPlace();
 		
 		var content = '<h4 style="margin-top: 0.4em;">'+place.name+'</h4><div>'+place.formatted_address+'</div>';
@@ -1633,24 +1656,35 @@ function initAutocomplete() {
 		});
 		marker.setVisible(true);
 
-//		document.getElementById('place-name').textContent = place.name;
-//		document.getElementById('place-address').textContent = place.formatted_address;
 		document.getElementById('placeID').value = place.place_id;
-//		infowindow.setContent(document.getElementById('infowindow-content'));
-//		infowindow.open(map, marker);
-		var infoWin = new google.maps.InfoWindow({
+		
+		infoWin = new google.maps.InfoWindow({
 			content: content
 		});
+		
 		
 		infoWin.open(map, marker);
 		
 	});
 }
 
+function emptyssmMap() {
+	var mapOptions = {
+		center: new google.maps.LatLng(37.566229 , 126.978016),
+		zoom: 13
+	};
+	
+	map.setOptions(mapOptions);
+//	marker.setMap(null);
+	marker.setVisible(false);
+	infoWin.close();
+}
+
 google.maps.event.addDomListener(window, 'load', initAutocomplete);
 
+
 /* 상세일정 모달 지도 */
-function initsrmMap() {
+/*function initsrmMap() {
 
 	var request = {
 			placeId: 'ChIJPXacoeqifDURZFdnLXIyirI'
@@ -1696,7 +1730,7 @@ function initsrmMap() {
 
 }
 
-google.maps.event.addDomListener(window, 'load', initsrmMap);
+google.maps.event.addDomListener(window, 'load', initsrmMap);*/
 
 /*일정 클릭 지도 위치 변경*/
 function changePlace(place) {
@@ -1705,7 +1739,7 @@ function changePlace(place) {
 	var placeID = place;
 	
 	if(place == null){
-		place = 'ChIJPXacoeqifDURZFdnLXIyirI'
+		place = 'ChIJKwjLMvOifDURqPAMQqxwK-k'
 	}
 
 	var request = {
@@ -1785,49 +1819,45 @@ function changePlace(place) {
 }
 
 /* 일정 수정 모달 지도 */
+var srmEditmap;
+var srmMarker;
+var infowindow;
+var srminput;
+var srmplace;
+
 function initsrmEditMap() {
-
-	var request = {
-			placeId: 'ChIJPXacoeqifDURZFdnLXIyirI'
-	};
-
-	var srmEditmap = new google.maps.Map(document.getElementById('srmEditMap'), {
+	
+	srmEditmap = new google.maps.Map(document.getElementById('srmEditMap'), {
+		center: {lat: 37.566229 , lng: 126.978016},
 		zoom: 17
 	});
 
-	var input = document.getElementById('srmEdit_pac-input');
+	srminput = document.getElementById('srmEdit_pac-input');
 
-	var autocomplete = new google.maps.places.Autocomplete(input);
+	var autocomplete = new google.maps.places.Autocomplete(srminput);
 	autocomplete.bindTo('bounds', srmEditmap);
 
-	srmEditmap.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+	srmEditmap.controls[google.maps.ControlPosition.TOP_LEFT].push(srminput);
 
-	var infowindow = new google.maps.InfoWindow();
-
-	var marker = new google.maps.Marker({
+	var content = "";
+	
+	infowindow = new google.maps.InfoWindow({
+		content: content
+	});
+	
+	srmMarker = new google.maps.Marker({
 		map: srmEditmap
 	});
 
-	function callback(place, status) {
-		if (status == google.maps.places.PlacesServiceStatus.OK) {
-			marker.setPosition(place.geometry.location);
-			srmEditmap.setCenter(marker.getPosition());
-			marker.setMap(srmEditmap);
-
-			document.getElementById('srmEdit-place-name').textContent = place.name;
-			document.getElementById('srmEdit-place-address').textContent = place.formatted_address;
-			infowindow.setContent(document.getElementById('srmEdit-infowindow-content'));
-			infowindow.open(srmEditmap, marker);
-		}
-	}
-
-	marker.addListener('click', function() {
-		infowindow.open(srmEditmap, marker);
+	srmMarker.addListener('click', function() {
+		infowindow.open(srmEditmap, srmMarker);
 	});
 
 	autocomplete.addListener('place_changed', function() {
+		alert('place_changed');
 		infowindow.close();
 		var place = autocomplete.getPlace();
+		var content = '<h4 style="margin-top: 0.4em;">'+place.name+'</h4><div>'+place.formatted_address+'</div>';
 		if (!place.geometry) {
 			return;
 		}
@@ -1838,23 +1868,102 @@ function initsrmEditMap() {
 			srmEditmap.setCenter(place.geometry.location);
 			srmEditmap.setZoom(13);
 		}
+		alert("autocom : "+place.geometry.location);
 
 		// Set the position of the marker using the place ID and location.
-		marker.setPlace({
+		srmMarker.setPlace({
 			placeId: place.place_id,
 			location: place.geometry.location
 		});
-		marker.setVisible(true);
+		
+		srmMarker.setVisible(true);
 
-		document.getElementById('srmEdit-place-name').textContent = place.name;
-		document.getElementById('srmEdit-place-address').textContent = place.formatted_address;
 		document.getElementById('srmEditplaceID').value = place.place_id;
-		infowindow.setContent(document.getElementById('srmEdit-infowindow-content'));
-		infowindow.open(srmEditmap, marker);
+		
+		infowindow.setContent(content);
+		
+		infowindow.open(srmEditmap, srmMarker);
 	});
 
+}
+
+function changesrmEditmap(place) {
+	alert('changesrmEditmap');
+	
+	infowindow.close();
+//	srmMarker.setMap(null);
+	srminput.value="";
+
+	var placeID = place;
+
+	if(place == "" || place == null){
+		place = 'ChIJKwjLMvOifDURqPAMQqxwK-k';
+	}
+
+	
+	var request = {
+			placeId: place
+	};
+	
+	
+	function callback(place, status) {
+		infowindow.close();
+		var content = '<h4 style="margin-top: 0.4em;">'+place.name+'</h4><div>'+place.formatted_address+'</div>';
+		if (status == google.maps.places.PlacesServiceStatus.OK) {
+			if(placeID == "" || placeID == null){
+				var mapOptions = {
+						center: new google.maps.LatLng(37.566229 , 126.978016),
+						zoom: 13
+				};
+
+				srmEditmap.setOptions(mapOptions);
+				srmMarker.setVisible(false);
+				
+			}else{
+				alert(place.geometry.location);
+				var loc = place.geometry.location;
+				alert(loc);
+				alert(content);
+				
+				srmEditmap.setZoom(17);
+				
+				srmMarker.setPosition(place.geometry.location);
+				srmMarker.setPlace({
+					placeId: place.place_id,
+					location: place.geometry.location
+				});
+				srmEditmap.setCenter(srmMarker.getPosition());
+				alert(srmMarker.getPosition());
+				srmMarker.setMap(srmEditmap);
+				srmMarker.setVisible(true);
+
+				infowindow.setContent(content);
+				infowindow.open(srmEditmap, srmMarker);
+			}
+		}
+	}
+	
 	service = new google.maps.places.PlacesService(srmEditmap);
 	service.getDetails(request, callback);
+	
+	/*var service = new google.maps.places.PlacesService(map);
+	  service.getDetails(request, function(place, status) {
+	    if (status == google.maps.places.PlacesServiceStatus.OK) {
+	      alert(place);
+	      return;
+	    }
+	    srmMarker = new google.maps.Marker({
+	      map: map,
+	      position: place.geometry.location
+	    });
+
+	    srmMarker.setMap(srmEditmap);
+	  });*/
+	
 }
+
+
+
+
 
 google.maps.event.addDomListener(window, 'load', initsrmEditMap);

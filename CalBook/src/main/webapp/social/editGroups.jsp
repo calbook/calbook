@@ -69,7 +69,7 @@
 		var s='';
 		var s2= '';
 		for(var i in resData){
-			s += '<figure class="snip1157"><img src="../images/basicProfile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
+			s += '<figure class="snip1157"><img src="../images/profile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
 			s += resData[i]['nick']+'</span><br><span>'+resData[i]['email']+'</span></h5><input class="email" type="hidden" name="f_email" value="'+resData[i]['email']+'" />';
 			
 			
@@ -97,7 +97,7 @@
 		var s='';
 		
 		for(var i in resData){
-			s += '<figure class="snip1157"><img src="../images/basicProfile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
+			s += '<figure class="snip1157"><img src="../images/profile.jpg" alt="sq-sample3" /><div class="author"><h5><span style="font-size: 17px;">';
 			s += resData[i]['nick']+'</span><br><span>'+resData[i]['email']+'</span></h5><input class="email" type="hidden" name="f_email" value="'+resData[i]['email']+'" />';
 			if(resData[i]['status_accept']==1 && resData[i]['g_num']==$("#g_num").val()){
 				s += '<br><span style="color:yellow">이미 초대하였습니다.</span>';
@@ -744,7 +744,7 @@ figure.snip1157 button:HOVER {
 		<div id="scroll" class="scroll">
 			<c:forEach var="m" items="${friends}">
 				<figure class="snip1157">
-		  			<img src="../images/basicProfile.jpg" alt="sq-sample3" />
+		  			<img src="../images/profile.jpg" alt="sq-sample3" />
 		  			<div class="author">
 		    			<%-- <h5>${m.nick}<br><span>${m.email}</span></h5> --%>
 		    			<h5><span style="font-size: 17px;">${m.nick}</span><br><span>${m.email}</span></h5>

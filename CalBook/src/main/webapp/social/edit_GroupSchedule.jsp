@@ -44,10 +44,13 @@
     box-sizing: border-box;
 	border: 0;
 	font-family: sans-serif;
-}
+} 
 
 body {
-   margin: 0;
+	background:url(../images/background/groupBackground.jpg) no-repeat center fixed;
+	background-size: cover;
+	/* background:#f2eee5; */
+	margin: 0;
 }
 
 html, body {
@@ -57,9 +60,7 @@ html, body {
 }
 
 html{    
-  background:url(http://thekitemap.com/images/feedback-img.jpg) no-repeat;
-  background-size: cover;
-  height:100%;
+	height:100%;
 }
 
 #feedback-page{
@@ -68,25 +69,21 @@ html{
 
 #form-main{
 	width:100%;
-	float:left;
 	padding-top:0px;
 }
 
 #form-div {
-	background-color:rgba(72,72,72,0.4);
+	background-color:rgba(72,72,72,0.7);
 	padding-left:35px;
 	padding-right:35px;
 	padding-top:35px;
 	padding-bottom:50px;
 	width: 450px;
-	float: left;
-	left: 50%;
-	position: absolute;
-  margin-top:30px;
-	margin-left: -260px;
-  -moz-border-radius: 7px;
-  -webkit-border-radius: 7px;
-  	color:white;
+	margin-top:30px;
+	margin: auto;
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
+	color:white;
 }
 
 .feedback-input {
@@ -307,6 +304,9 @@ input:focus, textarea:focus {
   width: 345px;
 }
 
+#infowindow-content{
+	color:black;
+}
 
 </style>
 </head>
@@ -353,7 +353,7 @@ input:focus, textarea:focus {
 	        <textarea name="content" class="validate[required,length[6,300]] feedback-input" id="content">${schedule.content}</textarea>
 	      </p>
 	      <div id="map"></div>
-          <input id="pac-input" name="location" class="controls" type="text" placeholder="Search Box" >
+          <input id="pac-input" class="controls" type="text" placeholder="Search Box" >
           <input id="placeID" name="location" type="hidden" value="${schedule.location}">
 	      <div id="infowindow-content">
              <span id="place-name"  class="title"></span><br>
@@ -374,7 +374,7 @@ input:focus, textarea:focus {
 	    </form>
 	  </div>
 	</div>
-<div style="position:absolute;left:0px; right:0px; bottom:0px; height:50px; margin-top:100px;">
+<div>
    <jsp:include page="../default/footer.jsp" />
 </div> 
 
