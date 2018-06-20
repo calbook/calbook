@@ -251,7 +251,7 @@ body {
 
 .search {
   height: 50px;
-  width: 70%;
+  width: 65%;
   padding: 5px 15px;
   border-radius: 50px;
   transition: 0.3s;

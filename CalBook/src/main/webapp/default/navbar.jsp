@@ -11,9 +11,9 @@
 <div class="navbar navbar-dark">
   <!--Left Link-->
 	<a href="../joinus/selectMenu.do" class="left"><img class="navLogo" src = "../images/icon/white_calbook.png"></a>
-    <a href="../social/social.do" class="left">모임</a>  
+    <a href="../social/social.do" class="left">소셜</a>  
     <a href="../scheduleBook/scheduleBook.do" class="left">일정</a> 
-    <a href="#" class="left">공지사항</a>  
+<!--     <a href="#" class="left">공지사항</a>   -->
   <!--Right Links-->
     <a href="../logout.do" class="right"><img class="navImg" src = "../images/icon/exit.png"></a>
     <a href="../social/individual_page.do?cEmail=${email}" class="right"><img class="navImg" src = "../images/icon/home.png"></a>

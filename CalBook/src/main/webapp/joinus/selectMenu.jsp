@@ -151,7 +151,7 @@ html, body {
 <div class="scene">
   <div class="page page-1 active">
     <div class="half left">
-       <a href="../social/social.do" class="heading">Group</a>
+       <a href="../social/social.do" class="heading">Social</a>
     </div>
     <div class="half right withText">
       <a  href="../scheduleBook/scheduleBook.do" class="heading">Schedule</a>
